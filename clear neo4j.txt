@@ -1,0 +1,5 @@
+cypher-shell "MATCH (n) DETACH DELETE n"
+
+load neo4j from cypher:
+
+cat neo4j_knowledge_graph_cypher.txt | cypher-shell -u neo4j -p test1234

@@ -1,0 +1,38 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Log files
+*.log
+logs/
+app/logs
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment variables
+.env
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Project specific
+transformed/
+source/
+*.zip
+lasVegas/app/logs/
