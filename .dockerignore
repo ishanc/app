@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Development
+.git
+.gitignore
+*.log
+.DS_Store
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Environment variables
+.env
+.env.*
+
+# Temporary files
+file_server/uploads/*
+file_server/processed/*
+!file_server/uploads/.gitkeep
+!file_server/processed/.gitkeep 
