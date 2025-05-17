@@ -1,5 +1,11 @@
-cypher-shell "MATCH (n) DETACH DELETE n"
+cypher-shell -u neo4j -p test1234 -d neo4j "MATCH (n) DETACH DELETE n"
+
+echo 'MATCH (n) DETACH DELETE n' | cypher-shell -u neo4j -p test1234 -d sumtotal-csod
+
+
 
 load neo4j from cypher:
 
-cat neo4j_knowledge_graph_cypher.txt | cypher-shell -u neo4j -p test1234
+cat neo4j_knowledge_graph_cypher.txt | cypher-shell -u neo4j -p test1234 -d neo4j
+
+cat UpdatedCypher_14052025.cypher | cypher-shell -u neo4j -p test1234 -d sumtotal-csod

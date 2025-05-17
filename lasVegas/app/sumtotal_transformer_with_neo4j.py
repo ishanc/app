@@ -59,68 +59,125 @@ def cleanup():
         driver.close()
         logger.info("Neo4j connection closed")
 
-def transform_sumtotal_file(input_df: pd.DataFrame, file_key: str, mapping_rules: dict) -> pd.DataFrame:
-    logger.info(f"Starting transformation for file key: {file_key}")
-    logger.info(f"Input DataFrame shape: {input_df.shape}")
+def parse_case_statement(transformation_rule: str) -> dict:
+    """Parse a CASE statement transformation rule into a dictionary of mappings"""
+    if not transformation_rule or not isinstance(transformation_rule, str):
+        return {}
+        
+    # Remove CASE and END keywords and split into conditions
+    rule = transformation_rule.strip()
+    if rule.upper().startswith('CASE'):
+        rule = rule[4:]
+    if rule.upper().endswith('END'):
+        rule = rule[:-3]
+        
+    mappings = {}
+    else_value = None
     
-    # Special handling for transcript files
-    if os.path.basename(os.path.dirname(file_key)).lower() == "transcript":
-        transformed_data = input_df.copy()
-        logger.info(f"Transcript file detected, keeping original columns")
-        return transformed_data
+    # Parse WHEN/THEN pairs and ELSE clause
+    parts = rule.strip().split('WHEN')
+    for part in parts[1:]:  # Skip first empty part
+        if 'THEN' in part:
+            condition, value = part.split('THEN', 1)
+            condition = condition.strip().strip("'").strip('"')
+            value = value.split('ELSE', 1)[0].strip().strip("'").strip('"')
+            mappings[condition] = value
         
-    if file_key not in mapping_rules:
-        logger.error(f"No mapping rules found for file '{file_key}'")
-        raise ValueError(f"No mapping rules defined for file '{file_key}'")
-
-    rules = mapping_rules[file_key]
-    output_columns = [r["CSOD Field Name"] for r in rules]
-    logger.info(f"Output columns to be created: {output_columns}")
-
-    # Create mapping of CSOD fields to SumTotal fields
-    mapped_fields = {
-        r["CSOD Field Name"]: r["SumTotal Field Name"]
-        for r in rules
-    }
-    logger.info(f"Field mapping configuration: {mapped_fields}")
-
-    transformed_data = {}
-    for csod_field in output_columns:
-        sumtotal_field = mapped_fields.get(csod_field, "")
+    # Check for ELSE clause
+    if 'ELSE' in rule:
+        else_value = rule.split('ELSE', 1)[1].split('END')[0].strip().strip("'").strip('"')
         
-        # Special handling for Audience Code/AudiencePK field
-        if sumtotal_field == "Audience Code/AudiencePK":
-            # Try both possible column names
-            if "Audience Code" in input_df.columns:
-                transformed_data[csod_field] = input_df["Audience Code"]
-                logger.debug(f"Mapped 'Audience Code' to {csod_field}")
-            elif "AudiencePK" in input_df.columns:
-                transformed_data[csod_field] = input_df["AudiencePK"]
-                logger.debug(f"Mapped 'AudiencePK' to {csod_field}")
-            else:
-                # Default handling if neither column exists
-                rule = next(r for r in rules if r["CSOD Field Name"] == csod_field)
-                default_value = rule.get("Default value", "")
-                transformed_data[csod_field] = pd.Series([default_value] * len(input_df))
-                logger.debug(f"Neither 'Audience Code' nor 'AudiencePK' found, using default value for {csod_field}: {default_value}")
-        # Regular field mapping
-        elif sumtotal_field and sumtotal_field in input_df.columns:
-            transformed_data[csod_field] = input_df[sumtotal_field]
-            logger.debug(f"Mapped {sumtotal_field} to {csod_field}")
-        else:
-            # Special handling for OU ID field with no mapping
-            if csod_field == "OU ID*" and not sumtotal_field:
-                transformed_data[csod_field] = pd.Series(range(1, len(input_df) + 1)).astype(str)
-                logger.debug("Generated sequential OU IDs")
-            else:
-                rule = next(r for r in rules if r["CSOD Field Name"] == csod_field)
-                default_value = rule.get("Default value", "")
-                transformed_data[csod_field] = pd.Series([default_value] * len(input_df))
-                logger.debug(f"Used default value for {csod_field}: {default_value}")
+    return {'mappings': mappings, 'default': else_value}
 
-    result_df = pd.DataFrame(transformed_data)
-    logger.info(f"Transformation complete. Output DataFrame shape: {result_df.shape}")
-    return result_df
+def apply_transformation_rule(value: str, transformation: dict) -> str:
+    """Apply a parsed transformation rule to a value"""
+    if not transformation:
+        return value
+        
+    mappings = transformation.get('mappings', {})
+    default = transformation.get('default')
+    
+    # Try exact match first
+    if value in mappings:
+        return mappings[value]
+    
+    # For Topic/Subject mappings, try pattern matching
+    for pattern, result in mappings.items():
+        if pattern.strip() in value or value.strip() in pattern:
+            return result
+            
+    return default if default is not None else value
+
+def transform_sumtotal_file(input_df, mapping_rules, file_type):
+    """Transform a SumTotal file according to mapping rules and file type"""
+    output_df = pd.DataFrame(index=range(len(input_df) if not input_df.empty else 1))
+    logger.info(f"Processing file type: {file_type}")
+    
+    # Process all fields based on mapping rules
+    for rule in mapping_rules:
+        csod_field = rule['CSOD Field Name']
+        st_field = rule.get('SumTotal Field Name', '')
+        default_value = rule.get('Default value', '')
+        transformation = rule.get('transformation', '')
+        field_type = rule.get('field_type', '')
+        char_length = rule.get('char_length', '')
+        mandatory = rule.get('mandatory', '') == 'Mandatory'
+        
+        logger.debug(f"\nProcessing field: {csod_field}")
+        logger.debug(f"- SumTotal field: {st_field}")
+        logger.debug(f"- Default value: {default_value}")
+        logger.debug(f"- Has transformation: {'Yes' if transformation else 'No'}")
+        logger.debug(f"- Field type: {field_type}")
+        logger.debug(f"- Character length: {char_length}")
+        logger.debug(f"- Mandatory: {mandatory}")
+
+        # Initialize field with empty string
+        output_df[csod_field] = ''
+        
+        # Apply source values if SumTotal mapping exists
+        if st_field and st_field in input_df.columns:
+            values = input_df[st_field].fillna('')
+            output_df[csod_field] = values
+            
+            # Apply transformation if it exists
+            if transformation:
+                parsed_transform = parse_case_statement(transformation)
+                non_empty_mask = values.astype(str).str.strip() != ''
+                if non_empty_mask.any():
+                    output_df.loc[non_empty_mask, csod_field] = values[non_empty_mask].apply(
+                        lambda x: apply_transformation_rule(x, parsed_transform)
+                    )
+
+        # Always apply default value to empty cells if one exists or if field is mandatory
+        if default_value or mandatory:
+            empty_mask = (output_df[csod_field].isna()) | (output_df[csod_field].astype(str).str.strip() == '')
+            if empty_mask.any():
+                # For mandatory fields without a default, use a sensible default based on field type
+                if mandatory and not default_value:
+                    if csod_field == "Transcript Status*":
+                        default_value = "Not Started"
+                        logger.info(f"Using default value '{default_value}' for mandatory field {csod_field}")
+                    else:
+                        logger.warning(f"Mandatory field {csod_field} has no default value")
+
+                if default_value:
+                    output_df.loc[empty_mask, csod_field] = default_value
+                    logger.debug(f"- Applied default value '{default_value}' to {empty_mask.sum()} empty cells")
+
+        # Special handling for Provider type mapping
+        if csod_field == 'Provider type*':
+            provider_values = input_df['Provider'].fillna('') if 'Provider' in input_df.columns else pd.Series([''] * len(output_df))
+            output_df[csod_field] = provider_values.apply(lambda x: 'ILT' if 'ILT' in str(x) else 'ONLINE')
+
+        # Truncate fields that have a character length limit
+        if char_length and char_length.isdigit():
+            max_length = int(char_length)
+            too_long_mask = output_df[csod_field].astype(str).str.len() > max_length
+            if too_long_mask.any():
+                output_df.loc[too_long_mask, csod_field] = output_df.loc[too_long_mask, csod_field].str.slice(0, max_length)
+                logger.info(f"Truncated {too_long_mask.sum()} values in {csod_field} to {max_length} characters")
+
+    return output_df
 
 def process_directory(directory_path: str, output_dir: str, mapping_rules: dict) -> tuple:
     """Process all Excel files in a directory and its subdirectories"""
@@ -147,7 +204,8 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
             
             logger.info(f"\nProcessing file: {file}")
             try:
-                input_df = pd.read_excel(file_path)
+                # Read Excel with empty strings instead of NaN
+                input_df = pd.read_excel(file_path, keep_default_na=False, na_values=[''])
                 logger.info(f"File shape: {input_df.shape}")
                 logger.info("Columns:")
                 for col in input_df.columns:
@@ -164,10 +222,15 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
                     ]
                     logger.info(f"Created default 1:1 mapping for {file_key}")
                 
-                transformed_df = transform_sumtotal_file(input_df, file_key, mapping_rules)
+                # Pass the file_key as file_type
+                transformed_df = transform_sumtotal_file(input_df, mapping_rules[file_key], file_key)
                 
+                # Ensure empty strings instead of NaN in output
+                transformed_df = transformed_df.fillna("")
+                
+                # Write CSV without index and with empty strings for missing values
                 output_file_path = os.path.join(current_output_dir, f"{file_key}-CSOD.csv")
-                transformed_df.to_csv(output_file_path, index=False)
+                transformed_df.to_csv(output_file_path, index=False, na_rep="")
                 logger.info(f"Successfully transformed and saved: {output_file_path}")
                 processed += 1
                 
@@ -226,44 +289,108 @@ def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
     """Load and parse mapping rules from the Neo4j cypher file"""
     mapping_rules = {}
     current_file = None
+    current_st_field = None
+    current_csod_field = None
+    current_properties = {}  # Store all properties for current field
+    logger.setLevel(logging.DEBUG)  # Temporarily set to DEBUG for more verbose logging
+
+    # First pass - collect all fields and their properties
+    with open(filepath, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith('//') or not line:
+                continue
+                
+            if line.startswith('MERGE (f:File {name:'):
+                current_file = line.split('"')[1]
+                if current_file and current_file not in mapping_rules:
+                    mapping_rules[current_file] = []
+                    logger.debug(f"\n=== Processing file: {current_file} ===")
+                    
+            elif line.startswith('MERGE (csod:CSODField {name:'):
+                if current_file:
+                    current_csod_field = line.split('"')[1]
+                    current_properties = {
+                        "CSOD Field Name": current_csod_field,
+                        "SumTotal Field Name": "",
+                        "Default value": "",
+                        "transformation": ""
+                    }
+                    logger.debug(f"Found CSOD field: {current_csod_field}")
+                    
+            elif line.startswith('SET csod.'):
+                if current_file and current_csod_field:
+                    try:
+                        # Remove 'SET csod.' prefix and parse property
+                        prop_line = line[9:].strip()
+                        prop_name, prop_value = prop_line.split('=', 1)
+                        prop_name = prop_name.strip()
+                        prop_value = prop_value.strip().strip('"').strip("'").rstrip(',')
+                        
+                        # Store default_value and other properties
+                        if prop_name == 'default_value':
+                            current_properties["Default value"] = prop_value
+                            logger.debug(f"  Setting default value: {prop_value}")
+                        elif prop_name == 'transformation':
+                            current_properties["transformation"] = prop_value
+                        # Store all properties in case we need them
+                        current_properties[prop_name] = prop_value
+                        logger.debug(f"  Property {prop_name} = {prop_value}")
+                        
+                    except ValueError as e:
+                        logger.warning(f"Failed to parse property line: {line}")
+                        logger.warning(str(e))
+                    
+            elif line.startswith('MERGE (f)-[:OUTPUTS_FIELD]->(csod)'):
+                if current_file and current_csod_field and current_properties:
+                    mapping_rules[current_file].append(current_properties.copy())
+                    logger.debug(f"Added field config for {current_csod_field} to {current_file}:")
+                    logger.debug(f"  {current_properties}")
+                    current_csod_field = None
+                    current_properties = {}
+
+    # Second pass - update SumTotal field mappings
+    current_file = None
+    current_st_field = None
+    current_csod_field = None
     
     with open(filepath, 'r') as f:
         for line in f:
-            # Skip comments and empty lines
-            if line.strip().startswith('//') or not line.strip():
+            line = line.strip()
+            if line.startswith('//') or not line:
                 continue
                 
-            # Parse MERGE statements
-            if line.strip().startswith('MERGE (f:File {name:'):
-                # Extract file name
-                file_name = line.split('"')[1]
-                if file_name:  # Only set if file name is not empty
-                    current_file = file_name
-                    if current_file not in mapping_rules:
-                        mapping_rules[current_file] = []
-                        
-            elif line.strip().startswith('MERGE (st:SumTotalField {name:'):
-                if current_file:
-                    # Extract SumTotal field name
-                    st_field = line.split('"')[1]
+            if line.startswith('MERGE (f:File {name:'):
+                current_file = line.split('"')[1]
+                logger.debug(f"\n=== Processing SumTotal mappings for file: {current_file} ===")
                     
-                    # Look for corresponding CSOD field in next lines
-                    next_lines = []
-                    while 'MERGE (csod:CSODField' not in next_lines and len(next_lines) < 5:
-                        next_line = next(f, '').strip()
-                        next_lines.append(next_line)
-                        
-                    for nl in next_lines:
-                        if 'MERGE (csod:CSODField {name:' in nl:
-                            csod_field = nl.split('"')[1]
-                            # Add mapping rule
-                            mapping_rules[current_file].append({
-                                "CSOD Field Name": csod_field,
-                                "SumTotal Field Name": st_field,
-                                "Default value": ""
-                            })
+            elif line.startswith('MERGE (st:SumTotalField {name:'):
+                if current_file:
+                    current_st_field = line.split('"')[1]
+                    logger.debug(f"Found SumTotal field: {current_st_field}")
+                    
+            elif line.startswith('MERGE (csod:CSODField {name:'):
+                if current_file:
+                    current_csod_field = line.split('"')[1]
+                    logger.debug(f"Processing MAPS_TO for CSOD field: {current_csod_field}")
+                    
+            elif line.startswith('MERGE (st)-[:MAPS_TO]->(csod)'):
+                if current_file and current_st_field and current_csod_field:
+                    for rule in mapping_rules[current_file]:
+                        if rule["CSOD Field Name"] == current_csod_field:
+                            rule["SumTotal Field Name"] = current_st_field
+                            logger.debug(f"  Mapped {current_st_field} to {current_csod_field}")
                             break
-                            
+                    current_st_field = None
+                    current_csod_field = None
+
+    logger.debug("\n=== Final mapping rules ===")
+    for file_name, rules in mapping_rules.items():
+        logger.debug(f"\nFile: {file_name}")
+        for rule in rules:
+            logger.debug(f"  {rule}")
+            
+    logger.setLevel(logging.INFO)  # Reset to INFO level
     return mapping_rules
 
 if __name__ == "__main__":
