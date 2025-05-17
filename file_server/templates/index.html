@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Processing Server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>File Processing Server</h1>
+        
+        <div class="upload-section">
+            <div class="upload-box" id="drop-zone">
+                <input type="file" id="file-input" class="file-input" multiple />
+                <label for="file-input">
+                    <div class="upload-content">
+                        <img src="{{ url_for('static', filename='upload-icon.svg') }}" alt="Upload" class="upload-icon">
+                        <p>Drag & drop files here or click to browse</p>
+                        <p class="upload-hint">(You can select multiple files)</p>
+                    </div>
+                </label>
+            </div>
+            <div id="upload-queue"></div>
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </div>
+
+        <div class="files-section">
+            <h2>Processed Files</h2>
+            <div class="files-list" id="files-list">
+                <!-- Files will be listed here -->
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
