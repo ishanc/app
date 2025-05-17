@@ -127,5 +127,18 @@ def list_files():
     files = os.listdir(app.config['PROCESSED_FOLDER'])
     return jsonify({'files': files})
 
+@app.route('/delete/<filename>', methods=['DELETE'])
+def delete_file(filename):
+    """Delete a processed file"""
+    try:
+        file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return jsonify({'success': True, 'message': 'File deleted successfully'})
+        else:
+            return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -99,6 +99,77 @@ h1 {
     color: var(--text-color);
 }
 
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-name {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.download-button, .delete-btn {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.download-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.download-button:hover {
+    background-color: #357abd;
+}
+
+.delete-btn {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #bd2130;
+}
+
+.delete-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-align: center;
+    display: none;
+}
+
+.delete-message.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.delete-message.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
 .files-list {
     display: flex;
     flex-direction: column;
@@ -109,14 +180,12 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem;
-    background-color: var(--secondary-color);
-    border-radius: 4px;
-    transition: transform 0.2s ease;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.file-item:hover {
-    transform: translateX(4px);
+.file-item:last-child {
+    border-bottom: none;
 }
 
 .download-button {
@@ -172,4 +241,40 @@ h1 {
 
 .queue-item.error {
     background-color: #ffebee;
+}
+
+.delete-btn {
+    padding: 0.25rem 0.75rem;
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #bd2130;
+}
+
+.delete-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-align: center;
+    display: none;
+}
+
+.delete-message.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.delete-message.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
