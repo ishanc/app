@@ -24,9 +24,6 @@ app/logs
 *.swp
 *.swo
 
-# Environment variables
-.env
-
 # Operating System
 .DS_Store
 Thumbs.db
@@ -36,4 +33,3 @@ transformed/
 source/
 *.zip
 lasVegas/app/logs/
-.env

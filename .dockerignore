@@ -17,9 +17,7 @@ venv/
 Dockerfile
 .dockerignore
 
-# Environment variables
-.env
-.env.*
+# Note: .env file is intentionally NOT ignored as it's needed for AWS deployment
 
 # Temporary files
 file_server/uploads/*
