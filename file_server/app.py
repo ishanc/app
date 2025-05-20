@@ -5,6 +5,11 @@ from werkzeug.utils import secure_filename
 import time
 import pandas as pd
 from datetime import datetime
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Add the lasVegas app directory to Python path
 LASVEGA_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
@@ -13,15 +18,22 @@ sys.path.append(LASVEGA_APP_DIR)
 import sumtotal_transformer_with_neo4j as transformer
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['PROCESSED_FOLDER'] = 'processed'
+
+# Use absolute paths for all directories
+# In Docker, the working directory is now /app/file_server
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
+app.config['PROCESSED_FOLDER'] = os.path.join(BASE_DIR, 'processed')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 
 # Ensure upload and processed directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 
-ALLOWED_EXTENSIONS = {'xlsx'}
+logger.debug(f"Upload folder: {app.config['UPLOAD_FOLDER']}")
+logger.debug(f"Processed folder: {app.config['PROCESSED_FOLDER']}")
+
+ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -44,7 +56,13 @@ def process_file(filepath):
         file_category = None
         
         # Read the Excel file with empty strings instead of NaN
-        df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
+        file_extension = os.path.splitext(filepath)[1].lower()
+        if file_extension == '.xlsx':
+            df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
+        elif file_extension == '.csv':
+            df = pd.read_csv(filepath, keep_default_na=False, na_values=[''])
+        else:
+            raise ValueError(f"Unsupported file type: {file_extension}")
         
         # Determine file category
         if "Employee" in filename:
@@ -79,53 +97,93 @@ def process_file(filepath):
         
         # Save as CSV with empty strings for missing values
         processed_data.to_csv(processed_filepath, index=False, na_rep="")
+        logger.debug(f"Saved processed file to: {processed_filepath}")
         return processed_filename
         
     except Exception as e:
+        logger.error(f"Error in process_file: {str(e)}")
         raise Exception(f"Error processing file {filepath}: {str(e)}")
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
+    if 'files[]' not in request.files:
+        return jsonify({'error': 'No files part'}), 400
     
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+    files = request.files.getlist('files[]')
+    if not files or files[0].filename == '':
+        return jsonify({'error': 'No selected files'}), 400
     
-    if file and allowed_file(file.filename):
-        try:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            
-            # Process the file using the transformer
-            processed_filename = process_file(filepath)
-            
-            # Clean up the original file
-            os.remove(filepath)
-            
-            return jsonify({
-                'message': 'File successfully uploaded and processed',
-                'processed_file': processed_filename
-            })
-            
-        except Exception as e:
-            # Clean up any uploaded file in case of error
-            if os.path.exists(filepath):
+    processed_files = []
+    errors = []
+    
+    for file in files:
+        if file and allowed_file(file.filename):
+            try:
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                
+                logger.debug(f"Processing file: {filename}")
+                
+                # Process the file using the transformer
+                processed_filename = process_file(filepath)
+                processed_files.append(processed_filename)
+                
+                # Clean up the original file
                 os.remove(filepath)
-            return jsonify({'error': str(e)}), 500
+                
+            except Exception as e:
+                error_msg = f"Error processing {filename}: {str(e)}"
+                logger.error(error_msg)
+                errors.append(error_msg)
+                # Clean up any uploaded file in case of error
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+        else:
+            errors.append(f"File type not allowed: {file.filename}")
     
-    return jsonify({'error': 'File type not allowed'}), 400
+    if processed_files:
+        return jsonify({
+            'message': f'Successfully processed {len(processed_files)} files',
+            'processed_files': processed_files,
+            'errors': errors if errors else None
+        })
+    else:
+        return jsonify({
+            'error': 'No files were successfully processed',
+            'errors': errors
+        }), 500
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
+    try:
+        logger.debug(f"Attempting to download file: {filename}")
+        logger.debug(f"From directory: {app.config['PROCESSED_FOLDER']}")
+        
+        # Check if file exists
+        file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+        if not os.path.exists(file_path):
+            logger.error(f"File not found: {file_path}")
+            return jsonify({'error': 'File not found'}), 404
+            
+        return send_from_directory(
+            app.config['PROCESSED_FOLDER'],
+            filename,
+            as_attachment=True
+        )
+    except Exception as e:
+        logger.error(f"Error downloading file: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/files')
 def list_files():
-    files = os.listdir(app.config['PROCESSED_FOLDER'])
-    return jsonify({'files': files})
+    try:
+        files = os.listdir(app.config['PROCESSED_FOLDER'])
+        logger.debug(f"Files in processed folder: {files}")
+        return jsonify({'files': files})
+    except Exception as e:
+        logger.error(f"Error listing files: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/delete/<filename>', methods=['DELETE'])
 def delete_file(filename):

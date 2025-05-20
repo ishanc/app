@@ -186,19 +186,19 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
     total = 0
     
     for root, _, files in os.walk(directory_path):
-        excel_files = [f for f in files if f.lower().endswith(('.xlsx', '.xls'))]
-        if not excel_files:
+        input_files = [f for f in files if f.lower().endswith(('.xlsx', '.xls', '.csv'))]
+        if not input_files:
             continue
             
-        total += len(excel_files)
-        logger.info(f"Found {len(excel_files)} Excel files in {os.path.relpath(root, directory_path)}")
+        total += len(input_files)
+        logger.info(f"Found {len(input_files)} input files in {os.path.relpath(root, directory_path)}")
         
         # Create corresponding output directory structure
         rel_path = os.path.relpath(root, directory_path)
         current_output_dir = os.path.join(output_dir, rel_path)
         os.makedirs(current_output_dir, exist_ok=True)
         
-        for file in excel_files:
+        for file in input_files:
             file_path = os.path.join(root, file)
             file_key = os.path.splitext(file)[0]
             

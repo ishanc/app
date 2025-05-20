@@ -1,11 +1,14 @@
 services:
   file-server:
     build: .
+    image: file-server-app
+    container_name: app-file-server
     ports:
       - "8000:8000"
     volumes:
       - ./file_server/uploads:/app/file_server/uploads
       - ./file_server/processed:/app/file_server/processed
+      - ./file_server/downloads:/app/file_server/downloads
     environment:
       - FLASK_APP=file_server/app.py
       - FLASK_ENV=production

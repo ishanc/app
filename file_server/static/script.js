@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function uploadFile(file, queueItem) {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('files[]', file);
         
         updateQueueItem(queueItem, 'uploading', 'Uploading...');
 
@@ -154,6 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            if (data.errors && data.errors.length > 0) {
+                throw new Error(data.errors.join(', '));
+            }
             updateQueueItem(queueItem, 'completed', 'File processed successfully!');
             
             // Update the file list after a small delay to ensure the server has completed processing
