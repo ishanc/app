@@ -25,7 +25,7 @@ app/logs
 *.swo
 
 # Environment variables
-.env
+#.env
 
 # Operating System
 .DS_Store

@@ -1,0 +1,81 @@
+{
+    "family": "lasvegas-app",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskRole",
+    "containerDefinitions": [
+        {
+            "name": "lasvegas-app",
+            "image": "YOUR_ECR_REPO_URL/lasvegas-app:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 5000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "NEO4J_URI",
+                    "value": "PLACEHOLDER_VALUE"
+                },
+                {
+                    "name": "NEO4J_USER",
+                    "value": "PLACEHOLDER_VALUE"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "NEO4J_PASSWORD",
+                    "valueFrom": "arn:aws:ssm:YOUR_REGION:YOUR_ACCOUNT_ID:parameter/lasvegas/neo4j_password"
+                }
+            ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "processed-files",
+                    "containerPath": "/app/file_server/processed",
+                    "readOnly": false
+                },
+                {
+                    "sourceVolume": "upload-files",
+                    "containerPath": "/app/file_server/uploads",
+                    "readOnly": false
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/lasvegas-app",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "healthCheck": {
+                "command": ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 60
+            }
+        }
+    ],
+    "volumes": [
+        {
+            "name": "processed-files",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "YOUR_EFS_ID",
+                "rootDirectory": "/processed"
+            }
+        },
+        {
+            "name": "upload-files",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "YOUR_EFS_ID",
+                "rootDirectory": "/uploads"
+            }
+        }
+    ]
+}

@@ -6,15 +6,33 @@ import time
 import pandas as pd
 from datetime import datetime
 
-# Add the lasVegas app directory to Python path
-LASVEGA_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
-sys.path.append(LASVEGA_APP_DIR)
+# Add the parent directory to Python path to find the lasVegas package
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
 
-import sumtotal_transformer_with_neo4j as transformer
+# Import the transformer and required modules
+from lasVegas.app import sumtotal_transformer_with_neo4j as transformer
+from dotenv import load_dotenv
+from neo4j import GraphDatabase
+
+# Load environment variables
+load_dotenv()
+
+# Initialize Neo4j connection
+NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
+NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
+
+if not NEO4J_PASSWORD:
+    raise ValueError("NEO4J_PASSWORD environment variable is required")
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['PROCESSED_FOLDER'] = 'processed'
+driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+
+# Define base directories
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
+app.config['PROCESSED_FOLDER'] = os.path.join(BASE_DIR, 'processed')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 
 # Ensure upload and processed directories exist
@@ -30,62 +48,73 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
-def process_file(filepath):
+def process_file(filepath, original_filename):
     """Process a file using the SumTotal transformer"""
     try:
-        # Load Neo4j mapping rules using absolute path
-        mapping_file = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'neo4j_knowledge_graph_cypher.txt'))
-        if not os.path.exists(mapping_file):
-            raise ValueError(f"Mapping file not found at: {mapping_file}")
-        mapping_rules = transformer.load_mapping_rules_from_neo4j_file(mapping_file)
-        
-        # Determine the file category based on its location in the folder structure
-        filename = os.path.basename(filepath)
-        file_category = None
-        
         # Read the Excel file with empty strings instead of NaN
-        df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
+        try:
+            df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
+            app.logger.info(f"Successfully read Excel file with {len(df)} rows and {len(df.columns)} columns")
+        except Exception as e:
+            raise ValueError(f"Error reading Excel file {original_filename}: {str(e)}")
         
-        # Determine file category
-        if "Employee" in filename:
+        # Determine file category using original filename
+        if "Employee" in original_filename:
             file_category = "Core"
-        elif "Facility" in filename:
+        elif "Facility" in original_filename:
             file_category = "Prerequisites"
-        elif "Curriculum" in filename or "Course" in filename:
+        elif "Curriculum" in original_filename or "Course" in original_filename:
             file_category = "Activity"
-        elif "Transcript" in filename:
+        elif "Transcript" in original_filename:
             file_category = "Transcript"
             
         if not file_category:
-            raise ValueError(f"Could not determine category for file: {filename}")
+            app.logger.warning(f"Could not determine category for file: {original_filename}, defaulting to 'Activity'")
+            file_category = "Activity"
+
+        # Get the rules for this file type based on the original filename without extension
+        # Do not use secure_filename here - we want to preserve the original name for lookups
+        file_key = os.path.splitext(original_filename)[0]
+        app.logger.info(f"Looking up mapping rules for file key: {file_key}")
         
-        # Get the rules for this file type based on the filename without extension
-        file_key = os.path.splitext(filename)[0]
+        try:
+            mapping_rules = transformer.fetch_mapping_rules_from_neo4j(driver)
+        except Exception as e:
+            app.logger.error("Failed to fetch mapping rules from Neo4j")
+            raise ValueError(f"Database error: {str(e)}")
+
         if file_key not in mapping_rules:
-            # Create default 1:1 mapping if no rules exist
+            app.logger.info(f"No mappings found for {file_key}, creating default 1:1 mapping")
+            # Create default 1:1 mapping
             mapping_rules[file_key] = [
                 {"CSOD Field Name": col, "SumTotal Field Name": col}
                 for col in df.columns
             ]
         
         # Transform the file
-        processed_data = transformer.transform_sumtotal_file(df, mapping_rules[file_key], file_key)
+        try:
+            processed_data = transformer.transform_sumtotal_file(df, mapping_rules[file_key], file_key)
+            app.logger.info(f"Successfully transformed file data for {original_filename}")
+        except Exception as e:
+            raise ValueError(f"Error transforming file {original_filename}: {str(e)}")
         
         # Save the processed file
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        base_filename = os.path.splitext(filename)[0]  # Remove the original extension
-        processed_filename = f"processed_{timestamp}_{base_filename}.csv"  # Add .csv extension
-        processed_filepath = os.path.join(app.config['PROCESSED_FOLDER'], processed_filename)
+        base_filename = os.path.splitext(original_filename)[0]  # Remove the original extension
+        # Keep original filename in output but use underscore for timestamp
+        processed_filename = f"{base_filename}_processed_{timestamp}.csv"  # Add .csv extension
+        output_path = os.path.join(app.config['PROCESSED_FOLDER'], processed_filename)
+        processed_data.to_csv(output_path, index=False)
         
-        # Save as CSV with empty strings for missing values
-        processed_data.to_csv(processed_filepath, index=False, na_rep="")
         return processed_filename
         
     except Exception as e:
-        raise Exception(f"Error processing file {filepath}: {str(e)}")
+        app.logger.error(f"Error processing file {original_filename}: {str(e)}")
+        raise ValueError(f"Processing failed: {str(e)}")
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    """Upload and process a file."""
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     
@@ -95,12 +124,16 @@ def upload_file():
     
     if file and allowed_file(file.filename):
         try:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # Store the original filename before any modifications
+            original_filename = file.filename
+            
+            # Use secure_filename for storage
+            storage_filename = secure_filename(original_filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], storage_filename)
             file.save(filepath)
             
-            # Process the file using the transformer
-            processed_filename = process_file(filepath)
+            # Process the file using the original filename
+            processed_filename = process_file(filepath, original_filename)
             
             # Clean up the original file
             os.remove(filepath)
@@ -139,6 +172,12 @@ def delete_file(filename):
             return jsonify({'error': 'File not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.teardown_appcontext
+def close_neo4j_driver(error):
+    """Close the Neo4j driver when the app context is torn down."""
+    if hasattr(app, 'driver'):
+        driver.close()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
