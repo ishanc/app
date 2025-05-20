@@ -215,12 +215,12 @@ class CSodTransformer:
             file_type = self._infer_file_type(input_path)
             self.logger.info(f"Processing file: {input_path}")
             self.logger.info(f"Inferred file type: {file_type}")
-            
+
             if file_type not in self.field_mappings:
                 self.logger.error(f"No mappings found for file type: {file_type}")
                 self.logger.info(f"Available mappings are for: {list(self.field_mappings.keys())}")
                 return
-            
+
             # Read the input file
             try:
                 if input_path.endswith(('.xlsx', '.xls')):
@@ -232,37 +232,62 @@ class CSodTransformer:
             except Exception as e:
                 self.logger.error(f"Error reading input file {input_path}: {str(e)}")
                 return
-                
-            input_columns = df.columns.tolist()
-            self.logger.info(f"Input columns in order: {input_columns}")
-            
+
             # Get mappings and rules
             field_mappings = self.field_mappings[file_type]
             file_rules = self.field_rules[file_type]
-            
-            # Create an output DataFrame
+
+            # Create output DataFrame
             output_df = pd.DataFrame(index=range(len(df)))
-            
-            # Process mapped fields in exact input sequence
+
+            # Track processed fields and maintain column order
             processed_fields = set()
             ordered_fields = []
             
-            # Step 1: Process input columns in exact sequence they appear
+            # Process fields in proper sequence
+            input_columns = df.columns.tolist()
+            self.logger.info(f"Input columns in order: {input_columns}")
+
+            # First, process User ID* if it exists in mappings or rules
+            user_id_field = "User ID*"
+            user_id_input_col = next((col for col in input_columns if col in field_mappings and field_mappings[col] == user_id_field), None)
+            
+            if user_id_field in file_rules:
+                # Add User ID* first if it exists in mappings
+                ordered_fields.append(user_id_field)
+                processed_fields.add(user_id_field)
+                
+                if user_id_input_col:
+                    # Map from input column if it exists
+                    self.logger.info(f"Processing User ID* from input column: {user_id_input_col}")
+                    rules = file_rules[user_id_field]
+                    output_df[user_id_field] = [
+                        self._validate_and_transform_value(
+                            value, rules, user_id_field, input_path, idx
+                        )
+                        for idx, value in enumerate(df[user_id_input_col])
+                    ]
+                else:
+                    # Use default value if no input column exists
+                    rules = file_rules[user_id_field]
+                    output_df[user_id_field] = [rules.get("default_value", "")] * len(df)
+                    self.logger.info("Added User ID* with default value")
+
+            # Step 1: Process remaining input columns in exact sequence they appear
             for input_col in input_columns:
                 if input_col in field_mappings:
                     csod_field = field_mappings[input_col]
+                    # Skip if already processed (User ID*)
+                    if csod_field in processed_fields:
+                        continue
+                        
                     rules = file_rules[csod_field]
-                    
                     self.logger.info(f"Processing mapped field: {input_col} -> {csod_field}")
-                    
-                    # Initialize field with empty strings
-                    output_df[csod_field] = ''
-                    
+
                     # Add to ordered fields and mark as processed
-                    if csod_field not in processed_fields:
-                        ordered_fields.append(csod_field)
-                        processed_fields.add(csod_field)
-                    
+                    ordered_fields.append(csod_field)
+                    processed_fields.add(csod_field)
+
                     # Transform and validate the data
                     output_df[csod_field] = [
                         self._validate_and_transform_value(
@@ -270,47 +295,47 @@ class CSodTransformer:
                         )
                         for idx, value in enumerate(df[input_col])
                     ]
-            
+
             # Step 2: Add mandatory fields not in input
-            mandatory_fields = [
+            mandatory_fields = sorted([
                 field for field in file_rules
                 if field not in processed_fields and file_rules[field].get("mandatory", False)
-            ]
-            
+            ])
+
             for csod_field in mandatory_fields:
                 rules = file_rules[csod_field]
                 ordered_fields.append(csod_field)
                 processed_fields.add(csod_field)
                 output_df[csod_field] = [rules.get("default_value", "")] * len(df)
                 self.logger.info(f"Added mandatory field: {csod_field}")
-            
-            # Step 3: Add optional fields
-            optional_fields = [
+
+            # Step 3: Add optional fields not yet processed
+            optional_fields = sorted([
                 field for field in file_rules
                 if field not in processed_fields and not file_rules[field].get("mandatory", False)
-            ]
-            
+            ])
+
             for csod_field in optional_fields:
                 rules = file_rules[csod_field]
                 ordered_fields.append(csod_field)
                 output_df[csod_field] = [rules.get("default_value", "")] * len(df)
                 self.logger.info(f"Added optional field: {csod_field}")
-            
+
             # Reorder columns to match ordered_fields
             result_df = output_df[ordered_fields]
-            
+
             # Log final column sequence
             self.logger.info("Final column sequence:")
             for idx, col in enumerate(ordered_fields):
                 self.logger.info(f"{idx + 1}. {col}")
-            
+
             # Ensure output directory exists
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            
+
             # Save the transformed file as CSV
             result_df.to_csv(output_path, index=False)
             self.logger.info(f"Successfully saved transformed file to {output_path}")
-            
+
         except Exception as e:
             self.logger.error(f"Error transforming file {input_path}: {str(e)}")
             raise
