@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, send_from_directory, jsonify
+from flask import Flask, render_template, request, send_from_directory, jsonify, send_file
 import os
 import sys
 from werkzeug.utils import secure_filename
 import time
 import pandas as pd
 from datetime import datetime
+import zipfile
+import io
 
 # Add the parent directory to Python path to find the lasVegas package
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -78,22 +80,22 @@ def process_file(filepath, original_filename):
         app.logger.info(f"Looking up mapping rules for file key: {file_key}")
         
         try:
-            mapping_rules = transformer.fetch_mapping_rules_from_neo4j(driver)
+            app.logger.info(f"Fetching mapping rules from Neo4j for file: {file_key}")
+            file_rules = transformer.fetch_mapping_rules_from_neo4j(driver, file_key)
+            if not file_rules:
+                app.logger.info(f"No mappings found for {file_key}, creating default 1:1 mapping")
+                # Create default 1:1 mapping
+                file_rules = [
+                    {"CSOD Field Name": col, "SumTotal Field Name": col}
+                    for col in df.columns
+                ]
         except Exception as e:
             app.logger.error("Failed to fetch mapping rules from Neo4j")
             raise ValueError(f"Database error: {str(e)}")
 
-        if file_key not in mapping_rules:
-            app.logger.info(f"No mappings found for {file_key}, creating default 1:1 mapping")
-            # Create default 1:1 mapping
-            mapping_rules[file_key] = [
-                {"CSOD Field Name": col, "SumTotal Field Name": col}
-                for col in df.columns
-            ]
-        
         # Transform the file
         try:
-            processed_data = transformer.transform_sumtotal_file(df, mapping_rules[file_key], file_key)
+            processed_data = transformer.transform_sumtotal_file(df, file_rules, file_key)
             app.logger.info(f"Successfully transformed file data for {original_filename}")
         except Exception as e:
             raise ValueError(f"Error transforming file {original_filename}: {str(e)}")
@@ -170,6 +172,46 @@ def delete_file(filename):
             return jsonify({'success': True, 'message': 'File deleted successfully'})
         else:
             return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/delete-all', methods=['DELETE'])
+def delete_all_files():
+    """Delete all processed files"""
+    try:
+        files = os.listdir(app.config['PROCESSED_FOLDER'])
+        for filename in files:
+            file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        return jsonify({'success': True, 'message': 'All files deleted successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/download-all')
+def download_all_files():
+    """Download all processed files as a ZIP archive"""
+    try:
+        files = os.listdir(app.config['PROCESSED_FOLDER'])
+        if not files:
+            return jsonify({'error': 'No files to download'}), 404
+
+        # Create a ZIP file in memory
+        memory_file = io.BytesIO()
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for filename in files:
+                file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+                if os.path.isfile(file_path):
+                    zipf.write(file_path, filename)
+        
+        memory_file.seek(0)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        return send_file(
+            memory_file,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name=f'processed_files_{timestamp}.zip'
+        )
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

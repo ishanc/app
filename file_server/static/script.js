@@ -1,3 +1,78 @@
+// Handle Delete All functionality
+function deleteAllFiles() {
+    if (!confirm('Are you sure you want to delete all files? This action cannot be undone.')) {
+        return;
+    }
+
+    fetch('/delete-all', {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Clear the files list immediately
+            const filesList = document.getElementById('files-list');
+            if (filesList) {
+                filesList.innerHTML = '';
+            }
+
+            const messageEl = document.getElementById('delete-message');
+            messageEl.textContent = 'All files deleted successfully';
+            messageEl.classList.add('success');
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.classList.remove('success');
+            }, 3000);
+            
+            // Reload the file list to ensure sync with server
+            loadFiles();
+        }
+    })
+    .catch(error => {
+        const messageEl = document.getElementById('delete-message');
+        messageEl.textContent = `Error: ${error.message || 'Failed to delete files'}`;
+        messageEl.classList.add('error');
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('error');
+        }, 3000);
+    });
+}
+
+// Handle Download All functionality
+function downloadAllFiles() {
+    fetch('/files')
+        .then(response => response.json())
+        .then(data => {
+            if (data.files && data.files.length > 0) {
+                // Trigger the download
+                window.location.href = '/download-all';
+            } else {
+                const messageEl = document.getElementById('delete-message');
+                messageEl.textContent = 'No files available to download';
+                messageEl.classList.add('error');
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('error');
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            const messageEl = document.getElementById('delete-message');
+            messageEl.textContent = `Error: ${error.message || 'Failed to check files'}`;
+            messageEl.classList.add('error');
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.classList.remove('error');
+            }, 3000);
+        });
+}
+
 // Make deleteFile function globally accessible
 window.deleteFile = function(filename) {
     if (!confirm(`Are you sure you want to delete ${filename}?`)) {
@@ -54,6 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     const progress = document.getElementById('progress');
     const filesList = document.getElementById('files-list');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+    // Add event listeners for bulk action buttons
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', deleteAllFiles);
+    }
+    if (downloadAllBtn) {
+        downloadAllBtn.addEventListener('click', downloadAllFiles);
+    }
 
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -228,4 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Add event listeners when document is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listeners for bulk action buttons
+        document.getElementById('deleteAllBtn').addEventListener('click', deleteAllFiles);
+        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllFiles);
+    });
 });
