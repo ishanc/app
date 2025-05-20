@@ -36,3 +36,7 @@ transformed/
 source/
 *.zip
 lasVegas/app/logs/
+SumTotal_CSOD_Mapping_Files/
+lasVegas/Activity/
+lasVegas/Core/
+lasVegas/Prerequisites/

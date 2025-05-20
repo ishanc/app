@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 # Neo4j connection settings (using environment variables)
 NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
 NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
-NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'password')
+NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
+
+if not NEO4J_PASSWORD:
+    raise ValueError("NEO4J_PASSWORD environment variable is required")
 
 def get_neo4j_rules(file_name: str) -> List[Dict]:
     """Fetch mapping rules directly from Neo4j for a specific file"""
