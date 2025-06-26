@@ -16,7 +16,6 @@ LASVEGA_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 
 sys.path.append(LASVEGA_APP_DIR)
 
 import sumtotal_transformer_with_neo4j as transformer
-from data_validation import DataValidator
 
 app = Flask(__name__)
 
@@ -70,18 +69,18 @@ def map_filename_to_database_key(filename):
         "Transcript_QuickAssessment": "Transcript_Tests",
         
         # Core mappings
-        "Core_Audience": "Core_Audience",
-        "Core_Domain": "Core_Domain",
+        "Core_Audience": "Core_GroupsOU",
+        "Core_Domain": "Core_DivisionOU",
         "Core_Employee": "Core_Employee", 
-        "Core_Jobs": "Core_Jobs",
-        "Core_Organization": "Core_Organization",
+        "Core_Jobs": "Core_PositionOU",
+        "Core_Organization": "Core_CostCenterOU",
         
         # Prerequisites mappings
         "Prerequisites_Facility": "Prerequisites_Facility",
         "Prerequisites_Instructor": "Prerequisites_Instructor",
         "Prerequisites_Provider": "Prerequisites_Provider",
-        "Prerequisites_Question": "Prerequisites_Question",
-        "Prerequisites_QuestionBanks": "Prerequisites_QuestionBanks",
+        "Prerequisites_Question": "Prerequisites_Questions",
+        "Prerequisites_QuestionBanks": "Prerequisites_QuestionCategories",
         "Prerequisites_Subject": "Prerequisites_Subject"
     }
     
@@ -91,11 +90,8 @@ def map_filename_to_database_key(filename):
     return mapped_key
 
 def process_file(filepath):
-    """Process a file using the SumTotal transformer with validation"""
+    """Process a file using the SumTotal transformer"""
     try:
-        # Initialize validator
-        validator = DataValidator(log_level=logging.INFO)
-        
         # Fetch mapping rules directly from Neo4j database
         filename = os.path.basename(filepath)
         file_key = map_filename_to_database_key(filename)
@@ -109,22 +105,6 @@ def process_file(filepath):
             logger.error(error_msg)
             raise ValueError(error_msg)
         
-        # Step 1: Validate input file
-        logger.info("Step 1: Validating input file...")
-        is_valid_file, file_errors = validator.validate_input_file(filepath)
-        if not is_valid_file:
-            error_msg = f"Input file validation failed: {'; '.join(file_errors)}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
-        
-        # Step 2: Validate mapping rules
-        logger.info("Step 2: Validating mapping rules...")
-        is_valid_rules, rule_errors = validator.validate_mapping_rules(mapping_rules, file_key)
-        if not is_valid_rules:
-            error_msg = f"Mapping rules validation failed: {'; '.join(rule_errors)}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
-        
         # Read the Excel file with empty strings instead of NaN
         file_extension = os.path.splitext(filepath)[1].lower()
         if file_extension == '.xlsx':
@@ -133,13 +113,6 @@ def process_file(filepath):
             df = pd.read_csv(filepath, keep_default_na=False, na_values=[''], encoding='utf-8')
         else:
             raise ValueError(f"Unsupported file type: {file_extension}")
-        
-        # Step 3: Validate data values against mapping rules
-        logger.info("Step 3: Validating data values...")
-        is_valid_data, data_errors = validator.validate_data_values(df, mapping_rules, file_key)
-        if not is_valid_data:
-            logger.warning(f"Data validation found issues: {'; '.join(data_errors)}")
-            # Continue processing but log warnings
         
         # Determine file category
         if "Core" in filename:
@@ -163,20 +136,6 @@ def process_file(filepath):
         # Convert back to DataFrame
         processed_data = pd.DataFrame(transformed_data)
         
-        # Step 4: Validate output data
-        logger.info("Step 4: Validating output data...")
-        is_valid_output, output_errors = validator.validate_output_data(processed_data, mapping_rules, file_key)
-        if not is_valid_output:
-            logger.warning(f"Output validation found issues: {'; '.join(output_errors)}")
-            # Continue processing but log warnings
-        
-        # Generate validation report
-        validation_report = validator.generate_validation_report(file_key)
-        logger.info(f"Validation Summary: {validation_report['summary']['total_errors']} errors, {validation_report['summary']['total_warnings']} warnings")
-        
-        # Log validation summary
-        validator.log_validation_summary()
-        
         # Save the processed file
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         processed_filename = f"processed_{timestamp}_{file_key}.csv"  # Use CSOD file type name
@@ -185,12 +144,7 @@ def process_file(filepath):
         # Save as CSV with empty strings for missing values and prevent float conversion
         processed_data.to_csv(processed_filepath, index=False, na_rep="", encoding='utf-8-sig', float_format='%.0f')
         logger.info(f"Saved processed file: {processed_filename}")
-        
-        # Return filename with validation status
-        return {
-            'filename': processed_filename,
-            'validation_report': validation_report
-        }
+        return processed_filename
         
     except Exception as e:
         logger.error(f"Error in process_file: {str(e)}")
@@ -215,9 +169,7 @@ def upload_file():
             
             # Process the file using the transformer
             try:
-                result = process_file(filepath)
-                processed_filename = result['filename']
-                validation_report = result['validation_report']
+                processed_filename = process_file(filepath)
             except Exception as process_error:
                 logger.error(f"Error in process_file: {str(process_error)}")
                 # Clean up the uploaded file
@@ -231,20 +183,10 @@ def upload_file():
             except Exception as cleanup_error:
                 logger.warning(f"Could not clean up original file: {cleanup_error}")
             
-            # Prepare response with validation information
-            response_data = {
+            return jsonify({
                 'message': 'File successfully processed',
-                'processed_file': processed_filename,
-                'validation': {
-                    'is_valid': validation_report['summary']['is_valid'],
-                    'total_errors': validation_report['summary']['total_errors'],
-                    'total_warnings': validation_report['summary']['total_warnings'],
-                    'errors': validation_report['errors'],
-                    'warnings': validation_report['warnings']
-                }
-            }
-            
-            return jsonify(response_data)
+                'processed_file': processed_filename
+            })
             
         except Exception as e:
             error_msg = f"Error processing {filename}: {str(e)}"
