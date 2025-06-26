@@ -295,7 +295,78 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            updateQueueItem(queueItem, 'completed', 'File processed successfully!');
+            // Check validation results
+            if (data.validation) {
+                const validation = data.validation;
+                let statusMessage = 'File processed successfully!';
+                let isError = false;
+                
+                if (validation.total_errors > 0) {
+                    statusMessage = `Processed with ${validation.total_errors} validation errors`;
+                    isError = true;
+                } else if (validation.total_warnings > 0) {
+                    statusMessage = `Processed with ${validation.total_warnings} warnings`;
+                }
+                
+                updateQueueItem(queueItem, 'completed', statusMessage, isError);
+                
+                // Add validation details to queue item
+                if (validation.total_errors > 0 || validation.total_warnings > 0) {
+                    const validationDetails = document.createElement('div');
+                    validationDetails.className = 'validation-details';
+                    validationDetails.style.marginTop = '10px';
+                    validationDetails.style.fontSize = '12px';
+                    
+                    if (validation.total_errors > 0) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.style.color = '#d32f2f';
+                        errorDiv.innerHTML = `<strong>Errors (${validation.total_errors}):</strong>`;
+                        validationDetails.appendChild(errorDiv);
+                        
+                        validation.errors.slice(0, 3).forEach(error => {
+                            const errorItem = document.createElement('div');
+                            errorItem.style.marginLeft = '10px';
+                            errorItem.textContent = `• ${error}`;
+                            validationDetails.appendChild(errorItem);
+                        });
+                        
+                        if (validation.errors.length > 3) {
+                            const moreErrors = document.createElement('div');
+                            moreErrors.style.marginLeft = '10px';
+                            moreErrors.style.fontStyle = 'italic';
+                            moreErrors.textContent = `... and ${validation.errors.length - 3} more errors`;
+                            validationDetails.appendChild(moreErrors);
+                        }
+                    }
+                    
+                    if (validation.total_warnings > 0) {
+                        const warningDiv = document.createElement('div');
+                        warningDiv.style.color = '#f57c00';
+                        warningDiv.style.marginTop = '5px';
+                        warningDiv.innerHTML = `<strong>Warnings (${validation.total_warnings}):</strong>`;
+                        validationDetails.appendChild(warningDiv);
+                        
+                        validation.warnings.slice(0, 2).forEach(warning => {
+                            const warningItem = document.createElement('div');
+                            warningItem.style.marginLeft = '10px';
+                            warningItem.textContent = `• ${warning}`;
+                            validationDetails.appendChild(warningItem);
+                        });
+                        
+                        if (validation.warnings.length > 2) {
+                            const moreWarnings = document.createElement('div');
+                            moreWarnings.style.marginLeft = '10px';
+                            moreWarnings.style.fontStyle = 'italic';
+                            moreWarnings.textContent = `... and ${validation.warnings.length - 2} more warnings`;
+                            validationDetails.appendChild(moreWarnings);
+                        }
+                    }
+                    
+                    queueItem.appendChild(validationDetails);
+                }
+            } else {
+                updateQueueItem(queueItem, 'completed', 'File processed successfully!');
+            }
             
             // Update the file list after a small delay to ensure the server has completed processing
             setTimeout(() => loadFiles(), 500);
@@ -303,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Remove the queue item after showing success for a moment
             setTimeout(() => {
                 queueItem.remove();
-            }, 3000);
+            }, 8000); // Increased timeout to allow reading validation details
         })
         .catch(error => {
             console.error('Error:', error);

@@ -281,7 +281,49 @@ h1 {
 
 .powered-by {
     text-align: center;
-    margin-bottom: 2rem;
     color: #666;
-    font-size: 0.9em;
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+/* Validation styles */
+.validation-details {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #dee2e6;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.validation-details div {
+    margin-bottom: 4px;
+}
+
+.validation-details div:last-child {
+    margin-bottom: 0;
+}
+
+.validation-details strong {
+    font-weight: 600;
+}
+
+.queue-item.error .validation-details {
+    border-left-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.queue-item.completed .validation-details {
+    border-left-color: #28a745;
+    background-color: #d4edda;
+}
+
+/* Error and warning colors */
+.validation-error {
+    color: #d32f2f;
+}
+
+.validation-warning {
+    color: #f57c00;
 }
