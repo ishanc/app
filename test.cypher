@@ -1734,7 +1734,7 @@ MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "PersonNumber", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "User ID*", file: "Core_Employee"})
-SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -1755,7 +1755,7 @@ MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "FirstName", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "First Name*", file: "Core_Employee"})
-SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -1771,7 +1771,7 @@ MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "LastName", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Last Name*", file: "Core_Employee"})
-SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -1787,7 +1787,7 @@ MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "UserName", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Username", file: "Core_Employee"})
-SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "128", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -1824,7 +1824,7 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "Required Training Approvals", file: "Core_Employee"})
-SET csod.mandatory = "Mandatory", csod.field_type = "int", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "int", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
@@ -1857,7 +1857,7 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 
 MERGE ( f:File {name: "Core_Employee"})
-MERGE (csod:CSODField {name: "Currency Code", file: "Core_Employee"})
+MERGE (csod:CSODField {name: "Compensation Currency", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type= "Char", csod.char_length = "3", csod.default_values = "", csod.accepted_values = "USD, ", csod.transformation = "CASE WHEN input_value = 'USD' THEN 1 WHEN input_value = 'United States Dollar' THEN 1 WHEN input_value = 'GBP' THEN 2 WHEN input_value = 'United Kingdoms Pound' THEN 2 WHEN input_value = 'Euro' THEN 3 WHEN input_value = 'EUR' THEN 3 WHEN input_value = 'Mexico Peso' THEN 17 WHEN input_value = 'MXN' THEN 17 WHEN input_value = 'TND' THEN 78 WHEN input_value = 'Tunisian Dinar' THEN 78 ELSE 1 END"
 MERGE (f) -[:OUTPUTS_FIELD] ->(csod);
 
@@ -1906,14 +1906,7 @@ MERGE (csod:CSODField {name: "Mailstop", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "20", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
-// Create Core_Employee file structure
-MERGE (f:File {name: "Core_Employee"});
-MERGE (st:SumTotalField {name: "Country", file: "Core_Employee"});
-MERGE (csod:CSODField {name: "Country", file: "Core_Employee"});
-MERGE (f)-[:HAS_FIELD]->(st);
-MERGE (f)-[:HAS_FIELD]->(csod);
-
-MERGE (f:File {name: "Activity_Events"})
+MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "Country", file: "Core_Employee"})
 MERGE (f) -[:HAS_FIELD] -> (st)
 MERGE (csod:CSODField {name: "Country", file: "Core_Employee"})
@@ -1992,64 +1985,31 @@ MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 
-// Create Core_Employee file structure
-MERGE (f:File {name: "Core_Employee"});
-MERGE (st:SumTotalField {name: "Language", file: "Core_Employee"});
-MERGE (csod:CSODField {name: "Language", file: "Core_Employee"});
-MERGE (f)-[:HAS_FIELD]->(st);
-MERGE (f)-[:HAS_FIELD]->(csod);
-
-/* Load SumTotal Languages */
-LOAD CSV WITH HEADERS FROM 'file:///Core_Employee.csv' AS row
-MERGE (st:SumTotalLanguage {name: row.Language})
-WITH st, row; // Carry forward row for matching
-
-// Load CSOD Languages and store Language Code
-LOAD CSV WITH HEADERS FROM 'file:///CSODLanguages.csv' AS row
-MERGE (csod:CSODLanguage {name: row.`Language Code`}) // Use Language Code for identification
-SET csod.languageCode = row.`Language Code` // Store language code
-WITH csod, row
-
-// Match Languages from SumTotal and assign default values
-MATCH (st:SumTotalLanguage {name: row.Language}) // Lookup language match
-MERGE (st)-[:MATCHES]->(csod)
-SET csod.default_value = COALESCE(csod.languageCode, "en-US"), // Assign matched Language Code or default to en-US
-    csod.mandatory = "Optional",  
-    csod.field_type = "Char",  
-    csod.char_length = "",  
-    csod.accepted_values = "";
-
-MERGE (st)-[:MAPS_TO]->(csod);
+MERGE (f:File {name: "Core_Employee"})
+MERGE (st:SumTotalField {name: "Language", file: "Core_Employee"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Default Language", file: "Core_Employee"})
+SET csod.mandatory = "Optional", 
+    csod.field_type = "Integer",
+    csod.char_length = "",
+    csod.default_values = "1",
+    csod.accepted_values = "",
+    csod.transformation = "CASE WHEN input_value = 'en-US' THEN 1 WHEN Language = 'English (US)' THEN 1 WHEN Language = 'en-GB' THEN 2 WHEN Language = 'English (UK)' THEN 2 WHEN Language = 'fr-FR' THEN 13 WHEN Language = 'French (France)' THEN 13 WHEN Language = 'es-MX' THEN 14 WHEN Language = 'Spanish (Latin America)' THEN 14 ELSE 1 END"
+MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
-// Create Core_Employee file structure
-MERGE (f:File {name: "Core_Employee"});
-MERGE (st:SumTotalField {name: "TimeZone", file: "Core_Employee"});
-MERGE (csod:CSODField {name: "Time Zone", file: "Core_Employee"});
-MERGE (f)-[:HAS_FIELD]->(st);
-MERGE (f)-[:HAS_FIELD]->(csod);
 
-/* Load SumTotal TimeZones */
-LOAD CSV WITH HEADERS FROM 'file:///Core_Employee.csv' AS row
-MERGE (st:SumTotalTimeZone {name: row.TimeZone})
-WITH st, row; // Carry forward row for matching
-
-// Load CSOD TimeZones and store Time Zone ID
-LOAD CSV WITH HEADERS FROM 'file:///CSODTimezones.csv' AS row
-MERGE (csod:CSODTimeZone {name: row.`Time Zone Description`}) // Use Time Zone Description for identification
-SET csod.timeZoneId = row.`Acceptable Values For:Time Zone ID` // Store time zone ID
-WITH csod, row
-
-// Match TimeZones from SumTotal and assign default values
-MATCH (st:SumTotalTimeZone {name: row.TimeZone}) // Lookup time zone match
-MERGE (st)-[:MATCHES]->(csod)
-SET csod.default_value = COALESCE(csod.timeZoneId, "9"), // Assign matched Time Zone ID or default to "9"
-    csod.mandatory = "Optional",  
-    csod.field_type = "Char",  
-    csod.char_length = "",  
-    csod.accepted_values = "";
-
-MERGE (st)-[:MAPS_TO]->(csod);
+MERGE (f:File {name: "Core_Employee"})
+MERGE (st:SumTotalField {name: "Time Zone", file: "Core_Employee"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Time Zone ID*", file: "Core_Employee"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Integer",
+    csod.char_length = "",
+    csod.default_value = "9",
+    csod.accepted_values = "",
+    csod.transformation = "CASE WHEN input_value = 'America/New_York' THEN 14 WHEN input_value = 'America/Chicago' THEN 9 WHEN input_value = 'America/Los_Angeles' THEN 5 WHEN input_value = 'America/Denver' THEN 8 WHEN input_value = 'America/Phoenix' THEN 8 WHEN input_value = 'America/Anchorage' THEN 4 WHEN input_value = 'America/Juneau' THEN 4 WHEN input_value = 'Pacific/Honolulu' THEN 3 WHEN input_value = 'America/Honolulu' THEN 3 WHEN input_value = 'America/Toronto' THEN 14 WHEN input_value = 'America/Montreal' THEN 14 WHEN input_value = 'America/Vancouver' THEN 5 WHEN input_value = 'America/Seattle' THEN 5 WHEN input_value = 'America/Calgary' THEN 8 WHEN input_value = 'America/Edmonton' THEN 8 WHEN input_value = 'America/Winnipeg' THEN 9 WHEN input_value = 'America/Regina' THEN 9 WHEN input_value = 'America/Saskatoon' THEN 9 WHEN input_value = 'America/Halifax' THEN 16 WHEN input_value = 'America/Moncton' THEN 16 WHEN input_value = 'America/St_Johns' THEN 74 WHEN input_value = 'Europe/London' THEN 26 WHEN input_value = 'Europe/Dublin' THEN 26 WHEN input_value = 'Europe/Lisbon' THEN 26 WHEN input_value = 'Europe/Amsterdam' THEN 28 WHEN input_value = 'Europe/Berlin' THEN 28 WHEN input_value = 'Europe/Rome' THEN 28 WHEN input_value = 'Europe/Vienna' THEN 28 WHEN input_value = 'Europe/Stockholm' THEN 28 WHEN input_value = 'Europe/Belgrade' THEN 29 WHEN input_value = 'Europe/Bratislava' THEN 29 WHEN input_value = 'Europe/Budapest' THEN 29 WHEN input_value = 'Europe/Ljubljana' THEN 29 WHEN input_value = 'Europe/Prague' THEN 29 WHEN input_value = 'Europe/Brussels' THEN 30 WHEN input_value = 'Europe/Copenhagen' THEN 30 WHEN input_value = 'Europe/Madrid' THEN 30 WHEN input_value = 'Europe/Paris' THEN 30 WHEN input_value = 'Europe/Sarajevo' THEN 31 WHEN input_value = 'Europe/Skopje' THEN 31 WHEN input_value = 'Europe/Warsaw' THEN 31 WHEN input_value = 'Europe/Zagreb' THEN 31 WHEN input_value = 'Europe/Athens' THEN 33 WHEN input_value = 'Europe/Bucharest' THEN 33 WHEN input_value = 'Europe/Helsinki' THEN 34 WHEN input_value = 'Europe/Kiev' THEN 34 WHEN input_value = 'Europe/Riga' THEN 34 WHEN input_value = 'Asia/Jerusalem' THEN 35 WHEN input_value = 'Asia/Baghdad' THEN 36 WHEN input_value = 'Asia/Kuwait' THEN 37 WHEN input_value = 'Asia/Riyadh' THEN 37 WHEN input_value = 'Asia/Tehran' THEN 38 WHEN input_value = 'Asia/Muscat' THEN 39 WHEN input_value = 'Asia/Baku' THEN 40 WHEN input_value = 'Asia/Tbilisi' THEN 41 WHEN input_value = 'Asia/Yerevan' THEN 42 WHEN input_value = 'Asia/Kabul' THEN 43 WHEN input_value = 'Asia/Yekaterinburg' THEN 47 WHEN input_value = 'Asia/Tashkent' THEN 48 WHEN input_value = 'Asia/Kolkata' THEN 49 WHEN input_value = 'Asia/Kathmandu' THEN 50 WHEN input_value = 'Asia/Novosibirsk' THEN 51 WHEN input_value = 'Asia/Almaty' THEN 52 WHEN input_value = 'Asia/Dhaka' THEN 53 WHEN input_value = 'Asia/Rangoon' THEN 54 WHEN input_value = 'Asia/Bangkok' THEN 55 WHEN input_value = 'Asia/Krasnoyarsk' THEN 56 WHEN input_value = 'Asia/Shanghai' THEN 57 WHEN input_value = 'Asia/Irkutsk' THEN 58 WHEN input_value = 'Asia/Kuala_Lumpur' THEN 59 WHEN input_value = 'Asia/Perth' THEN 60 WHEN input_value = 'Asia/Tokyo' THEN 62 WHEN input_value = 'Asia/Seoul' THEN 63 WHEN input_value = 'Asia/Yakutsk' THEN 64 WHEN input_value = 'Asia/Adelaide' THEN 65 WHEN input_value = 'Australia/Darwin' THEN 66 WHEN input_value = 'Australia/Brisbane' THEN 67 WHEN input_value = 'Australia/Sydney' THEN 68 WHEN input_value = 'Australia/Melbourne' THEN 68 WHEN input_value = 'Australia/Hobart' THEN 68 WHEN input_value = 'Pacific/Guam' THEN 69 WHEN input_value = 'Australia/Adelaide' THEN 70 WHEN input_value = 'Australia/Perth' THEN 71 WHEN input_value = 'Pacific/Auckland' THEN 73 WHEN input_value = 'Pacific/Fiji' THEN 74 WHEN input_value = 'Pacific/Midway' THEN 76 WHEN input_value = 'Pacific/Samoa' THEN 77 WHEN input_value = 'Pacific/Guadalcanal' THEN 78 WHEN input_value = 'Pacific/Port_Moresby' THEN 79 WHEN input_value = 'Pacific/Noumea' THEN 80 WHEN input_value = 'Pacific/Kiritimati' THEN 81 WHEN input_value = 'Pacific/Kwajalein' THEN 82 WHEN input_value = 'Pacific/Apia' THEN 83 WHEN input_value = 'Pacific/Chatham' THEN 84 WHEN input_value = 'Pacific/Easter' THEN 85 WHEN input_value = 'Pacific/Galapagos' THEN 86 WHEN input_value = 'Pacific/Marquesas' THEN 87 WHEN input_value = 'Pacific/Gambier' THEN 88 WHEN input_value = 'Pacific/Pitcairn' THEN 89 WHEN input_value = 'Pacific/Niue' THEN 90 WHEN input_value = 'Pacific/Pago_Pago' THEN 91 WHEN input_value = 'Pacific/Rarotonga' THEN 92 WHEN input_value = 'Pacific/Tahiti' THEN 93 WHEN input_value = 'Pacific/Tarawa' THEN 94 WHEN input_value = 'Pacific/Wake' THEN 95 WHEN input_value = 'Pacific/Wallis' THEN 96 WHEN input_value = 'Pacific/Tongatapu' THEN 97 WHEN input_value = 'Pacific/Fakaofo' THEN 98 WHEN input_value = 'Pacific/Chuuk' THEN 99 WHEN input_value = 'Pacific/Pohnpei' THEN 100 WHEN input_value = 'Pacific/Kosrae' THEN 101 WHEN input_value = 'Pacific/Majuro' THEN 102 WHEN input_value = 'Pacific/Kwajalein' THEN 103 WHEN input_value = 'Pacific/Nauru' THEN 104 WHEN input_value = 'Pacific/Funafuti' THEN 105 WHEN input_value = 'Pacific/Wallis' THEN 106 WHEN input_value = 'Pacific/Tokelau' THEN 107 WHEN input_value = 'Pacific/Kanton' THEN 108 WHEN input_value = 'Pacific/Fakaofo' THEN 109 WHEN input_value = 'Pacific/Chatham' THEN 110 WHEN input_value = 'Pacific/Easter' THEN 111 WHEN input_value = 'Pacific/Galapagos' THEN 112 WHEN input_value = 'Pacific/Marquesas' THEN 113 WHEN input_value = 'EST' THEN 14 WHEN input_value = 'CST' THEN 9 WHEN input_value = 'MST' THEN 8 WHEN input_value = 'PST' THEN 5 WHEN input_value = 'HST' THEN 3 WHEN input_value = 'AKST' THEN 4 WHEN input_value = 'GMT' THEN 26 WHEN input_value = 'UTC' THEN 28 ELSE 9 END"
+MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE (f:File {name: "Core_Employee"})
@@ -2057,6 +2017,48 @@ MERGE (st:SumTotalField {name: "usercode", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "User Type", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "", csod.default_value = "Employee", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Employment Status‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "On Leave, Onboarding, Terminated, Working"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Leave Reason‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "Administrative, Compassionate, Disability, Education, Force Majeure, Jury Service, Medical,Military, Parental, Sabbatical, Suspension,Temporary commission"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Termination Type‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Termination Reason‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "Better Opportunity, Career Change, Company leadership, Conviction of a Crime, Deceased, Declined offer, Dishonesty/Falsification/Theft, Education, Employee-job fit, End of casual employment, End of Contract, Fail to return from leave, Forced retirement, Inadequate Benefits, Inadequate Compensation, Job abandonment, Lack of Career Growth, Lack of Training/Development, Legally ineligible, Manager dissatisfaction, Medical, Move/relocation, Negligence, Offshoring, Policy violation, Poor attendance, Reduction in force/Layoff, Redundancy, Retired, Transfer, Unsatisfactory performance, Work Location, Work Schedule"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Termination Date‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Date and Time", csod.char_length = "100", csod.default_value = "", csod.accepted_values = " "
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Eligible for Rehire‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "eligible, ineligible, 1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Rehired Employee‡", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -2100,7 +2102,57 @@ SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Social Team", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Cohort Roster", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Client Account", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Translation Test", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "01344780", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Company", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "HR Partner", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Emergency Contact Name", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Emergency Contact Name", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "Spouse/Partner, Parent, Child, Sibling, Other Relative, Friend"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Emergency Contact Primary Telephone", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Emergency Contact Secondary Telephone", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -2110,5 +2162,789 @@ MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Job Date", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Date and Time", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Practice Learner", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Checkbox", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive, False"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "diana", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "RadioButton", csod.char_length = " ", csod.default_value = "", csod.accepted_values = "english"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Base Salary", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "ropdown", csod.char_length = " ", csod.default_value = "", csod.accepted_values = "english"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_Employee"})
+MERGE (csod:CSODField {name: "Availability Status", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "ropdown", csod.char_length = " ", csod.default_value = "", csod.accepted_values = "Yes, No"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (st:SumTotalField {name: "Organization Code", file: "Core_DivisionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU ID*", file: "Core_DivisionOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (st:SumTotalField {name: "Organization Name", file: "Core_DivisionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU Name*", file: "Core_DivisionOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (csod:CSODField {name: "Active", file: "Core_DivisionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "1", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (csod:CSODField {name: "Allow Reconciliation", file: "Core_DivisionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (st:SumTotalField {name: "Parent OrganizationCode", file: "Core_DivisionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Parent ID", file: "Core_DivisionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (st:SumTotalField {name: "Owner EmployeeId", file: "Core_DivisionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Owner ID", file: "Core_DivisionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_DivisionOU"})
+MERGE (st:SumTotalField {name: "Organization Description(Note)", file: "Core_DivisionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Description", file: "Core_DivisionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "4000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (st:SumTotalField {name: "JOB_CODE", file: "Core_PositionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU ID*", file: "Core_PositionOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (st:SumTotalField {name: "JOB_NAME", file: "Core_PositionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU Name*", file: "Core_PositionOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Active", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "1", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Allow Reconciliation", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Parent ID", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (st:SumTotalField {name: "created By EmployeeID", file: "Core_PositionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Owner ID", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (st:SumTotalField {name: "JOB_DESC", file: "Core_PositionOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Description", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "4000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Req- Person ID Number", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "LocalizedShortTextBox", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Critical Position", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_PositionOU"})
+MERGE (csod:CSODField {name: "Plan Owner OU ID", file: "Core_PositionOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (st:SumTotalField {name: "Organization Code", file: "Core_CostCenterOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU ID*", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (st:SumTotalField {name: "Organization Name", file: "Core_CostCenterOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU Name*", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (csod:CSODField {name: "Active", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "1", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (csod:CSODField {name: "Allow Reconciliation", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (st:SumTotalField {name: "Parent OrganizationCode", file: "Core_CostCenterOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Parent ID", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (st:SumTotalField {name: "Owner EmployeeId", file: "Core_CostCenterOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Owner ID", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (st:SumTotalField {name: "Organization Description(Note)", file: "Core_CostCenterOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Description", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "4000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_CostCenterOU"})
+MERGE (csod:CSODField {name: "Approver ID", file: "Core_CostCenterOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (st:SumTotalField {name: "Audience Code", file: "Core_GroupsOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU ID*", file: "Core_GroupsOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (st:SumTotalField {name: "Audience Name", file: "Core_GroupsOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "OU Name*", file: "Core_GroupsOU"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (st:SumTotalField {name: "Audience Active", file: "Core_GroupsOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Active", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "1", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (csod:CSODField {name: "Allow Reconciliation", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (csod:CSODField {name: "Parent ID", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (csod:CSODField {name: "Owner ID", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (st:SumTotalField {name: "Audience Description", file: "Core_GroupsOU"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Description", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "4000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Core_GroupsOU"})
+MERGE (csod:CSODField {name: "Freeze Group Processing", file: "Core_GroupsOU"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+
+
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (st:SumTotalField {name: "VendorName", file: "Prerequisites_Provider"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Provider Name*", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (st:SumTotalField {name: "Provider Type", file: "Prerequisites_Provider"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Provider Type*", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "20", csod.default_value = "", csod.accepted_values = "ONLINE, ILT"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "True", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Address 1", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Address 2", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "City", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "ZIP", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "State/Province", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Country", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "3", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Contact Name", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Phone number", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Fax number", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "URL", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Url", csod.char_length = "225", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Email", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Provider"})
+MERGE (csod:CSODField {name: "Description", file: "Prerequisites_Provider"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "2100", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "FacilityId", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Facility Id*", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Facility Name", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Facility Name*", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "1000", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Facility Type", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Facility Type*", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Time Zone", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Time Zone ID*", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "", csod.default_values = "", csod.accepted_values = "", csod.transformation = "CASE WHEN input_value = 'America/New_York' THEN 14 WHEN input_value = 'America/Chicago' THEN 9 WHEN input_value = 'America/Los_Angeles' THEN 5 WHEN input_value = 'America/Denver' THEN 8 WHEN input_value = 'America/Phoenix' THEN 8 WHEN input_value = 'America/Anchorage' THEN 4 WHEN input_value = 'America/Juneau' THEN 4 WHEN input_value = 'Pacific/Honolulu' THEN 3 WHEN input_value = 'America/Honolulu' THEN 3 WHEN input_value = 'America/Toronto' THEN 14 WHEN input_value = 'America/Montreal' THEN 14 WHEN input_value = 'America/Vancouver' THEN 5 WHEN input_value = 'America/Seattle' THEN 5 WHEN input_value = 'America/Calgary' THEN 8 WHEN input_value = 'America/Edmonton' THEN 8 WHEN input_value = 'America/Winnipeg' THEN 9 WHEN input_value = 'America/Regina' THEN 9 WHEN input_value = 'America/Saskatoon' THEN 9 WHEN input_value = 'America/Halifax' THEN 16 WHEN input_value = 'America/Moncton' THEN 16 WHEN input_value = 'America/St_Johns' THEN 74 WHEN input_value = 'Europe/London' THEN 26 WHEN input_value = 'Europe/Dublin' THEN 26 WHEN input_value = 'Europe/Lisbon' THEN 26 WHEN input_value = 'Europe/Amsterdam' THEN 28 WHEN input_value = 'Europe/Berlin' THEN 28 WHEN input_value = 'Europe/Rome' THEN 28 WHEN input_value = 'Europe/Vienna' THEN 28 WHEN input_value = 'Europe/Stockholm' THEN 28 WHEN input_value = 'Europe/Belgrade' THEN 29 WHEN input_value = 'Europe/Bratislava' THEN 29 WHEN input_value = 'Europe/Budapest' THEN 29 WHEN input_value = 'Europe/Ljubljana' THEN 29 WHEN input_value = 'Europe/Prague' THEN 29 WHEN input_value = 'Europe/Brussels' THEN 30 WHEN input_value = 'Europe/Copenhagen' THEN 30 WHEN input_value = 'Europe/Madrid' THEN 30 WHEN input_value = 'Europe/Paris' THEN 30 WHEN input_value = 'Europe/Sarajevo' THEN 31 WHEN input_value = 'Europe/Skopje' THEN 31 WHEN input_value = 'Europe/Warsaw' THEN 31 WHEN input_value = 'Europe/Zagreb' THEN 31 WHEN input_value = 'Europe/Athens' THEN 33 WHEN input_value = 'Europe/Bucharest' THEN 33 WHEN input_value = 'Europe/Helsinki' THEN 34 WHEN input_value = 'Europe/Kiev' THEN 34 WHEN input_value = 'Europe/Riga' THEN 34 WHEN input_value = 'Asia/Jerusalem' THEN 35 WHEN input_value = 'Asia/Baghdad' THEN 36 WHEN input_value = 'Asia/Kuwait' THEN 37 WHEN input_value = 'Asia/Riyadh' THEN 37 WHEN input_value = 'Asia/Tehran' THEN 38 WHEN input_value = 'Asia/Muscat' THEN 39 WHEN input_value = 'Asia/Baku' THEN 40 WHEN input_value = 'Asia/Tbilisi' THEN 41 WHEN input_value = 'Asia/Yerevan' THEN 42 WHEN input_value = 'Asia/Kabul' THEN 43 WHEN input_value = 'Asia/Yekaterinburg' THEN 47 WHEN input_value = 'Asia/Tashkent' THEN 48 WHEN input_value = 'Asia/Kolkata' THEN 49 WHEN input_value = 'Asia/Kathmandu' THEN 50 WHEN input_value = 'Asia/Novosibirsk' THEN 51 WHEN input_value = 'Asia/Almaty' THEN 52 WHEN input_value = 'Asia/Dhaka' THEN 53 WHEN input_value = 'Asia/Rangoon' THEN 54 WHEN input_value = 'Asia/Bangkok' THEN 55 WHEN input_value = 'Asia/Krasnoyarsk' THEN 56 WHEN input_value = 'Asia/Shanghai' THEN 57 WHEN input_value = 'Asia/Irkutsk' THEN 58 WHEN input_value = 'Asia/Kuala_Lumpur' THEN 59 WHEN input_value = 'Asia/Perth' THEN 60 WHEN input_value = 'Asia/Tokyo' THEN 62 WHEN input_value = 'Asia/Seoul' THEN 63 WHEN input_value = 'Asia/Yakutsk' THEN 64 WHEN input_value = 'Asia/Adelaide' THEN 65 WHEN input_value = 'Australia/Darwin' THEN 66 WHEN input_value = 'Australia/Brisbane' THEN 67 WHEN input_value = 'Australia/Sydney' THEN 68 WHEN input_value = 'Australia/Melbourne' THEN 68 WHEN input_value = 'Australia/Hobart' THEN 68 WHEN input_value = 'Pacific/Guam' THEN 69 WHEN input_value = 'Australia/Adelaide' THEN 70 WHEN input_value = 'Australia/Perth' THEN 71 WHEN input_value = 'Pacific/Auckland' THEN 73 WHEN input_value = 'Pacific/Fiji' THEN 74 WHEN input_value = 'Pacific/Midway' THEN 76 WHEN input_value = 'Pacific/Samoa' THEN 77 WHEN input_value = 'Pacific/Guadalcanal' THEN 78 WHEN input_value = 'Pacific/Port_Moresby' THEN 79 WHEN input_value = 'Pacific/Noumea' THEN 80 WHEN input_value = 'Pacific/Kiritimati' THEN 81 WHEN input_value = 'Pacific/Kwajalein' THEN 82 WHEN input_value = 'Pacific/Apia' THEN 83 WHEN input_value = 'Pacific/Chatham' THEN 84 WHEN input_value = 'Pacific/Easter' THEN 85 WHEN input_value = 'Pacific/Galapagos' THEN 86 WHEN input_value = 'Pacific/Marquesas' THEN 87 WHEN input_value = 'Pacific/Gambier' THEN 88 WHEN input_value = 'Pacific/Pitcairn' THEN 89 WHEN input_value = 'Pacific/Niue' THEN 90 WHEN input_value = 'Pacific/Pago_Pago' THEN 91 WHEN input_value = 'Pacific/Rarotonga' THEN 92 WHEN input_value = 'Pacific/Tahiti' THEN 93 WHEN input_value = 'Pacific/Tarawa' THEN 94 WHEN input_value = 'Pacific/Wake' THEN 95 WHEN input_value = 'Pacific/Wallis' THEN 96 WHEN input_value = 'Pacific/Tongatapu' THEN 97 WHEN input_value = 'Pacific/Fakaofo' THEN 98 WHEN input_value = 'Pacific/Chuuk' THEN 99 WHEN input_value = 'Pacific/Pohnpei' THEN 100 WHEN input_value = 'Pacific/Kosrae' THEN 101 WHEN input_value = 'Pacific/Majuro' THEN 102 WHEN input_value = 'Pacific/Kwajalein' THEN 103 WHEN input_value = 'Pacific/Nauru' THEN 104 WHEN input_value = 'Pacific/Funafuti' THEN 105 WHEN input_value = 'Pacific/Wallis' THEN 106 WHEN input_value = 'Pacific/Tokelau' THEN 107 WHEN input_value = 'Pacific/Kanton' THEN 108 WHEN input_value = 'Pacific/Fakaofo' THEN 109 WHEN input_value = 'Pacific/Chatham' THEN 110 WHEN input_value = 'Pacific/Easter' THEN 111 WHEN input_value = 'Pacific/Galapagos' THEN 112 WHEN input_value = 'Pacific/Marquesas' THEN 113 WHEN input_value = 'EST' THEN 14 WHEN input_value = 'CST' THEN 9 WHEN input_value = 'MST' THEN 8 WHEN input_value = 'PST' THEN 5 WHEN input_value = 'HST' THEN 3 WHEN input_value = 'AKST' THEN 4 WHEN input_value = 'GMT' THEN 26 WHEN input_value = 'UTC' THEN 28 ELSE 9 END"
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Approval Required", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Approval Required", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "FALSE", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "On site", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "TRUE", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "Allow Reconcile", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "FALSE", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "Parent ID", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Address 1", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Address 1", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "55", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Address 2", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Address 2", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "55", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "City", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "City", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "35", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "State", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "State", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "30", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Zip", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Zip", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "20", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Country", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Country", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Contact", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Contact", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Phone", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Phone", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "25", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Fax", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Fax", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "25", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Facility Email", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Facility Email", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (st:SumTotalField {name: "Occupancy", file: "Prerequisites_Facility"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Occupancy", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "int", csod.char_length = "", csod.default_values = "0", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "Created/Modified By", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Facility"})
+MERGE (csod:CSODField {name: "Owner ID", file: "Prerequisites_Facility" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Subject"})
+MERGE (st:SumTotalField {name: "Topic Code", file: "Prerequisites_Subject"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Subject Ref*", file: "Prerequisites_Subject" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "30", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Subject"})
+MERGE (st:SumTotalField {name: "Parent topic code", file: "Prerequisites_Subject"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Parent Subject Ref", file: "Prerequisites_Subject" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "30", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Subject"})
+MERGE (st:SumTotalField {name: "TopicName", file: "Prerequisites_Subject"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Title*", file: "Prerequisites_Subject" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Subject"})
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_Subject" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "TRUE", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (st:SumTotalField {name: "EmployeeId", file: "Prerequisites_Instructor"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Instructor ID*", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "50", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (st:SumTotalField {name: "ProviderName", file: "Prerequisites_Instructor"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Vendor/Provider*", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (st:SumTotalField {name: "EmployeeActive", file: "Prerequisites_Instructor"})
+MERGE (f) -[:HAS_FIELD] -> (st)
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_values = "TRUE", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]-> (csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Home Location", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Internal/External*", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Mandatory", csod.field_type = "", csod.char_length = "", csod.default_values = "Internal", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "First Name", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Last Name", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Phone", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Fax", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Email", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Languages Spoken", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Education", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Biography", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "2000", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE ( f:File {name: "Prerequisites_Instructor"})
+MERGE (csod:CSODField {name: "Certifications", file: "Prerequisites_Instructor" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_values = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_QuestionsCategories"})
+MERGE (st:SumTotalField {name: "QuestionBankCode", file: "Prerequisites_QuestionsCategories"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Category Ref*", file: "Prerequisites_QuestionsCategories"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_QuestionsCategories"})
+MERGE (st:SumTotalField {name: "QuestionBankName", file: "Prerequisites_QuestionsCategories"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Category Name*", file: "Prerequisites_QuestionsCategories"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_QuestionsCategories"})
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_QuestionsCategories"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "1", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_QuestionsCategories"})
+MERGE (csod:CSODField {name: "Parent Category Ref", file: "Prerequisites_QuestionsCategories"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "QuestionID", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Question Reference Number*", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "50", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Questiontext", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Question Text*", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "2000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Questiontype", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Question Type*", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Correct Answer", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Correct Answer", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "QuestionBankCode", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Category Ref*", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Default Language", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "", csod.default_value = "en-US", csod.accepted_values = "", csod.transformation = "CASE WHEN input_value = 'en-US' THEN 1 WHEN Language = 'English (US)' THEN 1 WHEN Language = 'en-GB' THEN 2 WHEN Language = 'English (UK)' THEN 2 WHEN Language = 'fr-FR' THEN 13 WHEN Language = 'French (France)' THEN 13 WHEN Language = 'es-MX' THEN 14 WHEN Language = 'Spanish (Latin America)' THEN 14 ELSE 1 END"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Active", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Randomize Answer Choices", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer Explanation", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "# of Answer Choices", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "# of Answer Choices", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "0", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "All of the Above", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "All of the Above", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "None of the Above", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "None of the Above", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Answer 1", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Answer 1", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Answer 2", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Answer 2", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Answer 3", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Answer 3", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (st:SumTotalField {name: "Answer 4", file: "Prerequisites_Questions"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Answer 4", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 5", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 6", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 7", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 8", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 9", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer 10", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Image Filename", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "200", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Answer Coordinates", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "2000", csod.default_value = "", csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Apply partial scoring", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod)
+;
+MERGE (f:File {name: "Prerequisites_Questions"})
+MERGE (csod:CSODField {name: "Author", file: "Prerequisites_Questions"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
