@@ -42,34 +42,84 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
+def map_filename_to_database_key(filename):
+    """Map filename to the correct database key for mapping rules"""
+    # Remove file extension
+    file_key = os.path.splitext(filename)[0]
+    
+    # Define the mapping from incoming filenames to database file names
+    # Simple one-to-one mappings for now
+    filename_mappings = {
+        # Activity mappings
+        "Activity_Curriculum": "Activity_Curriculum",
+        "Activity_QuickAssessment": "Activity_Test",
+        "Activity_ILTSessions": "Activity_SessionParts",
+        "Activity_ILTClass": "Activity_Sessions", 
+        "Activity_ILTCourse": "Activity_Events",
+        "Activity_OnlineCourse": "Activity_OnlineCourse",
+        "Activity_Online Course": "Activity_OnlineCourse",  # Original with space
+        "Activity_Online_Course": "Activity_OnlineCourse",  # Flask converts space to underscore
+        "Activity_Document": "Activity_Material",
+        
+        # Transcript mappings
+        "Transcript_Curriculum": "Transcript_Curriculum",
+        "Transcript_Document": "Transcript_Materials", 
+        "Transcript_ILTClass": "Transcript_Sessions",
+        "Transcript_OnlineCourse": "Transcript_OnlineCourse",
+        "Transcript_QuickAssessment": "Transcript_Tests",
+        
+        # Core mappings
+        "Core_Audience": "Core_Audience",
+        "Core_Domain": "Core_Domain",
+        "Core_Employee": "Core_Employee", 
+        "Core_Jobs": "Core_Jobs",
+        "Core_Organization": "Core_Organization",
+        
+        # Prerequisites mappings
+        "Prerequisites_Facility": "Prerequisites_Facility",
+        "Prerequisites_Instructor": "Prerequisites_Instructor",
+        "Prerequisites_Provider": "Prerequisites_Provider",
+        "Prerequisites_Question": "Prerequisites_Question",
+        "Prerequisites_QuestionBanks": "Prerequisites_QuestionBanks",
+        "Prerequisites_Subject": "Prerequisites_Subject"
+    }
+    
+    # Return mapped key if exists, otherwise return original
+    mapped_key = filename_mappings.get(file_key, file_key)
+    
+    return mapped_key
+
 def process_file(filepath):
     """Process a file using the SumTotal transformer"""
     try:
-        # Load Neo4j mapping rules using absolute path
-        mapping_file = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'neo4j_knowledge_graph_cypher.txt'))
-        if not os.path.exists(mapping_file):
-            raise ValueError(f"Mapping file not found at: {mapping_file}")
-        mapping_rules = transformer.load_mapping_rules_from_neo4j_file(mapping_file)
-        
-        # Determine the file category based on its location in the folder structure
+        # Fetch mapping rules directly from Neo4j database
         filename = os.path.basename(filepath)
-        file_category = None
+        file_key = map_filename_to_database_key(filename)
+        
+        logger.info(f"Processing file: {filename} -> {file_key}")
+        mapping_rules = transformer.fetch_mapping_rules_from_neo4j(file_key)
+        
+        # If no rules found in database, log error and stop processing
+        if not mapping_rules:
+            error_msg = f"No mapping rules found in Neo4j database for file: {file_key}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
         
         # Read the Excel file with empty strings instead of NaN
         file_extension = os.path.splitext(filepath)[1].lower()
         if file_extension == '.xlsx':
             df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
         elif file_extension == '.csv':
-            df = pd.read_csv(filepath, keep_default_na=False, na_values=[''])
+            df = pd.read_csv(filepath, keep_default_na=False, na_values=[''], encoding='utf-8')
         else:
             raise ValueError(f"Unsupported file type: {file_extension}")
         
         # Determine file category
-        if "Employee" in filename:
+        if "Core" in filename:
             file_category = "Core"
-        elif "Facility" in filename:
+        elif "Prerequisites" in filename:
             file_category = "Prerequisites"
-        elif "Curriculum" in filename or "Course" in filename:
+        elif "Activity" in filename or "Course" in filename or "Activity" in filename:
             file_category = "Activity"
         elif "Transcript" in filename:
             file_category = "Transcript"
@@ -77,27 +127,23 @@ def process_file(filepath):
         if not file_category:
             raise ValueError(f"Could not determine category for file: {filename}")
         
-        # Get the rules for this file type based on the filename without extension
-        file_key = os.path.splitext(filename)[0]
-        if file_key not in mapping_rules:
-            # Create default 1:1 mapping if no rules exist
-            mapping_rules[file_key] = [
-                {"CSOD Field Name": col, "SumTotal Field Name": col}
-                for col in df.columns
-            ]
+        # Convert DataFrame to list of dictionaries for the new transform_data function
+        data = df.to_dict('records')
         
-        # Transform the file
-        processed_data = transformer.transform_sumtotal_file(df, mapping_rules[file_key], file_key)
+        # Transform the data using the new function
+        transformed_data = transformer.transform_data(data, mapping_rules)
+        
+        # Convert back to DataFrame
+        processed_data = pd.DataFrame(transformed_data)
         
         # Save the processed file
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        base_filename = os.path.splitext(filename)[0]  # Remove the original extension
-        processed_filename = f"processed_{timestamp}_{base_filename}.csv"  # Add .csv extension
+        processed_filename = f"processed_{timestamp}_{file_key}.csv"  # Use CSOD file type name
         processed_filepath = os.path.join(app.config['PROCESSED_FOLDER'], processed_filename)
         
-        # Save as CSV with empty strings for missing values
-        processed_data.to_csv(processed_filepath, index=False, na_rep="")
-        logger.debug(f"Saved processed file to: {processed_filepath}")
+        # Save as CSV with empty strings for missing values and prevent float conversion
+        processed_data.to_csv(processed_filepath, index=False, na_rep="", encoding='utf-8-sig', float_format='%.0f')
+        logger.info(f"Saved processed file: {processed_filename}")
         return processed_filename
         
     except Exception as e:
@@ -106,53 +152,54 @@ def process_file(filepath):
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'files[]' not in request.files:
-        return jsonify({'error': 'No files part'}), 400
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
     
-    files = request.files.getlist('files[]')
-    if not files or files[0].filename == '':
-        return jsonify({'error': 'No selected files'}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
     
-    processed_files = []
-    errors = []
-    
-    for file in files:
-        if file and allowed_file(file.filename):
+    if file and allowed_file(file.filename):
+        try:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            logger.info(f"Processing file: {filename}")
+            
+            # Process the file using the transformer
             try:
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
-                
-                logger.debug(f"Processing file: {filename}")
-                
-                # Process the file using the transformer
                 processed_filename = process_file(filepath)
-                processed_files.append(processed_filename)
-                
-                # Clean up the original file
-                os.remove(filepath)
-                
-            except Exception as e:
-                error_msg = f"Error processing {filename}: {str(e)}"
-                logger.error(error_msg)
-                errors.append(error_msg)
-                # Clean up any uploaded file in case of error
+            except Exception as process_error:
+                logger.error(f"Error in process_file: {str(process_error)}")
+                # Clean up the uploaded file
                 if os.path.exists(filepath):
                     os.remove(filepath)
-        else:
-            errors.append(f"File type not allowed: {file.filename}")
-    
-    if processed_files:
-        return jsonify({
-            'message': f'Successfully processed {len(processed_files)} files',
-            'processed_files': processed_files,
-            'errors': errors if errors else None
-        })
+                return jsonify({'error': f'Processing error: {str(process_error)}'}), 500
+            
+            # Clean up the original file
+            try:
+                os.remove(filepath)
+            except Exception as cleanup_error:
+                logger.warning(f"Could not clean up original file: {cleanup_error}")
+            
+            return jsonify({
+                'message': 'File successfully processed',
+                'processed_file': processed_filename
+            })
+            
+        except Exception as e:
+            error_msg = f"Error processing {filename}: {str(e)}"
+            logger.error(error_msg)
+            # Clean up any uploaded file in case of error
+            if 'filepath' in locals() and os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except:
+                    pass
+            return jsonify({'error': error_msg}), 500
     else:
-        return jsonify({
-            'error': 'No files were successfully processed',
-            'errors': errors
-        }), 500
+        return jsonify({'error': 'File type not allowed'}), 400
 
 @app.route('/download/<filename>')
 def download_file(filename):
@@ -199,4 +246,4 @@ def delete_file(filename):
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)

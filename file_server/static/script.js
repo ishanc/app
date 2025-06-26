@@ -1,3 +1,134 @@
+// Handle Delete All functionality
+function deleteAllFiles() {
+    if (!confirm('Are you sure you want to delete all files? This action cannot be undone.')) {
+        return;
+    }
+
+    fetch('/delete-all', {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Clear the files list immediately
+            const filesList = document.getElementById('files-list');
+            if (filesList) {
+                filesList.innerHTML = '';
+            }
+
+            const messageEl = document.getElementById('delete-message');
+            messageEl.textContent = 'All files deleted successfully';
+            messageEl.classList.add('success');
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.classList.remove('success');
+            }, 3000);
+            
+            // Reload the file list to ensure sync with server
+            loadFiles();
+        }
+    })
+    .catch(error => {
+        const messageEl = document.getElementById('delete-message');
+        messageEl.textContent = `Error: ${error.message || 'Failed to delete files'}`;
+        messageEl.classList.add('error');
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('error');
+        }, 3000);
+    });
+}
+
+// Handle Download All functionality
+function downloadAllFiles() {
+    fetch('/files')
+        .then(response => response.json())
+        .then(data => {
+            if (data.files && data.files.length > 0) {
+                // Trigger the download
+                window.location.href = '/download-all';
+            } else {
+                const messageEl = document.getElementById('delete-message');
+                messageEl.textContent = 'No files available to download';
+                messageEl.classList.add('error');
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('error');
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            const messageEl = document.getElementById('delete-message');
+            messageEl.textContent = `Error: ${error.message || 'Failed to check files'}`;
+            messageEl.classList.add('error');
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.classList.remove('error');
+            }, 3000);
+        });
+}
+
+// Make loadFiles function globally accessible
+window.loadFiles = function() {
+    fetch('/files')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch files');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const filesList = document.getElementById('files-list');
+            filesList.innerHTML = '';
+            data.files.forEach(filename => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-btn';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => deleteFile(filename));
+
+                const downloadButton = document.createElement('button');
+                downloadButton.className = 'download-button';
+                downloadButton.textContent = 'Download';
+                downloadButton.addEventListener('click', () => {
+                    window.location.href = `/download/${encodeURIComponent(filename)}`;
+                });
+
+                const actions = document.createElement('div');
+                actions.className = 'file-actions';
+                actions.appendChild(downloadButton);
+                actions.appendChild(deleteButton);
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'file-name';
+                nameSpan.textContent = filename;
+
+                fileItem.appendChild(nameSpan);
+                fileItem.appendChild(actions);
+                filesList.appendChild(fileItem);
+            });
+            
+            // Add the delete message container if it doesn't exist
+            if (!document.getElementById('delete-message')) {
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'delete-message';
+                messageContainer.className = 'delete-message';
+                filesList.parentNode.appendChild(messageContainer);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const filesList = document.getElementById('files-list');
+            filesList.innerHTML = '<div class="error-message">Failed to load files</div>';
+        });
+};
+
 // Make deleteFile function globally accessible
 window.deleteFile = function(filename) {
     if (!confirm(`Are you sure you want to delete ${filename}?`)) {
@@ -54,6 +185,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     const progress = document.getElementById('progress');
     const filesList = document.getElementById('files-list');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+    // Add event listeners for bulk action buttons
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', deleteAllFiles);
+    }
+    if (downloadAllBtn) {
+        downloadAllBtn.addEventListener('click', downloadAllFiles);
+    }
 
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -139,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function uploadFile(file, queueItem) {
         const formData = new FormData();
-        formData.append('files[]', file);
+        formData.append('file', file);
         
         updateQueueItem(queueItem, 'uploading', 'Uploading...');
 
@@ -154,9 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            if (data.errors && data.errors.length > 0) {
-                throw new Error(data.errors.join(', '));
-            }
             updateQueueItem(queueItem, 'completed', 'File processed successfully!');
             
             // Update the file list after a small delay to ensure the server has completed processing
@@ -178,57 +316,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function loadFiles() {
-        fetch('/files')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch files');
-                }
-                return response.json();
-            })
-            .then(data => {
-                filesList.innerHTML = '';
-                data.files.forEach(filename => {
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'file-item';
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'delete-btn';
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.addEventListener('click', () => deleteFile(filename));
-
-                    const downloadButton = document.createElement('button');
-                    downloadButton.className = 'download-button';
-                    downloadButton.textContent = 'Download';
-                    downloadButton.addEventListener('click', () => {
-                        window.location.href = `/download/${encodeURIComponent(filename)}`;
-                    });
-
-                    const actions = document.createElement('div');
-                    actions.className = 'file-actions';
-                    actions.appendChild(downloadButton);
-                    actions.appendChild(deleteButton);
-
-                    const nameSpan = document.createElement('span');
-                    nameSpan.className = 'file-name';
-                    nameSpan.textContent = filename;
-
-                    fileItem.appendChild(nameSpan);
-                    fileItem.appendChild(actions);
-                    filesList.appendChild(fileItem);
-                });
-                
-                // Add the delete message container if it doesn't exist
-                if (!document.getElementById('delete-message')) {
-                    const messageContainer = document.createElement('div');
-                    messageContainer.id = 'delete-message';
-                    messageContainer.className = 'delete-message';
-                    filesList.parentNode.appendChild(messageContainer);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                filesList.innerHTML = '<div class="error-message">Failed to load files</div>';
-            });
-    }
-
+    // Add event listeners when document is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listeners for bulk action buttons
+        document.getElementById('deleteAllBtn').addEventListener('click', deleteAllFiles);
+        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllFiles);
+    });
 });
