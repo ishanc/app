@@ -26,7 +26,7 @@ try:
                csod.mandatory as mandatory,
                csod.field_type as field_type,
                csod.char_length as char_length,
-               csod.default_values as default_values,
+               csod.default_value as default_value,
                csod.accepted_values as accepted_values,
                csod.transformation as transformation
         LIMIT 5
@@ -41,16 +41,16 @@ try:
             print(f"  mandatory: {record['mandatory']}")
             print(f"  field_type: {record['field_type']}")
             print(f"  char_length: {record['char_length']}")
-            print(f"  default_values: {record['default_values']}")
+            print(f"  default_value: {record['default_value']}")
             print(f"  accepted_values: {record['accepted_values']}")
             print(f"  transformation: {record['transformation'][:100] if record['transformation'] else 'None'}...")
             
-            # Check if default_values field exists
-            if 'default_values' in record:
-                print(f"  ✅ default_values field exists: {record['default_values']}")
+            # Check if default_value field exists
+            if 'default_value' in record:
+                print(f"  ✅ default_value field exists: {record['default_value']}")
             else:
-                print(f"  ❌ default_values field missing")
-                print(f"  Available keys: {list(record.keys())}")
+                print(f"  ❌ default_value field missing")
+            print(f"  Available keys: {list(record.keys())}")
 
 finally:
     driver.close() 

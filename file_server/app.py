@@ -80,7 +80,7 @@ def map_filename_to_database_key(filename):
         "Prerequisites_Instructor": "Prerequisites_Instructor",
         "Prerequisites_Provider": "Prerequisites_Provider",
         "Prerequisites_Question": "Prerequisites_Questions",
-        "Prerequisites_QuestionBanks": "Prerequisites_QuestionCategories",
+        "Prerequisites_QuestionBanks": "Prerequisites_QuestionsCategories",
         "Prerequisites_Subject": "Prerequisites_Subject"
     }
     
@@ -88,6 +88,39 @@ def map_filename_to_database_key(filename):
     mapped_key = filename_mappings.get(file_key, file_key)
     
     return mapped_key
+
+def validate_transformed_data(df, mapping_rules):
+    """Validate the transformed data against mapping rules"""
+    errors = []
+    warnings = []  # Keep for internal logging only
+    
+    for rule in mapping_rules:
+        csod_field = rule['CSOD Field Name']
+        mandatory = rule.get('mandatory', '') == 'Mandatory'
+        
+        if csod_field in df.columns:
+            # Check for mandatory fields that are empty
+            if mandatory:
+                empty_count = (df[csod_field].isna() | (df[csod_field].astype(str).str.strip() == '')).sum()
+                if empty_count > 0:
+                    warnings.append(f"Mandatory field '{csod_field}' has {empty_count} empty values")
+        else:
+            # Field is missing from output
+            if mandatory:
+                errors.append(f"Mandatory field '{csod_field}' is missing from output")
+            else:
+                warnings.append(f"Optional field '{csod_field}' is missing from output")
+    
+    # Log warnings internally but don't return them to UI
+    if warnings:
+        logger.warning(f"Validation warnings: {warnings}")
+    
+    return {
+        'total_errors': len(errors),
+        'total_warnings': 0,  # Always return 0 for UI
+        'errors': errors,
+        'warnings': []  # Always return empty array for UI
+    }
 
 def process_file(filepath):
     """Process a file using the SumTotal transformer"""
@@ -106,49 +139,65 @@ def process_file(filepath):
             raise ValueError(error_msg)
         
         # Read the Excel file with empty strings instead of NaN
-        file_extension = os.path.splitext(filepath)[1].lower()
-        if file_extension == '.xlsx':
-            df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
+        file_extension = os.path.splitext(filename)[1].lower()
+        if file_extension in ['.xlsx', '.xls']:
+            input_df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
         elif file_extension == '.csv':
-            df = pd.read_csv(filepath, keep_default_na=False, na_values=[''], encoding='utf-8')
+            input_df = pd.read_csv(filepath, keep_default_na=False, na_values=[''])
         else:
             raise ValueError(f"Unsupported file type: {file_extension}")
         
-        # Determine file category
-        if "Core" in filename:
-            file_category = "Core"
-        elif "Prerequisites" in filename:
-            file_category = "Prerequisites"
-        elif "Activity" in filename or "Course" in filename or "Activity" in filename:
-            file_category = "Activity"
-        elif "Transcript" in filename:
-            file_category = "Transcript"
+        # Transform the data
+        transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key)
+        
+        # Ensure empty strings instead of NaN in output
+        transformed_df = transformed_df.fillna("")
+        
+        # Save to multiple files based on output_document property
+        saved_files = []
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Group fields by output_document
+        output_groups = {}
+        for rule in mapping_rules:
+            output_document = rule.get('output_document', '')
+            # If output_document is empty or just a space, fall back to file property or file_key
+            if not output_document or output_document.strip() == '':
+                output_document = rule.get('file', file_key)
+            csod_field = rule['CSOD Field Name']
             
-        if not file_category:
-            raise ValueError(f"Could not determine category for file: {filename}")
+            if output_document not in output_groups:
+                output_groups[output_document] = []
+            output_groups[output_document].append(csod_field)
         
-        # Convert DataFrame to list of dictionaries for the new transform_data function
-        data = df.to_dict('records')
+        # Create separate CSV files for each output document
+        for output_document, columns in output_groups.items():
+            # Filter DataFrame to only include columns for this output document
+            available_columns = [col for col in columns if col in transformed_df.columns]
+            if available_columns:
+                output_filename = f"processed_{timestamp}_{output_document}.csv"
+                output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
+                
+                # Save the filtered DataFrame
+                transformed_df[available_columns].to_csv(output_path, index=False)
+                saved_files.append(output_filename)
+                logger.info(f"Saved {len(available_columns)} columns to {output_filename}")
         
-        # Transform the data using the new function
-        transformed_data = transformer.transform_data(data, mapping_rules)
+        # Validate the transformed data
+        validation_results = validate_transformed_data(transformed_df, mapping_rules)
         
-        # Convert back to DataFrame
-        processed_data = pd.DataFrame(transformed_data)
-        
-        # Save the processed file
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        processed_filename = f"processed_{timestamp}_{file_key}.csv"  # Use CSOD file type name
-        processed_filepath = os.path.join(app.config['PROCESSED_FOLDER'], processed_filename)
-        
-        # Save as CSV with empty strings for missing values and prevent float conversion
-        processed_data.to_csv(processed_filepath, index=False, na_rep="", encoding='utf-8-sig', float_format='%.0f')
-        logger.info(f"Saved processed file: {processed_filename}")
-        return processed_filename
+        return {
+            'success': True,
+            'validation': validation_results,
+            'processed_files': saved_files
+        }
         
     except Exception as e:
-        logger.error(f"Error in process_file: {str(e)}")
-        raise Exception(f"Error processing file {filepath}: {str(e)}")
+        logger.error(f"Error processing file {filepath}: {str(e)}", exc_info=True)
+        return {
+            'success': False,
+            'error': str(e)
+        }
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -169,7 +218,7 @@ def upload_file():
             
             # Process the file using the transformer
             try:
-                processed_filename = process_file(filepath)
+                processed_results = process_file(filepath)
             except Exception as process_error:
                 logger.error(f"Error in process_file: {str(process_error)}")
                 # Clean up the uploaded file
@@ -183,10 +232,7 @@ def upload_file():
             except Exception as cleanup_error:
                 logger.warning(f"Could not clean up original file: {cleanup_error}")
             
-            return jsonify({
-                'message': 'File successfully processed',
-                'processed_file': processed_filename
-            })
+            return jsonify(processed_results)
             
         except Exception as e:
             error_msg = f"Error processing {filename}: {str(e)}"
