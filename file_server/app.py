@@ -62,11 +62,13 @@ def map_filename_to_database_key(filename):
         "Activity_Document": "Activity_Material",
         
         # Transcript mappings
-        "Transcript_Curriculum": "Transcript_Curriculum",
-        "Transcript_Document": "Transcript_Materials", 
-        "Transcript_ILTClass": "Transcript_Sessions",
-        "Transcript_OnlineCourse": "Transcript_OnlineCourse",
-        "Transcript_QuickAssessment": "Transcript_Tests",
+        "Transcript_Curriculum": "Transcript_CurriculumTranscript",
+        "Transcript_Document": "Transcript_MaterialTranscript", 
+        "Transcript_ILT Class": "Transcript_SessionTranscript",
+        "Transcript_ILT_Class": "Transcript_SessionTranscript",
+        "Transcript_Online Course": "Transcript_OnlineCourse",
+        "Transcript_Online_Course": "Transcript_OnlineCourse",
+        "Transcript_QuickAssessment": "Transcript_TestTranscript",
         
         # Core mappings
         "Core_Audience": "Core_GroupsOU",
@@ -135,7 +137,7 @@ def process_file(filepath):
         # If no rules found in database, log error and stop processing
         if not mapping_rules:
             error_msg = f"No mapping rules found in Neo4j database for file: {file_key}"
-            logger.error(error_msg)
+            logger.error(f"Processing error: {error_msg}")
             raise ValueError(error_msg)
         
         # Read the Excel file with empty strings instead of NaN
@@ -147,8 +149,26 @@ def process_file(filepath):
         else:
             raise ValueError(f"Unsupported file type: {file_extension}")
         
+        # Debug: Check for issues with the DataFrame
+        logger.info(f"Loaded DataFrame shape: {input_df.shape}")
+        logger.info(f"DataFrame columns: {list(input_df.columns)}")
+        
+        # Check for empty column names
+        empty_columns = [col for col in input_df.columns if col == '']
+        if empty_columns:
+            logger.error(f"Found {len(empty_columns)} empty column names in uploaded file")
+            raise ValueError(f"Uploaded file contains {len(empty_columns)} empty column names")
+        
+        # Check for duplicate column names
+        if len(input_df.columns) != len(set(input_df.columns)):
+            logger.error("Uploaded file contains duplicate column names")
+            raise ValueError("Uploaded file contains duplicate column names")
+        
         # Transform the data
         transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key)
+        
+       
+        
         
         # Ensure empty strings instead of NaN in output
         transformed_df = transformed_df.fillna("")
@@ -157,7 +177,7 @@ def process_file(filepath):
         saved_files = []
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
-        # Group fields by output_document
+        # Group fields by output_document while preserving order
         output_groups = {}
         for rule in mapping_rules:
             output_document = rule.get('output_document', '')
@@ -166,19 +186,28 @@ def process_file(filepath):
                 output_document = rule.get('file', file_key)
             csod_field = rule['CSOD Field Name']
             
+            # For Transcript files, only allow Transcript-specific output documents
+            if file_key.startswith("Transcript_") and not output_document.startswith("Transcript_"):
+                logger.warning(f"Skipping non-Transcript output document '{output_document}' for Transcript file '{file_key}'")
+                continue
+            
             if output_document not in output_groups:
                 output_groups[output_document] = []
-            output_groups[output_document].append(csod_field)
+            # Only add if not already present (to avoid duplicates while preserving order)
+            if csod_field not in output_groups[output_document]:
+                output_groups[output_document].append(csod_field)
+        
+        logger.info(f"Created output groups: {list(output_groups.keys())}")
         
         # Create separate CSV files for each output document
         for output_document, columns in output_groups.items():
-            # Filter DataFrame to only include columns for this output document
+            # Filter DataFrame to only include columns for this output document (preserving order)
             available_columns = [col for col in columns if col in transformed_df.columns]
             if available_columns:
                 output_filename = f"processed_{timestamp}_{output_document}.csv"
                 output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
                 
-                # Save the filtered DataFrame
+                # Save the filtered DataFrame with preserved column order
                 transformed_df[available_columns].to_csv(output_path, index=False)
                 saved_files.append(output_filename)
                 logger.info(f"Saved {len(available_columns)} columns to {output_filename}")

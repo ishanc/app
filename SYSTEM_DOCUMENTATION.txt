@@ -940,5 +940,315 @@ LESSONS LEARNED:
 5. Error logging without truncation provides better debugging
 
 ================================================================================
+14. ERROR LOGGING SYSTEM MIGRATION PLAN
+================================================================================
+
+OVERVIEW:
+---------
+This section documents the plan to migrate from the current MySQL-based error logging 
+system to Apache NiFi for enterprise-grade error logging with enhanced scalability, 
+monitoring, and integration capabilities.
+
+CURRENT ERROR LOGGING SYSTEM:
+-----------------------------
+- MySQL database with error_logs table
+- ErrorLogger class with direct database connections
+- Error categories: VALIDATION, TRANSFORMATION, DATABASE, FILE_PROCESSING, NEO4J, CONFIGURATION, SYSTEM
+- Basic error logging with stack traces and timestamps
+
+LIMITATIONS OF CURRENT SYSTEM:
+-----------------------------
+1. Direct database connections (no connection pooling)
+2. Limited scalability (single point of failure)
+3. Basic monitoring capabilities
+4. No built-in alerting or notification system
+5. Manual error categorization and routing
+6. Limited integration with other systems
+
+APACHE NIFI ADVANTAGES:
+----------------------
+1. Built-in Database Processors:
+   - PutDatabaseRecord: Direct database insertion
+   - PutSQL: Custom SQL execution
+   - ExecuteSQL: Query execution
+   - DatabaseConnectionPoolService: Connection management
+
+2. Advanced Error Handling:
+   - LogAttribute: Log flow file attributes
+   - LogContent: Log actual content
+   - PutFile: Save error files to disk
+   - Notify: Send notifications on errors
+
+3. Scalability Features:
+   - Horizontal scaling with multiple NiFi nodes
+   - Load balancing and automatic distribution
+   - High availability with clustered deployment
+   - Backpressure handling and flow control
+
+4. Monitoring & Management:
+   - Real-time monitoring with web UI
+   - Visual flow design and management
+   - Built-in notification and alerting system
+   - Comprehensive metrics and reporting
+
+PROPOSED NIFI ERROR LOGGING ARCHITECTURE:
+-----------------------------------------
+
+Error Sources:
+- SumTotal Transformer (lasVegas/app/sumtotal_transformer_with_neo4j.py)
+- File Server (file_server/app.py)
+- Neo4j Operations
+- Data Validation (lasVegas/app/data_validation.py)
+
+NiFi Flow Design:
+```
+Error Event → ListenHTTP → EvaluateJsonPath → PutDatabaseRecord → RouteOnAttribute → Success/Failure Routes
+```
+
+Detailed Flow:
+1. ListenHTTP (port 8080)
+   - Receives error events from applications
+   - Endpoint: /error-log
+   - Accepts JSON error payloads
+
+2. EvaluateJsonPath
+   - Extracts error details from JSON
+   - Fields: error_id, message, category, timestamp, file_name, line_number, stack_trace
+
+3. PutDatabaseRecord
+   - Inserts error records into MySQL error_logs table
+   - Uses connection pooling for efficiency
+   - Handles database failures gracefully
+
+4. RouteOnAttribute
+   - Routes errors based on category and severity
+   - CRITICAL → Notify (email/Slack)
+   - WARNING → LogAttribute (console logging)
+   - INFO → LogAttribute (console logging)
+
+5. PutFile (backup)
+   - Saves error files to disk for backup
+   - Directory: /errors/backup
+   - Filename: ${now():format('yyyy-MM-dd-HH-mm-ss')}-${error_id}.json
+
+MIGRATION STRATEGY:
+------------------
+
+Phase 1: Parallel Implementation (Week 1-2)
+1. Deploy Apache NiFi instance
+2. Implement NiFi error logging flow
+3. Keep current MySQL error logging active
+4. Route new error sources to NiFi
+5. Compare performance and reliability
+
+Phase 2: Gradual Migration (Week 3-4)
+1. Migrate existing error flows to NiFi
+2. Update application code to use NiFi endpoints
+3. Implement advanced NiFi features
+4. Add monitoring and alerting
+
+Phase 3: Full NiFi Implementation (Week 5-6)
+1. Remove MySQL error logging code
+2. Implement advanced NiFi features
+3. Add comprehensive monitoring
+4. Deploy production NiFi cluster
+
+NIFI CONFIGURATION EXAMPLE:
+--------------------------
+
+ListenHTTP Processor:
+```json
+{
+  "name": "ListenHTTP",
+  "properties": {
+    "port": "8080",
+    "path": "/error-log",
+    "max-request-size": "1MB"
+  }
+}
+```
+
+PutDatabaseRecord Processor:
+```json
+{
+  "name": "PutDatabaseRecord",
+  "properties": {
+    "table": "error_logs",
+    "schema": "error_id, message, file_name, line_number, error_category, timestamp, stack_trace",
+    "connection-pool": "mysql-pool"
+  }
+}
+```
+
+RouteOnAttribute Processor:
+```json
+{
+  "name": "RouteOnAttribute",
+  "properties": {
+    "error_category": "CRITICAL",
+    "routing-strategy": "Route to Property"
+  }
+}
+```
+
+APPLICATION CODE CHANGES:
+------------------------
+
+Current Error Logging: 
+```python
+# Only VALIDATION errors go to database
+ErrorLogger.log_error("VALIDATION", error_msg, __file__, 212)
+
+# All other errors go to terminal/console
+logger.error(f"TRANSFORMATION error: {str(e)}")
+logger.error(f"NEO4J connection error: {str(e)}")
+logger.error(f"File processing error: {str(e)}")
+```
+
+Proposed NiFi Error Logging:
+```python
+import requests
+import json
+
+def log_error_to_nifi(category: str, message: str, file_name: str = None, 
+                     line_number: int = None, include_stack_trace: bool = True):
+    """Log error to Apache NiFi"""
+    error_payload = {
+        "error_id": generate_error_id(),
+        "message": message,
+        "category": category,
+        "timestamp": datetime.now().isoformat(),
+        "file_name": file_name,
+        "line_number": line_number,
+        "stack_trace": traceback.format_stack() if include_stack_trace else None
+    }
+    
+    try:
+        response = requests.post(
+            "http://nifi-server:8080/error-log",
+            json=error_payload,
+            timeout=5
+        )
+        response.raise_for_status()
+    except Exception as e:
+        # Fallback to console logging if NiFi is unavailable
+        logger.error(f"Failed to log to NiFi: {str(e)}")
+        logger.error(f"Original error: {message}")
+```
+
+BENEFITS OF NIFI MIGRATION:
+---------------------------
+
+1. Scalability:
+   - Horizontal scaling with multiple NiFi nodes
+   - Automatic load balancing
+   - High availability with clustering
+
+2. Monitoring & Management:
+   - Real-time web UI with metrics
+   - Visual flow design and management
+   - Built-in alerting and notification
+   - Comprehensive audit trail
+
+3. Data Quality:
+   - Schema validation and enforcement
+   - Built-in data transformation
+   - Duplicate detection and handling
+   - Full data lineage tracking
+
+4. Integration Capabilities:
+   - Multiple database support (MySQL, PostgreSQL, Oracle)
+   - Message queue integration (Kafka, RabbitMQ)
+   - Cloud service integration (AWS, Azure, GCP)
+   - Monitoring tool integration (Prometheus, Grafana)
+
+IMPLEMENTATION TIMELINE:
+-----------------------
+
+Week 1: NiFi Setup & Basic Flow
+- Install and configure Apache NiFi
+- Implement basic error logging flow
+- Test with sample error events
+
+Week 2: Enhanced Features
+- Add error categorization and routing
+- Implement backup and notification
+- Performance testing and optimization
+
+Week 3: Application Integration
+- Update application code to use NiFi
+- Implement fallback mechanisms
+- Parallel testing with current system
+
+Week 4: Migration & Testing
+- Gradual migration of error sources
+- Comprehensive testing and validation
+- Performance comparison and optimization
+
+Week 5: Production Deployment
+- Deploy NiFi cluster for production
+- Remove legacy error logging code
+- Monitor and tune performance
+
+Week 6: Advanced Features
+- Implement advanced monitoring
+- Add custom processors if needed
+- Documentation and training
+
+RISK MITIGATION:
+----------------
+
+1. Parallel Implementation:
+   - Keep current system active during migration
+   - Gradual transition reduces risk
+   - Easy rollback if issues arise
+
+2. Fallback Mechanisms:
+   - Console logging if NiFi is unavailable
+   - Local file logging as backup
+   - Graceful degradation of features
+
+3. Testing Strategy:
+   - Comprehensive unit and integration tests
+   - Load testing with high error volumes
+   - Performance benchmarking
+
+4. Monitoring & Alerting:
+   - Real-time monitoring of NiFi health
+   - Alerting for system failures
+   - Performance metrics tracking
+
+SUCCESS METRICS:
+----------------
+
+1. Performance:
+   - Error logging latency < 100ms
+   - Throughput > 1000 errors/second
+   - 99.9% uptime for error logging system
+
+2. Reliability:
+   - Zero data loss during migration
+   - Successful error categorization
+   - Proper notification delivery
+
+3. Scalability:
+   - Support for 10x current error volume
+   - Horizontal scaling capability
+   - Load balancing effectiveness
+
+4. Monitoring:
+   - Real-time error visibility
+   - Comprehensive audit trail
+   - Proactive alerting
+
+NEXT STEPS:
+-----------
+1. Set up Apache NiFi development environment
+2. Design and implement basic error logging flow
+3. Create test scenarios and validation scripts
+4. Begin parallel implementation with current system
+5. Plan production deployment strategy
+
+================================================================================
 END OF DOCUMENTATION
 ================================================================================ 

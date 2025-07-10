@@ -50,17 +50,20 @@ try:
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     logger.info("Successfully connected to Neo4j database")
 except Exception as e:
-    logger.error(f"Failed to connect to Neo4j: {str(e)}")
+    logger.error(f"NEO4J connection error: {str(e)}")
     raise
 
-# Global error list to collect all errors during transformation
-transformation_errors = []  # Stores all transformation and validation errors for reporting
+# Import MySQL error logging
+from error_logger import ErrorLogger
 
 def cleanup():
-    """Cleanup function to close the Neo4j driver connection"""
+    """Cleanup function to close the Neo4j driver connection and error logger"""
     if driver:
         driver.close()
         logger.info("Neo4j connection closed")
+    
+    # Close error logger connection
+    ErrorLogger.close_connection()
 
 def parse_case_statement(transformation_rule: str) -> dict:
     """Parse a CASE statement transformation rule from Neo4j into a Python dictionary of mappings and default."""
@@ -127,15 +130,20 @@ def apply_transformation_rule(value: str, transformation: dict) -> str:
 
 def transform_sumtotal_file(input_df, mapping_rules, file_type):
     """Transform a SumTotal file according to mapping rules and file type."""
-    # Log input DataFrame details for debugging
-    logger.info(f"Processing file type: {file_type}")
-    logger.info(f"Input DataFrame shape: {input_df.shape}")
-    logger.info(f"Input DataFrame columns: {list(input_df.columns)}")
-    logger.info(f"Input DataFrame types: {input_df.dtypes.to_dict()}")
+    # Check for empty column names
+    empty_columns = [col for col in input_df.columns if col == '']
+    if empty_columns:
+        logger.error(f"Found {len(empty_columns)} empty column names in input DataFrame")
+        raise ValueError(f"Input DataFrame contains {len(empty_columns)} empty column names")
+    
+    # Check for duplicate column names
+    if len(input_df.columns) != len(set(input_df.columns)):
+        logger.error("Input DataFrame contains duplicate column names")
+        raise ValueError("Input DataFrame contains duplicate column names")
+    
     # Always create output DataFrame with at least one row
     num_rows = max(len(input_df), 1)
     output_df = pd.DataFrame(index=range(num_rows))
-    logger.info(f"Created output DataFrame with {num_rows} rows")
     populated_fields = set()  # Track which fields have been populated
     # Process all fields based on mapping rules
     for rule in mapping_rules:
@@ -146,20 +154,18 @@ def transform_sumtotal_file(input_df, mapping_rules, file_type):
         field_type = rule.get('field_type', '')
         char_length = rule.get('char_length', '')
         mandatory = rule.get('mandatory', '') == 'Mandatory'
-        # Log field processing details
-        logger.debug(f"\nProcessing field: {csod_field}")
-        logger.debug(f"- SumTotal field: {st_field}")
-        logger.debug(f"- Default value: {default_value}")
-        logger.debug(f"- Has transformation: {'Yes' if transformation else 'No'}")
-        logger.debug(f"- Field type: {field_type}")
-        logger.debug(f"- Character length: {char_length}")
-        logger.debug(f"- Mandatory: {mandatory}")
+        # Process field (logging removed for cleaner code)
         # Initialize field with empty string only if not already populated
         if csod_field not in output_df.columns:
             output_df[csod_field] = ''
         # Copy source values if mapping exists and not already populated
         if st_field and st_field in input_df.columns and csod_field not in populated_fields:
             try:
+                # Additional safety check for empty field names
+                if st_field == '':
+                    logger.error(f"Attempting to access empty field name for {csod_field}")
+                    raise ValueError(f"Cannot access empty field name for {csod_field}")
+                
                 values = input_df[st_field].fillna('')
                 # Ensure values is a pandas Series
                 if not isinstance(values, pd.Series):
@@ -167,9 +173,8 @@ def transform_sumtotal_file(input_df, mapping_rules, file_type):
                     values = pd.Series([values] * len(output_df))
                 output_df[csod_field] = values
                 populated_fields.add(csod_field)
-                logger.debug(f"- Copied values from {st_field} to {csod_field}")
             except Exception as e:
-                logger.error(f"Error processing field {st_field}: {str(e)}")
+                logger.error(f"TRANSFORMATION error: {str(e)}")
                 # Set empty values as fallback
                 output_df[csod_field] = [''] * len(output_df)
                 populated_fields.add(csod_field)
@@ -181,17 +186,14 @@ def transform_sumtotal_file(input_df, mapping_rules, file_type):
                     output_df.loc[non_empty_mask, csod_field] = values[non_empty_mask].apply(
                         lambda x: apply_transformation_rule(x, parsed_transform)
                     )
-        elif st_field and st_field in input_df.columns and csod_field in populated_fields:
-            logger.debug(f"- Skipping {csod_field} as it's already populated")
         elif st_field and st_field not in input_df.columns:
-            logger.warning(f"- SumTotal field '{st_field}' not found in input file for {csod_field}")
+            logger.warning(f"SumTotal field '{st_field}' not found in input file for {csod_field}")
         # Apply default value to empty cells ONLY if default value exists and field hasn't been populated
         if default_value and csod_field not in populated_fields:
             empty_mask = (output_df[csod_field].isna()) | (output_df[csod_field].astype(str).str.strip() == '')
             if empty_mask.any():
                 output_df.loc[empty_mask, csod_field] = default_value
                 populated_fields.add(csod_field)
-                logger.debug(f"- Applied default value '{default_value}' to {empty_mask.sum()} empty cells")
         elif not default_value and mandatory and csod_field not in populated_fields:
             # If no default value and field is mandatory, log warning but don't set a default
             logger.warning(f"Mandatory field {csod_field} has no default value - will remain empty if no SumTotal data")
@@ -200,21 +202,21 @@ def transform_sumtotal_file(input_df, mapping_rules, file_type):
             provider_values = input_df['Provider'].fillna('') if 'Provider' in input_df.columns else pd.Series([''] * len(output_df))
             output_df[csod_field] = provider_values.apply(lambda x: 'ILT' if 'ILT' in str(x) else 'ONLINE')
             populated_fields.add(csod_field)
-        # Log and record error if value exceeds char_length, but do NOT truncate
-        if char_length and char_length.isdigit():
-            max_length = int(char_length)
-            too_long_mask = output_df[csod_field].astype(str).str.len() > max_length
-            if too_long_mask.any():
-                # Store error details for each value exceeding char_length, but do NOT truncate
-                for idx in output_df[too_long_mask].index:
-                    original_value = output_df.at[idx, csod_field]
-                    error_msg = (f"Truncation warning: Field '{csod_field}' at row {idx} exceeded char_length {max_length}. "
-                                 f"Value: '{original_value}'")
-                    transformation_errors.append(error_msg)
-                    logger.error(error_msg)
-                logger.info(f"{too_long_mask.sum()} values in {csod_field} exceed {max_length} characters (not truncated)")
+        # Validate field using ErrorLogger
+        ErrorLogger.validate_field(
+            field_name=csod_field,
+            field_values=output_df[csod_field],
+            field_type=field_type,
+            char_length=char_length,
+            mandatory=mandatory
+        )
+    
+    # Process any queued validation errors before returning
+    ErrorLogger.process_error_queue()
+    
     # Return single DataFrame (original behavior)
     return output_df
+                    
 
 def process_directory(directory_path: str, output_dir: str, mapping_rules: dict) -> tuple:
     """Process all Excel files in a directory and its subdirectories"""
@@ -228,7 +230,6 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
             continue
             
         total += len(input_files)
-        logger.info(f"Found {len(input_files)} input files in {os.path.relpath(root, directory_path)}")
         
         # Create corresponding output directory structure
         rel_path = os.path.relpath(root, directory_path)
@@ -239,17 +240,9 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
             file_path = os.path.join(root, file)
             file_key = os.path.splitext(file)[0]
             
-            logger.info(f"\nProcessing file: {file}")
             try:
                 # Read Excel with empty strings instead of NaN
                 input_df = pd.read_excel(file_path, keep_default_na=False, na_values=[''])
-                logger.info(f"File shape: {input_df.shape}")
-                logger.info("Columns:")
-                for col in input_df.columns:
-                    # Show a sample of non-null values for each column
-                    sample = input_df[col].dropna().iloc[:3].tolist() if not input_df[col].empty else []
-                    logger.info(f"  - {col}")
-                    logger.info(f"    Sample values: {sample[:3]}")
                 
                 # Create empty mapping rules if none exist
                 if file_key not in mapping_rules:
@@ -257,7 +250,6 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
                         {"CSOD Field Name": col, "SumTotal Field Name": col}
                         for col in input_df.columns
                     ]
-                    logger.info(f"Created default 1:1 mapping for {file_key}")
                 
                 # Pass the file_key as file_type
                 transformed_df = transform_sumtotal_file(input_df, mapping_rules[file_key], file_key)
@@ -268,20 +260,17 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
                 # Write CSV without index and with empty strings for missing values
                 output_file_path = os.path.join(current_output_dir, f"{file_key}-CSOD.csv")
                 transformed_df.to_csv(output_file_path, index=False, na_rep="")
-                logger.info(f"Successfully transformed and saved: {output_file_path}")
                 processed += 1
                 
             except Exception as e:
-                logger.error(f"Failed to process {file_path}: {str(e)}", exc_info=True)
+                logger.error(f"FILE_PROCESSING error: {str(e)}")
                 failed += 1
                 
     return total, processed, failed
 
 def process_folder_sequence(source_folder: str, output_folder: str, mapping_rules: dict):
     """Process main folders in the specified sequence"""
-    logger.info("Starting main folder sequential processing")
-    logger.info(f"Source folder: {source_folder}")
-    logger.info(f"Output folder: {output_folder}")
+
 
     total_files = 0
     total_processed = 0
@@ -290,7 +279,7 @@ def process_folder_sequence(source_folder: str, output_folder: str, mapping_rule
     # Process each main folder in sequence
     for folder in FOLDER_SEQUENCE:
         current_folder = os.path.join(source_folder, folder)
-        logger.info(f"\n=== Processing main folder: {folder} ===")
+
         
         if not os.path.exists(current_folder):
             logger.warning(f"Main folder not found: {current_folder}")
@@ -311,16 +300,7 @@ def process_folder_sequence(source_folder: str, output_folder: str, mapping_rule
         total_processed += folder_processed
         total_failed += folder_failed
         
-        logger.info(f"=== Completed {folder} ===")
-        logger.info(f"Files found: {folder_total}")
-        logger.info(f"Successfully processed: {folder_processed}")
-        logger.info(f"Failed to process: {folder_failed}")
 
-    logger.info("\n=== Final Processing Summary ===")
-    logger.info(f"Total files found: {total_files}")
-    logger.info(f"Successfully processed: {total_processed}")
-    logger.info(f"Failed to process: {total_failed}")
-    logger.info("=============================")
 
 def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
     """Load and parse mapping rules from the Neo4j cypher file"""
@@ -329,7 +309,7 @@ def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
     current_st_field = None
     current_csod_field = None
     current_properties = {}  # Store all properties for current field
-    logger.setLevel(logging.DEBUG)  # Temporarily set to DEBUG for more verbose logging
+
 
     # First pass - collect all fields and their properties
     with open(filepath, 'r') as f:
@@ -342,7 +322,7 @@ def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
                 current_file = line.split('"')[1]
                 if current_file and current_file not in mapping_rules:
                     mapping_rules[current_file] = []
-                    logger.debug(f"\n=== Processing file: {current_file} ===")
+
                     
             elif line.startswith('MERGE (csod:CSODField {name:'):
                 if current_file:
@@ -353,7 +333,7 @@ def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
                         "Default value": "",
                         "transformation": ""
                     }
-                    logger.debug(f"Found CSOD field: {current_csod_field}")
+
                     
             elif line.startswith('SET csod.'):
                 if current_file and current_csod_field:
@@ -367,12 +347,12 @@ def load_mapping_rules_from_neo4j_file(filepath: str) -> Dict[str, List[Dict]]:
                         # Store default_value and other properties
                         if prop_name == 'default_value':
                             current_properties["default_value"] = prop_value
-                            logger.debug(f"  Setting default value: {prop_value}")
+
                         elif prop_name == 'transformation':
                             current_properties["transformation"] = prop_value
                         # Store all properties in case we need them
                         current_properties[prop_name] = prop_value
-                        logger.debug(f"  Property {prop_name} = {prop_value}")
+
                         
                     except ValueError as e:
                         logger.warning(f"Failed to parse property line: {line}")
@@ -474,6 +454,26 @@ def fetch_mapping_rules_from_neo4j(file_name: str) -> List[Dict]:
                        csod.output_document as output_document
                 """
                 result = session.run(query)
+            # Special handling for Transcript files - ensure they only fetch their specific rules
+            elif file_name.startswith("Transcript_"):
+                query = """
+                MATCH (f:File {name: $fileName})-[:OUTPUTS_FIELD]->(csod:CSODField)
+                WHERE f.name = $fileName
+                OPTIONAL MATCH (st:SumTotalField)-[:MAPS_TO]->(csod)
+                OPTIONAL MATCH (f)-[:HAS_FIELD]->(st)
+                RETURN csod.name as csod_field_name,
+                       st.name as sumtotal_field_name,
+                       csod.mandatory as mandatory,
+                       csod.field_type as field_type,
+                       csod.char_length as char_length,
+                       csod.default_value as default_value,
+                       csod.accepted_values as accepted_values,
+                       csod.transformation as transformation,
+                       f.name as file,
+                       csod.output_document as output_document
+                """
+                result = session.run(query, fileName=file_name)
+                logger.info(f"Executing Transcript-specific query for file: {file_name}")
             else:
                 # Regular query for other files
                 query = """
@@ -507,12 +507,13 @@ def fetch_mapping_rules_from_neo4j(file_name: str) -> List[Dict]:
                     "output_document": record.get("output_document") or ""
                 }
                 rules.append(rule)
+                logger.debug(f"Fetched rule: {rule['CSOD Field Name']} -> {rule['output_document']} (file: {rule['file']})")
             
             logger.info(f"Fetched {len(rules)} mapping rules from Neo4j for file: {file_name}")
             return rules
             
     except Exception as e:
-        logger.error(f"Error fetching mapping rules from Neo4j for {file_name}: {str(e)}")
+        logger.error(f"NEO4J query error: {str(e)}")
         raise
 
 def fetch_all_mapping_rules_from_neo4j() -> Dict[str, List[Dict]]:
@@ -534,7 +535,7 @@ def fetch_all_mapping_rules_from_neo4j() -> Dict[str, List[Dict]]:
         return all_rules
         
     except Exception as e:
-        logger.error(f"Error fetching all mapping rules from Neo4j: {str(e)}")
+        logger.error(f"NEO4J fetch error: {str(e)}")
         raise
 
 def transform_data(data: List[Dict], mapping_rules: List[Dict]) -> List[Dict]:
@@ -609,14 +610,7 @@ def transform_data(data: List[Dict], mapping_rules: List[Dict]) -> List[Dict]:
     
     return transformed_data
 
-def get_transformation_errors() -> List[str]:
-    """Return all collected transformation errors"""
-    return transformation_errors.copy()
 
-def clear_transformation_errors():
-    """Clear all collected transformation errors"""
-    global transformation_errors
-    transformation_errors = []
 
 if __name__ == "__main__":
     try:
@@ -635,7 +629,7 @@ if __name__ == "__main__":
         logger.info("Transformation process completed successfully")
         
     except Exception as e:
-        logger.error("Fatal error occurred", exc_info=True)
+        logger.error(f"SYSTEM error: {str(e)}")
         raise
     finally:
         cleanup()

@@ -162,6 +162,18 @@ SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length =
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_Curriculum"})
+MERGE (csod:CSODField {name: "Points", file: "Activity_Curriculum" })
+SET csod.mandatory = "Optional", csod.field_type = "Text", csod.char_length = "", csod.default_value = "", csod.accepted_values = "",  csod.output_document = "Activity_Curriculum"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod); 
+
+
+MERGE ( f:File {name: "Activity_Curriculum"})
+MERGE (csod:CSODField {name: "Badge", file: "Activity_Curriculum" })
+SET csod.mandatory = "Optional", csod.field_type = "Text", csod.char_length = "", csod.default_value = "", csod.accepted_values = "Onboarded, Onboarded (1), Presentation Expert, Curriculum Leader, Safety First, Video Master, NEW HIRE ONBOARDING SUCCESSFULLY DONE, voohoo, Above and Beyond, Great Work, DELETE",  csod.output_document = "Activity_Curriculum" 
+MERGE (f)-[:OUTPUTS_FIELD]->(csod); 
+
+
+MERGE ( f:File {name: "Activity_Curriculum"})
 MERGE (csod:CSODField {name: "Emails", file: "Activity_Curriculum" })
 SET csod.mandatory = "Optional", csod.field_type = "Enum", csod.char_length = "", csod.default_value = "No Email", csod.accepted_values = "System Default, No Email",  csod.output_document = "Activity_Curriculum"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod); 
@@ -177,11 +189,11 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_CurriculumStructure"})
 MERGE (csod:CSODField {name: "Section #*", file: "Activity_CurriculumStructure" })
-SET csod.mandatory = "Mandatory", csod.field_type = "Integer", csod.char_length = "999", csod.default_value = "1", csod.accepted_values = "",  csod.output_document = "Activity_CurriculumStructure"
+SET csod.mandatory = "Mandatory", csod.field_type = "Integer", csod.char_length = "999", csod.default_value = "", csod.accepted_values = "",  csod.output_document = "Activity_CurriculumStructure"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_CurriculumStructure"})
-MERGE (st:SumTotalField {name: "SectionName*", file: "Activity_CurriculumStructure"})
+MERGE (st:SumTotalField {name: "SectionName", file: "Activity_CurriculumStructure"})
 MERGE (f) -[:HAS_FIELD] -> (st)
 MERGE (csod:CSODField {name: "Section Name*", file: "Activity_CurriculumStructure" })
 SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = "",  csod.output_document = "Activity_CurriculumStructure"
@@ -855,18 +867,18 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 MERGE ( f:File {name: "Activity_OnlineCourse"})
 MERGE (st:SumTotalField {name: "EstimatedDuration", file: "Activity_OnlineCourse"})
 MERGE (f) -[:HAS_FIELD] -> (st)
-MERGE (csod:CSODField {name: "Training Hours*", file: "Activity_OnlineCourse" })
+MERGE (csod:CSODField {name: "Training Hours", file: "Activity_OnlineCourse" })
 SET csod.mandatory = "Optional", csod.field_type = "Time(0000:00:00)(HHHHHH:MM:SS)", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_OnlineCourse"})
-MERGE (csod:CSODField {name: "Available Languages*", file: "Activity_OnlineCourse" })
+MERGE (csod:CSODField {name: "Available Languages", file: "Activity_OnlineCourse" })
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "2000", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_OnlineCourse"})
-MERGE (csod:CSODField {name: "Keywords*", file: "Activity_OnlineCourse" })
+MERGE (csod:CSODField {name: "Keywords", file: "Activity_OnlineCourse" })
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1000", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
@@ -951,12 +963,12 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_OnlineCourse"})
 MERGE (csod:CSODField {name: "Height Screen Resolution", file: "Activity_OnlineCourse" })
-SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "9999", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_OnlineCourse"})
 MERGE (csod:CSODField {name: "Width Screen Resolution", file: "Activity_OnlineCourse" })
-SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "9999", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_OnlineCourse"})
@@ -1001,14 +1013,14 @@ MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_SessionParts"})
-MERGE (csod:CSODField {name: "Break Duration", file: "Activity_SessionParts" })
-SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "0", csod.accepted_values = ""
+MERGE (csod:CSODField {name: "Part Break", file: "Activity_SessionParts" })
+SET csod.mandatory = "Optional", csod.field_type = "Integer", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE (f:File {name: "Activity_SessionParts"})
 MERGE (st:SumTotalField {name: "Time Zone", file: "Activity_SessionParts"})
 MERGE (f) -[:HAS_FIELD] -> (st)
-MERGE (csod:CSODField {name: "Time Zone ID*", file: "Activity_SessionParts"})
+MERGE (csod:CSODField {name: "Time Zone ID", file: "Activity_SessionParts"})
 SET csod.mandatory = "Mandatory",
     csod.field_type = "Integer",
     csod.char_length = "",
@@ -1042,7 +1054,7 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 MERGE ( f:File {name: "Activity_SessionParts"})
 MERGE (st:SumTotalField {name: "SessionLocation", file: "Activity_SessionParts"})
 MERGE (f) -[:HAS_FIELD] -> (st)
-MERGE (csod:CSODField {name: "Part Location*", file: "Activity_SessionParts" })
+MERGE (csod:CSODField {name: "Location", file: "Activity_SessionParts" })
 SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "500", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
@@ -1052,7 +1064,7 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 MERGE ( f:File {name: "Activity_SessionParts"})
 MERGE (st:SumTotalField {name: "SessionInstructor", file: "Activity_SessionParts"})
 MERGE (f) -[:HAS_FIELD] -> (st)
-MERGE (csod:CSODField {name: "Part Instructor*", file: "Activity_SessionParts" })
+MERGE (csod:CSODField {name: "Instructor", file: "Activity_SessionParts" })
 SET csod.mandatory = "Mandatory", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]-> (csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
@@ -2960,3 +2972,937 @@ MERGE (csod:CSODField {name: "Author", file: "Prerequisites_Questions"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "128", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "EmployeeID"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "User ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "ActivityCode"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Curriculum ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "Training Status"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Transcript Status*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Request Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Registration Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Transcript Action"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Create, Update"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "CompletionDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Completion Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "DueDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Due Date/Time‡"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Archived"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Boolean",
+    csod.char_length = "",
+    csod.default_value = "false",
+    csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "User Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Approver Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "User's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Approver's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Exempt By"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "Note"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "245",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Training Points"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_CurriculumTranscript"})
+MERGE (csod:CSODField {name: "Training Badge"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "EmployeeID"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "User ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "ActivityCode"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Material ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "TrainingStatus"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Transcript Status*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "50",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Request Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Registration Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Transcript Action"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Create, Update"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "CompletionDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Completion Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "DueDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Due Date/Time‡"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Due Date Action type"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "Update ONLY for this transcript",
+    csod.accepted_values = "Update ONLY for this transcript, Update this and ALL LO associated transcript, Delete ONLY for this transcript, Delete for ALL LO associated transcript"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Archived"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Boolean",
+    csod.char_length = "",
+    csod.default_value = "false",
+    csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "User Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = "Other, Completed comparable training at prior organization, Acknowledged expert on subject matter, On leave, test"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Approver Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = "Other, Completed comparable training at prior organization, Acknowledged expert on subject matter, On leave, test"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "User's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "EIL",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Approver's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "EIL",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Exempt By"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "User performing the load",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (st:SumTotalField {name: "Notes"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "245",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Training Points"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_MaterialTranscript"})
+MERGE (csod:CSODField {name: "Training Badge"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "EmployeeID"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "User ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "ActivityCode"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Session ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "TrainingStatus"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Transcript Status"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "10",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "Score"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Score"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Integer",
+    csod.char_length = "Integer",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "Success"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Pass/Fail"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "Pass",
+    csod.accepted_values = "Fail, Pass"
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Request Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Registration Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "CompleteionDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Completion Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "DueDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Due Date/Time‡"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "User Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "Approver Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "User's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "Approver's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "Exempt By"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (st:SumTotalField {name: "Note"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "245",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_SessionTranscript"})
+MERGE (csod:CSODField {name: "Archived"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Boolean",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "EmployeeID"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "User ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "ActivityCode"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Online Course ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "TrainingStatus"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Transcript Status*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "50",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Request Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Registration Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Transcript Action"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Create, Update"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "CompletionDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Completion Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "DueDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Due Date/Time‡"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Due Date Action type"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "Score"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Score"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Integer",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Archived"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Boolean",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "User Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Approver Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "User's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Approver's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Exempt By"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (st:SumTotalField {name: "Note"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "245",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Training Points"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_OnlineCourse"})
+MERGE (csod:CSODField {name: "Training Badge"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "EmployeeID"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "User ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "ActivityCode"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Test ID*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "TrainingStatus"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Transcript Status*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "Char",
+    csod.char_length = "50",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Request Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "RegistrationDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Registration Date/Time*"})
+SET csod.mandatory = "Mandatory",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Transcript Action"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Create, Update"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "CompletionDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Completion Date/Time"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "DueDate"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Due Date/Time‡"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "DateTime",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Due Date Action type"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "Score"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Score"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Integer",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Archived"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Boolean",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "User Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Approver Exempt Reason"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "",
+    csod.default_value = "0",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "User's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Approver's Exemption Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "100",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Exempt By"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "128",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (st:SumTotalField {name: "Notes"})
+MERGE (f)-[:HAS_FIELD]->(st)
+MERGE (csod:CSODField {name: "Comments"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Char",
+    csod.char_length = "245",
+    csod.default_value = "",
+    csod.accepted_values = ""
+MERGE (st)-[:MAPS_TO]->(csod)
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Training Points"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE (f:File {name: "Transcript_TestTranscript"})
+MERGE (csod:CSODField {name: "Training Badge"})
+SET csod.mandatory = "Optional",
+    csod.field_type = "Enum",
+    csod.char_length = "",
+    csod.default_value = "",
+    csod.accepted_values = "Apply, Delete"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
