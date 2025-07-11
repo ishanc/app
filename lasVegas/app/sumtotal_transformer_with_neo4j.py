@@ -129,6 +129,10 @@ def apply_transformation_rule(value: str, transformation: dict) -> str:
     return default if default is not None else value
 
 def transform_sumtotal_file(input_df, mapping_rules, file_type):
+    # Debug: Print all input columns
+    print("Input columns:", input_df.columns.tolist())
+    print("Looking for ManagerID:", "ManagerID" in input_df.columns)
+def transform_sumtotal_file(input_df, mapping_rules, file_type):
     """Transform a SumTotal file according to mapping rules and file type."""
     # Check for empty column names
     empty_columns = [col for col in input_df.columns if col == '']
@@ -211,6 +215,7 @@ def transform_sumtotal_file(input_df, mapping_rules, file_type):
             mandatory=mandatory
         )
     
+
     # Process any queued validation errors before returning
     ErrorLogger.process_error_queue()
     
@@ -242,7 +247,7 @@ def process_directory(directory_path: str, output_dir: str, mapping_rules: dict)
             
             try:
                 # Read Excel with empty strings instead of NaN
-                input_df = pd.read_excel(file_path, keep_default_na=False, na_values=[''])
+                input_df = pd.read_excel(file_path, keep_default_na=False, na_values=[''], dtype=str)
                 
                 # Create empty mapping rules if none exist
                 if file_key not in mapping_rules:

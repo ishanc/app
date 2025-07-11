@@ -162,6 +162,11 @@ SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length =
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE ( f:File {name: "Activity_Curriculum"})
+MERGE (csod:CSODField {name: "Training Purpose", file: "Activity_Curriculum" })
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "", csod.default_value = "", csod.accepted_values = "テスト",  csod.output_document = "Activity_Curriculum"
+MERGE (f)-[:OUTPUTS_FIELD]->(csod);
+
+MERGE ( f:File {name: "Activity_Curriculum"})
 MERGE (csod:CSODField {name: "Points", file: "Activity_Curriculum" })
 SET csod.mandatory = "Optional", csod.field_type = "Text", csod.char_length = "", csod.default_value = "", csod.accepted_values = "",  csod.output_document = "Activity_Curriculum"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod); 
@@ -1811,7 +1816,7 @@ SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
-MERGE (st:SumTotalField {name: "ManagerID", file: "Core_Employee"})
+MERGE (st:SumTotalField {name: "ManagerId", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Manager", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
@@ -1820,12 +1825,12 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "Absent", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "Active, InActive, 1, 0, y, n, yes, no, t, f, true, false, on, off"
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "", csod.accepted_values = "Active, InActive, 1, 0, y, n, yes, no, t, f, true, false, on, off"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "Allow Reconciliation", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "0", csod.accepted_values = "Active, InActive, 1, 0, y, n, yes, no, t, f, true, false, on, off"
+SET csod.mandatory = "Optional", csod.field_type = "Boolean", csod.char_length = "", csod.default_value = "", csod.accepted_values = "Active, InActive, 1, 0, y, n, yes, no, t, f, true, false, on, off"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
@@ -2006,7 +2011,7 @@ MERGE (csod:CSODField {name: "Default Language", file: "Core_Employee"})
 SET csod.mandatory = "Optional", 
     csod.field_type = "Integer",
     csod.char_length = "",
-    csod.default_value = "1",
+    csod.default_value = "",
     csod.accepted_values = "",
     csod.transformation = "CASE WHEN input_value = 'en-US' THEN 1 WHEN Language = 'English (US)' THEN 1 WHEN Language = 'en-GB' THEN 2 WHEN Language = 'English (UK)' THEN 2 WHEN Language = 'fr-FR' THEN 13 WHEN Language = 'French (France)' THEN 13 WHEN Language = 'es-MX' THEN 14 WHEN Language = 'Spanish (Latin America)' THEN 14 ELSE 1 END"
 MERGE (st)-[:MAPS_TO]-> (csod)
@@ -2016,11 +2021,11 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "Time Zone", file: "Core_Employee"})
 MERGE (f) -[:HAS_FIELD] -> (st)
-MERGE (csod:CSODField {name: "Time Zone ID*", file: "Core_Employee"})
+MERGE (csod:CSODField {name: "Time Zone ID", file: "Core_Employee"})
 SET csod.mandatory = "Optional",
     csod.field_type = "Integer",
     csod.char_length = "",
-    csod.default_value = "9",
+    csod.default_value = "",
     csod.accepted_values = "",
     csod.transformation = "CASE WHEN input_value = 'America/New_York' THEN 14 WHEN input_value = 'America/Chicago' THEN 9 WHEN input_value = 'America/Los_Angeles' THEN 5 WHEN input_value = 'America/Denver' THEN 8 WHEN input_value = 'America/Phoenix' THEN 8 WHEN input_value = 'America/Anchorage' THEN 4 WHEN input_value = 'America/Juneau' THEN 4 WHEN input_value = 'Pacific/Honolulu' THEN 3 WHEN input_value = 'America/Honolulu' THEN 3 WHEN input_value = 'America/Toronto' THEN 14 WHEN input_value = 'America/Montreal' THEN 14 WHEN input_value = 'America/Vancouver' THEN 5 WHEN input_value = 'America/Seattle' THEN 5 WHEN input_value = 'America/Calgary' THEN 8 WHEN input_value = 'America/Edmonton' THEN 8 WHEN input_value = 'America/Winnipeg' THEN 9 WHEN input_value = 'America/Regina' THEN 9 WHEN input_value = 'America/Saskatoon' THEN 9 WHEN input_value = 'America/Halifax' THEN 16 WHEN input_value = 'America/Moncton' THEN 16 WHEN input_value = 'America/St_Johns' THEN 74 WHEN input_value = 'Europe/London' THEN 26 WHEN input_value = 'Europe/Dublin' THEN 26 WHEN input_value = 'Europe/Lisbon' THEN 26 WHEN input_value = 'Europe/Amsterdam' THEN 28 WHEN input_value = 'Europe/Berlin' THEN 28 WHEN input_value = 'Europe/Rome' THEN 28 WHEN input_value = 'Europe/Vienna' THEN 28 WHEN input_value = 'Europe/Stockholm' THEN 28 WHEN input_value = 'Europe/Belgrade' THEN 29 WHEN input_value = 'Europe/Bratislava' THEN 29 WHEN input_value = 'Europe/Budapest' THEN 29 WHEN input_value = 'Europe/Ljubljana' THEN 29 WHEN input_value = 'Europe/Prague' THEN 29 WHEN input_value = 'Europe/Brussels' THEN 30 WHEN input_value = 'Europe/Copenhagen' THEN 30 WHEN input_value = 'Europe/Madrid' THEN 30 WHEN input_value = 'Europe/Paris' THEN 30 WHEN input_value = 'Europe/Sarajevo' THEN 31 WHEN input_value = 'Europe/Skopje' THEN 31 WHEN input_value = 'Europe/Warsaw' THEN 31 WHEN input_value = 'Europe/Zagreb' THEN 31 WHEN input_value = 'Europe/Athens' THEN 33 WHEN input_value = 'Europe/Bucharest' THEN 33 WHEN input_value = 'Europe/Helsinki' THEN 34 WHEN input_value = 'Europe/Kiev' THEN 34 WHEN input_value = 'Europe/Riga' THEN 34 WHEN input_value = 'Asia/Jerusalem' THEN 35 WHEN input_value = 'Asia/Baghdad' THEN 36 WHEN input_value = 'Asia/Kuwait' THEN 37 WHEN input_value = 'Asia/Riyadh' THEN 37 WHEN input_value = 'Asia/Tehran' THEN 38 WHEN input_value = 'Asia/Muscat' THEN 39 WHEN input_value = 'Asia/Baku' THEN 40 WHEN input_value = 'Asia/Tbilisi' THEN 41 WHEN input_value = 'Asia/Yerevan' THEN 42 WHEN input_value = 'Asia/Kabul' THEN 43 WHEN input_value = 'Asia/Yekaterinburg' THEN 47 WHEN input_value = 'Asia/Tashkent' THEN 48 WHEN input_value = 'Asia/Kolkata' THEN 49 WHEN input_value = 'Asia/Kathmandu' THEN 50 WHEN input_value = 'Asia/Novosibirsk' THEN 51 WHEN input_value = 'Asia/Almaty' THEN 52 WHEN input_value = 'Asia/Dhaka' THEN 53 WHEN input_value = 'Asia/Rangoon' THEN 54 WHEN input_value = 'Asia/Bangkok' THEN 55 WHEN input_value = 'Asia/Krasnoyarsk' THEN 56 WHEN input_value = 'Asia/Shanghai' THEN 57 WHEN input_value = 'Asia/Irkutsk' THEN 58 WHEN input_value = 'Asia/Kuala_Lumpur' THEN 59 WHEN input_value = 'Asia/Perth' THEN 60 WHEN input_value = 'Asia/Tokyo' THEN 62 WHEN input_value = 'Asia/Seoul' THEN 63 WHEN input_value = 'Asia/Yakutsk' THEN 64 WHEN input_value = 'Asia/Adelaide' THEN 65 WHEN input_value = 'Australia/Darwin' THEN 66 WHEN input_value = 'Australia/Brisbane' THEN 67 WHEN input_value = 'Australia/Sydney' THEN 68 WHEN input_value = 'Australia/Melbourne' THEN 68 WHEN input_value = 'Australia/Hobart' THEN 68 WHEN input_value = 'Pacific/Guam' THEN 69 WHEN input_value = 'Australia/Adelaide' THEN 70 WHEN input_value = 'Australia/Perth' THEN 71 WHEN input_value = 'Pacific/Auckland' THEN 73 WHEN input_value = 'Pacific/Fiji' THEN 74 WHEN input_value = 'Pacific/Midway' THEN 76 WHEN input_value = 'Pacific/Samoa' THEN 77 WHEN input_value = 'Pacific/Guadalcanal' THEN 78 WHEN input_value = 'Pacific/Port_Moresby' THEN 79 WHEN input_value = 'Pacific/Noumea' THEN 80 WHEN input_value = 'Pacific/Kiritimati' THEN 81 WHEN input_value = 'Pacific/Kwajalein' THEN 82 WHEN input_value = 'Pacific/Apia' THEN 83 WHEN input_value = 'Pacific/Chatham' THEN 84 WHEN input_value = 'Pacific/Easter' THEN 85 WHEN input_value = 'Pacific/Galapagos' THEN 86 WHEN input_value = 'Pacific/Marquesas' THEN 87 WHEN input_value = 'Pacific/Gambier' THEN 88 WHEN input_value = 'Pacific/Pitcairn' THEN 89 WHEN input_value = 'Pacific/Niue' THEN 90 WHEN input_value = 'Pacific/Pago_Pago' THEN 91 WHEN input_value = 'Pacific/Rarotonga' THEN 92 WHEN input_value = 'Pacific/Tahiti' THEN 93 WHEN input_value = 'Pacific/Tarawa' THEN 94 WHEN input_value = 'Pacific/Wake' THEN 95 WHEN input_value = 'Pacific/Wallis' THEN 96 WHEN input_value = 'Pacific/Tongatapu' THEN 97 WHEN input_value = 'Pacific/Fakaofo' THEN 98 WHEN input_value = 'Pacific/Chuuk' THEN 99 WHEN input_value = 'Pacific/Pohnpei' THEN 100 WHEN input_value = 'Pacific/Kosrae' THEN 101 WHEN input_value = 'Pacific/Majuro' THEN 102 WHEN input_value = 'Pacific/Kwajalein' THEN 103 WHEN input_value = 'Pacific/Nauru' THEN 104 WHEN input_value = 'Pacific/Funafuti' THEN 105 WHEN input_value = 'Pacific/Wallis' THEN 106 WHEN input_value = 'Pacific/Tokelau' THEN 107 WHEN input_value = 'Pacific/Kanton' THEN 108 WHEN input_value = 'Pacific/Fakaofo' THEN 109 WHEN input_value = 'Pacific/Chatham' THEN 110 WHEN input_value = 'Pacific/Easter' THEN 111 WHEN input_value = 'Pacific/Galapagos' THEN 112 WHEN input_value = 'Pacific/Marquesas' THEN 113 WHEN input_value = 'EST' THEN 14 WHEN input_value = 'CST' THEN 9 WHEN input_value = 'MST' THEN 8 WHEN input_value = 'PST' THEN 5 WHEN input_value = 'HST' THEN 3 WHEN input_value = 'AKST' THEN 4 WHEN input_value = 'GMT' THEN 26 WHEN input_value = 'UTC' THEN 28 ELSE 9 END"
 MERGE (st)-[:MAPS_TO]-> (csod)
@@ -2136,7 +2141,7 @@ SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
-MERGE (csod:CSODField {name: "01344780", file: "Core_Employee"})
+MERGE (csod:CSODField {name: "1344780", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
@@ -2156,10 +2161,11 @@ SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "1
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
-MERGE (csod:CSODField {name: "Emergency Contact Name", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "Spouse/Partner, Parent, Child, Sibling, Other Relative, Friend"
+MERGE (csod:CSODField {name: "next of kin contact", file: "Core_Employee"})
+SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "", csod.default_value = "", csod.accepted_values = "Spouse/Partner, Parent, Child, Sibling, Other Relative, Friend"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
+
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "Emergency Contact Primary Telephone", file: "Core_Employee"})
 SET csod.mandatory = "Optional", csod.field_type = "Char", csod.char_length = "100", csod.default_value = "", csod.accepted_values = ""
@@ -2174,18 +2180,18 @@ MERGE (f:File {name: "Core_Employee"})
 MERGE (st:SumTotalField {name: "Primary Job JoiningDate", file: "Core_Employee"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Job Date", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "Date and Time", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
+SET csod.mandatory = "Optional", csod.field_type = "Date/Time", csod.char_length = "", csod.default_value = "", csod.accepted_values = ""
 MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "Practice Learner", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "Checkbox", csod.char_length = "100", csod.default_value = "", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive, False"
+SET csod.mandatory = "Optional", csod.field_type = "Checkbox", csod.char_length = "100", csod.default_value = "False", csod.accepted_values = "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive, False, True"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
 MERGE (csod:CSODField {name: "diana", file: "Core_Employee"})
-SET csod.mandatory = "Optional", csod.field_type = "RadioButton", csod.char_length = " ", csod.default_value = "", csod.accepted_values = "english"
+SET csod.mandatory = "Optional", csod.field_type = "RadioButton", csod.char_length = " ", csod.default_value = "english", csod.accepted_values = "english"
 MERGE (f)-[:OUTPUTS_FIELD]->(csod)
 ;
 MERGE (f:File {name: "Core_Employee"})
