@@ -4,7 +4,7 @@ services:
     image: file-server-app
     container_name: app-file-server
     ports:
-      - "8000:8000"
+      - "5001:8000"
     volumes:
       - ./file_server/uploads:/app/file_server/uploads
       - ./file_server/processed:/app/file_server/processed
