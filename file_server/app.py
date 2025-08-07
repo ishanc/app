@@ -6,14 +6,15 @@ import time
 import pandas as pd
 from datetime import datetime
 import logging
+import debugpy
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Add the lasVegas app directory to Python path
-LASVEGA_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
-sys.path.append(LASVEGA_APP_DIR)
+LASVEGAS_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
+sys.path.append(LASVEGAS_APP_DIR)
 
 import sumtotal_transformer_with_neo4j as transformer
 
@@ -165,9 +166,17 @@ def process_file(filepath):
             raise ValueError("Uploaded file contains duplicate column names")
         
         # Transform the data
-        transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key)
+        transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key, filename) #Pass original filename
+        try:
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+            from dashboard import Dashboard
+            dashboard = Dashboard()
+            completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
+            dashboard.store_completeness_metrics(filename, completeness_metrics)
+            dashboard.close_connections()
+        except Exception as e:
+            logger.error(f"Error calculating completeness for {filename}: {e}")
         
-       
         
         
         # Ensure empty strings instead of NaN in output
@@ -320,5 +329,11 @@ def delete_file(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+debugpy.listen(("localhost", 5679))  # Listen on all interfaces
+print("⏳ Waiting for debugger to attach...")
+debugpy.wait_for_client()  # This pauses execution until debugger connects
+print("✅ Debugger attached!")
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)

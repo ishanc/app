@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional
 import sys
 import pandas as pd
+from column_meta_data import ColumnMetaData
 
 class ErrorLogger:
     """
@@ -12,13 +13,15 @@ class ErrorLogger:
     Follows industry best practices for error logging and categorization.
     """
     
-    # Database configuration
+    # Database configuration- this needs to be corrected when pushed to AWS/ production. 
+    
     DB_CONFIG = {
         'host': 'localhost',
         'user': 'error_logger',
         'password': 'IerpAgents.com1%',
         'database': 'error_logging',
         'port': 3306
+        #should we add ssl_ca and ssl_verify?
     }
     
     # Error categories
@@ -34,14 +37,21 @@ class ErrorLogger:
     
     # Validation error types
     VALIDATION_ERROR_TYPES = {
-        'TRUNCATION': 'Field value exceeds character length limit',
-        'LEADING_SPACES': 'Field value has leading whitespace',
-        'TRAILING_SPACES': 'Field value has trailing whitespace',
-        'ENCODING_ISSUE': 'Field value contains invalid characters',
-        'MANDATORY_EMPTY': 'Mandatory field is empty or null',
-        'DATE_FORMAT': 'Invalid date/time format',
-        'LEADING_ZEROS': 'Numeric field has unwanted leading zeros',
-        'INVALID_FORMAT': 'Field value does not match expected format'
+        'TRUNCATION': 'Field value exceeds character length limit', #Source file error
+        'LEADING_SPACES': 'Field value has leading whitespace',#can fix in code/ workshop agent. 
+        'TRAILING_SPACES': 'Field value has trailing whitespace',#can fix in workshop agent
+        'ENCODING_ISSUE': 'Field value contains invalid characters',#source 
+        'MANDATORY_EMPTY': 'Mandatory field is empty or null',#source/ workshop 
+        'DATE_FORMAT': 'Invalid date/time format',#workshop depends on target format
+        'LEADING_ZEROS': 'Numeric field has unwanted leading zeros',#workshop confirmation
+        'DUPLICATE_RECORD': 'Duplicate record found',# need to implement logic for this. 
+        'HETEROGENEOUS_TYPE': 'Field contains heterogeneous data types',#workshop confirmation 
+        'OUTLIER_VALUE': 'Field value is an outlier', #date cannot be too much of an outlier. percentage cannot be more than 100% 
+        'TYPE_COMPATIBILITY': 'Field value is not type compatible', #compatability issue inside workshop, right parameters/logic. 
+        'BOOLEAN_CONVERSION': 'Boolean value transformation issue', #transformation validation workshop trasnformation
+        'HEADER_INCONSISTENCY': 'File header/structure inconsistency',#workshop confirmation
+        'DELIMITER_ISSUE': 'File delimiter/structure issue',#add logic for this. 
+        'COMPLETENESS_SCORE': 'Data completeness issue'#output into the error field. report to the user. As a percentage, use as a test metric. 
     }
     
     _logger = None
@@ -82,11 +92,13 @@ class ErrorLogger:
             file_name VARCHAR(255),
             line_number INT,
             error_category VARCHAR(50) NOT NULL,
+            validation_type VARCHAR(50),
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             stack_trace TEXT,
             INDEX idx_category (error_category),
             INDEX idx_timestamp (timestamp),
-            INDEX idx_file (file_name)
+            INDEX idx_file (file_name),
+            INDEX idx_validation_type (validation_type)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         """
         
@@ -103,117 +115,43 @@ class ErrorLogger:
         except mysql.connector.Error as e:
             cls._get_logger().error(f"Failed to create error logging table: {str(e)}")
     
+
+    
+   
     @classmethod
-    def log_error(cls, category: str, message: str, file_name: Optional[str] = None, 
-                  line_number: Optional[int] = None, include_stack_trace: bool = True):
+    def get_errors_by_validation_type(cls, validation_type: str, limit: int = 100) -> list:
         """
-        Log an error to the MySQL database.
+        Retrieve validation types from database.
         
         Args:
-            category: Error category (must be one of ERROR_CATEGORIES keys)
-            message: Error message
-            file_name: Name of the file where error occurred
-            line_number: Line number where error occurred
-            include_stack_trace: Whether to include stack trace in log
+            validation_type: Validation type to filter by
+            limit: Maximum number of records to return
+            
+        Returns:
+            List of validation types
         """
-        # Validate category
-        if category not in cls.ERROR_CATEGORIES:
-            category = 'SYSTEM'  # Default to SYSTEM if invalid category
-        
-        # Get stack trace if requested
-        stack_trace = None
-        if include_stack_trace:
-            try:
-                stack_trace = ''.join(traceback.format_stack())
-            except:
-                stack_trace = "Unable to capture stack trace"
-        
-        # Prepare file name
-        if file_name is None:
-            file_name = "unknown"
-        
-        # Log to console first (for immediate visibility)
-        logger = cls._get_logger()
-        logger.error(f"[{category}] {message} - File: {file_name}, Line: {line_number}")
-        
-        # Try to log to database
         try:
             connection = cls._get_db_connection()
             if connection:
-                # Ensure table exists, check flag first 
-                if not cls._table_verified:
-                    cls._create_error_table()
-                    cls._table_verified = True
-                
-                
-                # Insert error record
-                insert_sql = """
-                INSERT INTO error_logs (message, file_name, line_number, error_category, stack_trace)
-                VALUES (%s, %s, %s, %s, %s)
+                cursor = connection.cursor(dictionary=True)
+                query = """
+                SELECT error_id, message, file_name, line_number, error_category, validation_type, timestamp, stack_trace
+                FROM error_logs
+                WHERE validation_type = %s
+                ORDER BY timestamp DESC
+                LIMIT %s
                 """
-                
-                cursor = connection.cursor()
-                cursor.execute(insert_sql, (message, file_name, line_number, category, stack_trace))
-                connection.commit()
+                cursor.execute(query, (validation_type, limit))
+                results = cursor.fetchall()
                 cursor.close()
-                
-                logger.debug(f"Error logged to database successfully")
+                return results
             else:
-                logger.error("Failed to log error to database - no database connection")
-                
+                cls._logger.error("Cannot retrieve validation types")
+                return []
         except mysql.connector.Error as e:
-            logger.error(f"Failed to log error to database: {str(e)}")
-        except Exception as e:
-            logger.error(f"Unexpected error while logging to database: {str(e)}")
-    
-    @classmethod
-    def log_exception(cls, category: str, exception: Exception, file_name: Optional[str] = None, 
-                     line_number: Optional[int] = None):
-        """
-        Log an exception with full details.
-        
-        Args:
-            category: Error category
-            exception: The exception object
-            file_name: Name of the file where exception occurred
-            line_number: Line number where exception occurred
-        """
-        message = f"Exception: {type(exception).__name__}: {str(exception)}"
-        stack_trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
-        
-        # Log to console
-        logger = cls._get_logger()
-        logger.error(f"[{category}] {message}", exc_info=True)
-        
-        # Try to log to database
-        try:
-            connection = cls._get_db_connection()
-            if connection:
-                # Ensure table exists, check flag first 
-                if not cls._table_verified:
-                    cls._create_error_table()
-                    cls._table_verified = True
-                
-                # Insert error record
-                insert_sql = """
-                INSERT INTO error_logs (message, file_name, line_number, error_category, stack_trace)
-                VALUES (%s, %s, %s, %s, %s)
-                """
-                
-                cursor = connection.cursor()
-                cursor.execute(insert_sql, (message, file_name, line_number, category, stack_trace))
-                connection.commit()
-                cursor.close()
-                
-                logger.debug(f"Exception logged to database successfully")
-            else:
-                logger.error("Failed to log exception to database - no database connection")
-                
-        except mysql.connector.Error as e:
-            logger.error(f"Failed to log exception to database: {str(e)}")
-        except Exception as e:
-            logger.error(f"Unexpected error while logging exception to database: {str(e)}")
-    
+            cls._logger.error(f"Failed to retrieve validation types: {str(e)}")
+            return []
+   
     @classmethod
     def get_errors_by_category(cls, category: str, limit: int = 100) -> list:
         """
@@ -231,7 +169,7 @@ class ErrorLogger:
             if connection:
                 cursor = connection.cursor(dictionary=True)
                 query = """
-                SELECT error_id, message, file_name, line_number, error_category, 
+                SELECT error_id, message, file_name, line_number, error_category, validation_type,
                        timestamp, stack_trace
                 FROM error_logs 
                 WHERE error_category = %s 
@@ -266,7 +204,7 @@ class ErrorLogger:
             if connection:
                 cursor = connection.cursor(dictionary=True)
                 query = """
-                SELECT error_id, message, file_name, line_number, error_category, 
+                SELECT error_id, message, file_name, line_number, error_category, validation_type,
                        timestamp, stack_trace
                 FROM error_logs 
                 WHERE timestamp >= DATE_SUB(NOW(), INTERVAL %s HOUR)
@@ -319,6 +257,10 @@ class ErrorLogger:
     # Queue for batch error processing
     _error_queue = []
     _queue_lock = None
+    #Error type counting
+    _error_type_counts = {}
+    
+    
     
     @classmethod
     def _get_queue_lock(cls):
@@ -328,9 +270,38 @@ class ErrorLogger:
             cls._queue_lock = threading.Lock()
         return cls._queue_lock
     
+    
+    #method to return all current counts of error types
     @classmethod
+    def get_error_type_counts(cls):
+        """
+        Get the current counts of all error types.
+        
+        Returns:
+            Dictionary with error type counts
+        """
+        #get current counts of error types
+        
+        #if the error type counts dictionary is empty, return an empty dictionary
+        return dict(cls._error_type_counts)
+    
+    #method to reset the error type counts
+    @classmethod
+    def reset_error_type_counts(cls):
+        """
+        Reset all error type counts. Useful between file processing turns. """
+        cls._error_type_counts.clear()
+    
+    #method to get the count of a specific error type
+    @classmethod
+    def get_error_count(cls, error_type: str) -> int:
+        """Get count for a specific error type"""
+        return cls._error_type_counts.get(error_type, 0)
+    
+    @classmethod # made to be agnostic of the input file name. 
     def queue_validation_error(cls, error_type: str, field_name: str, row_number: int, 
-                              value: str, max_length: int = None, expected_format: str = None):
+                        value: str, max_length: int = None, expected_format: str = None, file_name: str = None, 
+                        line_number: int = None, field_values: pd.Series = None):
         """
         Queue a validation error for batch processing.
         
@@ -341,11 +312,22 @@ class ErrorLogger:
             value: The problematic value
             max_length: Maximum allowed length (for truncation errors)
             expected_format: Expected format (for date/format errors)
+            field_values: Pandas Series containing the field values (for checking input field name)
         """
         if error_type not in cls.VALIDATION_ERROR_TYPES:
-            error_type = 'INVALID_FORMAT'
+            raise ValueError(f"Invalid error type '{error_type}'. Must be one of: {list(cls.VALIDATION_ERROR_TYPES.keys())}")
         
-        error_details = {
+        # Check if this field has a source mapping (input field name exists)
+        # If no input field name exists, skip logging the error
+        if field_values is not None and hasattr(field_values, 'attrs'):
+            if 'input_field_name' not in field_values.attrs:
+                # No source field mapping exists - skip this error
+                return
+        
+        #Increment error count
+        cls._error_type_counts[error_type] = cls._error_type_counts.get(error_type, 0) + 1
+        
+        error_details = { 
             'category': 'VALIDATION',
             'error_type': error_type,
             'field_name': field_name,
@@ -354,8 +336,8 @@ class ErrorLogger:
             'max_length': max_length,
             'expected_format': expected_format,
             'timestamp': datetime.now(),
-            'file_name': 'unknown',
-            'line_number': None
+            'file_name': file_name,
+            'line_number': row_number + 1 if row_number is not None else None  # Convert to 1-based file line number
         }
         
         with cls._get_queue_lock():
@@ -391,7 +373,8 @@ class ErrorLogger:
         elif error_type == 'LEADING_ZEROS':
             return f"Field '{field_name}' at row {row_number} has unwanted leading zeros. Value: '{value}'"
         else:
-            return f"Field '{field_name}' at row {row_number} has invalid format. Value: '{value}'"
+            # No fallback - only specific error types are allowed
+            return f"Field '{field_name}' at row {row_number} has validation error type '{error_type}'. Value: '{value}'" 
     
     @classmethod
     def process_error_queue(cls, batch_size: int = 100):
@@ -431,8 +414,8 @@ class ErrorLogger:
             
             # Prepare batch insert
             insert_sql = """
-            INSERT INTO error_logs (message, file_name, line_number, error_category, stack_trace)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO error_logs (message, file_name, line_number, error_category, validation_type, stack_trace)
+            VALUES (%s, %s, %s, %s, %s, %s)
             """
             
             # Process each error in the batch
@@ -443,7 +426,7 @@ class ErrorLogger:
                 category = error_details['category']
                 stack_trace = None
                 
-                cursor.execute(insert_sql, (message, file_name, line_number, category, stack_trace))
+                cursor.execute(insert_sql, (message, file_name, line_number,category,error_details['error_type'], stack_trace))
             
             # Commit the entire batch
             connection.commit()
@@ -471,9 +454,9 @@ class ErrorLogger:
         with cls._get_queue_lock():
             cls._error_queue.clear()
     
-    @classmethod
+    @classmethod 
     def validate_field(cls, field_name: str, field_values: pd.Series, field_type: str = '', 
-                      char_length: str = '', mandatory: bool = False):
+                      char_length: str = '', mandatory: bool = False, file_name : str = None):
         """
         Comprehensive field validation - handles all validation types
         
@@ -486,18 +469,252 @@ class ErrorLogger:
         """
         # Validate mandatory fields
         if mandatory:
-            cls._validate_mandatory_field(field_name, field_values)
+            cls._validate_mandatory_field(field_name, field_values, file_name)
         
         # Validate character length (truncation)
         if char_length and char_length.isdigit():
-            cls._validate_truncation(field_name, field_values, int(char_length))
+            cls._validate_truncation(field_name, field_values, int(char_length), file_name)
         
         # Validate encoding for text fields
         if field_type == 'Char':
-            cls._validate_encoding(field_name, field_values)
+            cls._validate_encoding(field_name, field_values, file_name)
+    
+#--VALIDATION METHODS--
+    #method to detect outliers
+    @classmethod
+    def detect_outliers(cls, field_name: str, field_values: pd.Series, file_name: str = None, method: str = 'iqr'):
+        """Detect outlier values using IQR or z-score method, dates needed to be added. 
+        """ 
+        try:
+            numeric_values = pd.to_numeric(field_values, errors='coerce').dropna()
+            if len(numeric_values) < 3:
+                return
+            
+            if method == 'iqr':
+                q1, q3 = numeric_values.quantile([0.25, 0.75])
+                iqr = q3 - q1
+                lower_bound = q1 - 1.5 * iqr
+                upper_bound = q3 + 1.5 * iqr
+                outlier_mask = (numeric_values < lower_bound) | (numeric_values > upper_bound)
+            else:  # z-score
+                z_scores = abs((numeric_values - numeric_values.mean()) / numeric_values.std())
+                outlier_mask = z_scores > 3
+            
+            outlier_indices = numeric_values[outlier_mask].index
+            for idx in outlier_indices:
+                cls.queue_validation_error('OUTLIER_VALUE', field_name, idx, numeric_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Outlier detection failed for field '{field_name}': {str(e)}")
     
     @classmethod
-    def _validate_mandatory_field(cls, field_name: str, field_values: pd.Series):
+    def detect_heterogeneous_types(cls, field_name: str, field_values: pd.Series, file_name: str = None):
+        """Detect true heterogeneous data when fundamentally different data types are mixed in"""
+        try:
+            # Single pass collection
+            pure_numeric = []
+            text_based = []
+            
+            # Main processing loop
+            for idx, value in field_values.items():
+                if pd.notna(value) and (str_val := str(value).strip()):
+                    if str_val.isdigit():
+                        pure_numeric.append((idx, str_val))
+                    else:
+                        text_based.append((idx, str_val))
+            
+            total = len(pure_numeric) + len(text_based)
+            if total == 0:
+                return 
+            
+            # Calculate percentages
+            numeric_pct = len(pure_numeric) / total
+            text_pct = len(text_based) / total
+            
+            # Only flag if we have a significant mix (not 95%+ of one type)
+            if 0.05 < numeric_pct < 0.95:  # Between 5% and 95% numeric
+                cls._get_logger().info(
+                    f"Column '{field_name}' has mixed types: "
+                    f"{numeric_pct:.1%} numeric, {text_pct:.1%} text"
+                )
+                
+                # Determine minority type to flag as errors
+                if numeric_pct < text_pct:
+                    # Numeric values are the minority - flag them
+                    for idx, val in pure_numeric:
+                        cls.queue_validation_error(
+                            'HETEROGENEOUS_TYPE', field_name, idx, val,
+                            file_name=file_name, line_number=idx, field_values=field_values
+                        )
+                else:
+                    # Text values are the minority - flag them
+                    for idx, val in text_based:
+                        cls.queue_validation_error(
+                            'HETEROGENEOUS_TYPE', field_name, idx, val,
+                            file_name=file_name, line_number=idx, field_values=field_values
+                        )
+                    
+        except Exception as e:
+            cls._get_logger().warning(f"Heterogeneous type detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_leading_spaces(cls, field_name: str, field_values: pd.Series, file_name: str = None):
+        """Detect leading spaces in text fields"""
+        try:
+            leading_mask = field_values.astype(str).str.match(r'^\s+')
+            for idx in field_values[leading_mask].index:
+                cls.queue_validation_error('LEADING_SPACES', field_name, idx, field_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Leading spaces detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_trailing_spaces(cls, field_name: str, field_values: pd.Series, file_name: str = None):
+        """Detect trailing spaces in text fields"""
+        try:
+            trailing_mask = field_values.astype(str).str.match(r'.*\s+$')
+            for idx in field_values[trailing_mask].index:
+                cls.queue_validation_error('TRAILING_SPACES', field_name, idx, field_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Trailing spaces detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_date_format_issues(cls, field_name: str, field_values: pd.Series, expected_format: str = None, file_name: str = None):
+        """Detect invalid date formats"""
+        try:
+            for idx, value in field_values.items():
+                if pd.notna(value) and str(value).strip():
+                    try:
+                        pd.to_datetime(value)
+                    except:
+                        cls.queue_validation_error('DATE_FORMAT', field_name, idx, value, expected_format=expected_format, file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Date format detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_leading_zeros(cls, field_name: str, field_values: pd.Series, file_name: str = None):
+        """Detect unwanted leading zeros in numeric fields"""
+        try:
+            for idx, value in field_values.items():
+                if pd.notna(value) and str(value).startswith('0') and len(str(value)) > 1:
+                    try:
+                        int(value)  # Check if it's actually numeric
+                        cls.queue_validation_error('LEADING_ZEROS', field_name, idx, value, file_name=file_name, line_number=idx, field_values=field_values)
+                    except ValueError:
+                        pass  # Not numeric, skip
+        except Exception as e:
+            cls._get_logger().warning(f"Leading zeros detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_type_compatibility(cls, field_name: str, field_values: pd.Series, expected_type: str, file_name: str = None):
+        """Detect type compatibility issues"""
+        try:
+            if expected_type == 'integer':
+                non_int_mask = pd.to_numeric(field_values, errors='coerce').isna()
+                for idx in field_values[non_int_mask].index:
+                    cls.queue_validation_error('TYPE_COMPATIBILITY', field_name, idx, field_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+            elif expected_type == 'decimal':
+                non_num_mask = pd.to_numeric(field_values, errors='coerce').isna()
+                for idx in field_values[non_num_mask].index:
+                    cls.queue_validation_error('TYPE_COMPATIBILITY', field_name, idx, field_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Type compatibility detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_boolean_conversion_issues(cls, field_name: str, field_values: pd.Series, file_name: str = None):
+        """Detect boolean conversion issues"""
+        try:
+            valid_bools = ['true', 'false', '1', '0', 'yes', 'no', 'y', 'n', 't', 'f']
+            invalid_bool_mask = ~field_values.astype(str).str.lower().isin(valid_bools)
+            for idx in field_values[invalid_bool_mask].index:
+                if pd.notna(field_values.loc[idx]) and str(field_values.loc[idx]).strip():
+                    cls.queue_validation_error('BOOLEAN_CONVERSION', field_name, idx, field_values.loc[idx], file_name=file_name, line_number=idx, field_values=field_values)
+        except Exception as e:
+            cls._get_logger().warning(f"Boolean conversion detection failed for field '{field_name}': {str(e)}")
+    
+    @classmethod
+    def detect_header_inconsistency(cls, df: pd.DataFrame, expected_headers: list = None, file_name: str = None):
+        """Detect header/structure inconsistencies"""#delimiter issue, record terminator - file structure and consistency error
+        try:
+            if expected_headers:
+                missing_headers = set(expected_headers) - set(df.columns)
+                extra_headers = set(df.columns) - set(expected_headers)
+                if missing_headers or extra_headers:
+                    cls.queue_validation_error('HEADER_INCONSISTENCY', 'HEADERS', 0, f"Missing: {missing_headers}, Extra: {extra_headers}", file_name=file_name, line_number=0)
+        except Exception as e:
+            cls._get_logger().warning(f"Header inconsistency detection failed: {str(e)}")
+    
+    @classmethod
+    def calculate_completeness_score(cls, df: pd.DataFrame, mandatory_fields: list = None, file_name: str = None):#object by unique identifier file going by record 
+        """Calculate and log data completeness score"""
+        try:
+            if mandatory_fields:
+                completeness_scores = {}
+                for field in mandatory_fields:
+                    if field in df.columns:
+                        non_empty_count = df[field].notna().sum()
+                        total_count = len(df)
+                        completeness = non_empty_count / total_count if total_count > 0 else 0
+                        completeness_scores[field] = completeness
+                        
+                        if completeness < 0.9:  # Log if completeness is below 90%
+                            cls.queue_validation_error('COMPLETENESS_SCORE', field, 0, f"Completeness: {completeness:.2%}", file_name=file_name, line_number=0)
+            else:
+                # Overall completeness
+                total_cells = df.size
+                non_empty_cells = df.notna().sum().sum()
+                overall_completeness = non_empty_cells / total_cells if total_cells > 0 else 0
+                
+                if overall_completeness < 0.8:  # Log if overall completeness is below 80%
+                    cls.queue_validation_error('COMPLETENESS_SCORE', 'OVERALL', 0, f"Overall completeness: {overall_completeness:.2%}", file_name=file_name, line_number=0)
+        except Exception as e:
+            cls._get_logger().warning(f"Completeness score calculation failed: {str(e)}")
+    
+    @classmethod
+    def comprehensive_validation(cls, df: pd.DataFrame, field_configs: dict = None, file_name: str = None):
+        """Run comprehensive validation on entire DataFrame"""
+        try:
+            for col in df.columns:
+                field_config = field_configs.get(col, {}) if field_configs else {}
+                
+                # Basic validations
+                cls.validate_field(
+                    col, df[col], 
+                    field_config.get('field_type', ''),
+                    field_config.get('char_length', ''),
+                    field_config.get('mandatory', False),
+                    file_name
+                )
+                
+                # Additional validations
+                if field_config.get('check_outliers', False):
+                    cls.detect_outliers(col, df[col], file_name)
+                
+                if field_config.get('check_heterogeneous', False):
+                    cls.detect_heterogeneous_types(col, df[col], file_name)
+                
+                if field_config.get('field_type') == 'Char':
+                    cls.detect_leading_spaces(col, df[col], file_name)
+                    cls.detect_trailing_spaces(col, df[col], file_name)
+                
+                if field_config.get('field_type') in ['date', 'datetime']:
+                    cls.detect_date_format_issues(col, df[col], field_config.get('date_format'), file_name)
+                
+                if field_config.get('field_type') in ['integer', 'decimal']:
+                    cls.detect_leading_zeros(col, df[col], file_name)
+                    cls.detect_type_compatibility(col, df[col], field_config.get('field_type'), file_name)
+                
+                if field_config.get('field_type') == 'boolean':
+                    cls.detect_boolean_conversion_issues(col, df[col], file_name)
+            
+            # File-level validations
+            if field_configs:
+                mandatory_fields = [col for col, config in field_configs.items() if config.get('mandatory', False)]
+                cls.calculate_completeness_score(df, mandatory_fields, file_name)
+            
+        except Exception as e:
+            cls._get_logger().warning(f"Comprehensive validation failed: {str(e)}") 
+        
+    @classmethod
+    def _validate_mandatory_field(cls, field_name: str, field_values: pd.Series, file_name: str = None):
         """Validate mandatory fields are not empty"""
         try:
             empty_mask = (field_values.isna() | (field_values.astype(str).str.strip() == ''))
@@ -508,15 +725,14 @@ class ErrorLogger:
                     # Skip empty string indices
                     if idx == '':
                         continue
-                    cls.queue_validation_error('MANDATORY_EMPTY', field_name, idx, '')
+                    cls.queue_validation_error('MANDATORY_EMPTY', field_name, idx, '', file_name = file_name, line_number = idx, field_values=field_values)
         except Exception as e:
             # Log the error but don't crash the validation
             logger = cls._get_logger()
             logger.warning(f"Mandatory field validation failed for field '{field_name}': {str(e)}")
     
     @classmethod
-    def _validate_truncation(cls, field_name: str, field_values: pd.Series, max_length: int):
-        """Validate field values don't exceed character length"""
+    def _validate_truncation(cls, field_name: str, field_values: pd.Series, max_length: int, file_name: str = None):
         try:
             too_long_mask = field_values.astype(str).str.len() > max_length
             if too_long_mask.any():
@@ -528,7 +744,7 @@ class ErrorLogger:
                         continue
                     try:
                         original_value = field_values.at[idx]
-                        cls.queue_validation_error('TRUNCATION', field_name, idx, original_value, max_length)
+                        cls.queue_validation_error('TRUNCATION', field_name, idx, original_value, max_length, file_name=file_name, line_number=idx, field_values=field_values)
                     except KeyError:
                         # Skip if index doesn't exist
                         continue
@@ -538,12 +754,23 @@ class ErrorLogger:
             logger.warning(f"Truncation validation failed for field '{field_name}': {str(e)}")
     
     @classmethod
-    def _validate_encoding(cls, field_name: str, field_values: pd.Series):
+    def _validate_encoding(cls, field_name: str, field_values: pd.Series, file_name: str = None):
         """Validate text fields don't contain invalid characters"""
         try:
-            encoding_issues_mask = field_values.astype(str).apply(
-                lambda x: x and not x.isascii()
-            )
+            # Define acceptable special characters (in addition to ASCII)
+            ACCEPTABLE_SPECIAL_CHARS = {'‡'}  # Add more special characters here if needed
+            
+            def is_valid_character(char):
+                """Check if a character is valid (ASCII or in acceptable special chars)"""
+                return char.isascii() or char in ACCEPTABLE_SPECIAL_CHARS
+            
+            def has_invalid_chars(text):
+                """Check if text contains any invalid characters"""
+                if not text:
+                    return False
+                return not all(is_valid_character(char) for char in text)
+            
+            encoding_issues_mask = field_values.astype(str).apply(has_invalid_chars)
             if encoding_issues_mask.any():
                 # Get the problematic indices safely
                 problematic_indices = encoding_issues_mask[encoding_issues_mask].index
@@ -553,13 +780,11 @@ class ErrorLogger:
                         continue
                     try:
                         original_value = field_values.at[idx]
-                        cls.queue_validation_error('ENCODING_ISSUE', field_name, idx, original_value)
+                        cls.queue_validation_error('ENCODING_ISSUE', field_name, idx, original_value,file_name=file_name, line_number=idx, field_values=field_values)
                     except KeyError:
                         # Skip if index doesn't exist
                         continue
         except Exception as e:
             # Log the error but don't crash the validation
             logger = cls._get_logger()
-            logger.warning(f"Encoding validation failed for field '{field_name}': {str(e)}")
- 
-   
+            logger.warning(f"Encoding validation failed for field '{field_name}': {str(e)}") 

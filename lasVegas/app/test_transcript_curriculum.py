@@ -51,7 +51,7 @@ def get_transcript_curriculum_rules(cypher_file_path: str) -> Dict:
                         prop_line = line[9:].strip()
                         prop_name, prop_value = prop_line.split('=', 1)
                         prop_name = prop_name.strip()
-                        prop_value = prop_value.strip().strip('"').strip("'").rstrip(',')
+                        prop_value = prop_value.strip().rstrip(',')
                         
                         # Map Neo4j property names to our dictionary keys
                         prop_mapping = {

@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Set working directory
-WORKDIR /app/file_server
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,9 +12,10 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements first to leverage Docker cache
 COPY file_server/requirements.txt .
+COPY lasVegas/requirements.txt ./backend_requirements.txt
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt -r  backend_requirements.txt
 
 # Copy the entire application
 COPY . .
@@ -28,7 +29,7 @@ ENV FLASK_APP=file_server/app.py
 ENV FLASK_ENV=production
 
 # Verify critical files exist
-RUN test -f neo4j_knowledge_graph_cypher.txt || (echo "Neo4j mapping file not found" && exit 1)
+RUN test -f test.cypher || (echo "Neo4j mapping file not found" && exit 1)
 RUN test -f lasVegas/app/sumtotal_transformer_with_neo4j.py || (echo "Transformer module not found" && exit 1)
 RUN test -f file_server/templates/index.html || (echo "Template file not found" && exit 1)
 
