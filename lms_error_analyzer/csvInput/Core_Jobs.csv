@@ -1,0 +1,1609 @@
+JOB_CODE,JOB_NAME,created By EmployeeID,JOB_DESC
+100258 (old),TEMP,DefaultAdmin,
+110021,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+110027,Supervisor(delete),DefaultAdmin,
+110074,Direct Production Team Member,DefaultAdmin,This Job is for Direct Production Team Member Users only
+110076,Direct Quality Control Team Me,DefaultAdmin,This Job is for Direct Quality Control Team Me Users only
+110077,Direct Team Leader,DefaultAdmin,This Job is for Direct Team Leader Users only
+110097,Quality Engineer II,DefaultAdmin,This Job is for Quality Engineer II Users only
+110133,"Shift Leader IV, MTM",DefaultAdmin,"This Job is for Shift Leader IV, MTM Users only"
+330062,TPS Technician,DefaultAdmin,
+440041,Maintenance Team Member,DefaultAdmin,
+550016,Engineering Technician,DefaultAdmin,This Job is for Engineering Technician Users only
+550066,Supervisor(delete),DefaultAdmin,
+660001,Clerk,DefaultAdmin,This Job is for Clerk Users only
+660003,Shipping Specialist,DefaultAdmin,
+660004,Packaging Specialist,DefaultAdmin,
+660009,Administrator,DefaultAdmin,
+660012,"Administrator, Accounting",DefaultAdmin,
+660016,Help Desk Operator,DefaultAdmin,
+660017,Training Specialist,DefaultAdmin,
+660019,Quality Engineering Technician,DefaultAdmin,
+660020,Quality Specialist,DefaultAdmin,
+660021,Translator,DefaultAdmin,
+660026,Supv Maintenance(delete),DefaultAdmin,
+660027,Supervisor,DefaultAdmin,
+660035,Public Relations Spe,DefaultAdmin,
+660036,Human Resources Generalist,DefaultAdmin,
+660039,Project Coordinator,DefaultAdmin,
+660041,Cost Accountant,DefaultAdmin,
+660042,General Accountant,DefaultAdmin,This Job is for General Accountant Users only
+660053,Quality Engineer I,DefaultAdmin,
+660055,Manufacturing Engineer II,DefaultAdmin,
+660057,Quality Engineer II,DefaultAdmin,
+660061,Customs Specialists,DefaultAdmin,
+660062,"Occupational Health Nurse, SR",DefaultAdmin,
+660076,Environmental Specialist,DefaultAdmin,
+660088,General Manager,DefaultAdmin,
+660093,"Cost Accountant, SR",DefaultAdmin,
+660094,Inventory Accountant,DefaultAdmin,This Job is for Inventory Accountant Users only
+660095,Ast GM Quality,DefaultAdmin,
+660096,"General Manager, Asst",DefaultAdmin,
+660104,Vice President,DefaultAdmin,
+660107,Production Team Member,DefaultAdmin,
+660108,Lead Team Member,DefaultAdmin,
+660109,Mold Set-up Team Member,DefaultAdmin,
+660110,Maintenance Team Member I,DefaultAdmin,
+660111,Maintenance Team Member II,DefaultAdmin,
+660121,Quality Engineering Tech II,DefaultAdmin,
+660122,Ocup Health Speciali,DefaultAdmin,This Job is for Ocup Health Speciali Users only
+660126,Intern,DefaultAdmin,
+660127,Supervisor II,DefaultAdmin,
+660128,Packaging Engineer I,DefaultAdmin,This Job is for Packaging Engineer I Users only
+660129,Project Engineer I,DefaultAdmin,This Job is for Project Engineer I Users only
+660131,"Apprentice, MTM",DefaultAdmin,"This Job is for Apprentice, MTM Users only"
+660132,Human Resources Generalist SR.,DefaultAdmin,
+660135,Machine Engineer I,DefaultAdmin,
+660137,Shift Leader,DefaultAdmin,
+660144,Ast Mgr Production,DefaultAdmin,
+660150,Ast Manager,DefaultAdmin,This Job is for Ast Manager Users only
+660159,Lead Tech Poly Mold,DefaultAdmin,
+660161,"Kaizen Shop Technician, MTM",DefaultAdmin,"This Job is for Kaizen Shop Technician, MTM Users only"
+660170,Maintenance Team Member III,DefaultAdmin,
+660171,Maintenance Team Member IV,DefaultAdmin,
+660172,Maintenance Team Member V,DefaultAdmin,This Job is for Maintenance Team Member V Users only
+660173,Planner I,DefaultAdmin,
+660174,Planner II,DefaultAdmin,
+660175,Machine Engineer II,DefaultAdmin,
+660176,Machine Engineer III,DefaultAdmin,
+660178,Planner III,DefaultAdmin,This Job is for Planner III Users only
+660180,"Administrator, Maintenance",DefaultAdmin,
+660181,"Administrator, AP",DefaultAdmin,
+660182,"Administrator, Purchasing",DefaultAdmin,
+660183,"Administrator, Process Stabliz",DefaultAdmin,
+660185,Maintenance Team Member VI,DefaultAdmin,This Job is for Maintenance Team Member VI Users only
+660186,"Maintenance Team Member, JR",DefaultAdmin,"This Job is for Maintenance Team Member, JR Users only"
+660190,"Cost Accountant, Jr.",DefaultAdmin,
+660191,Project Engineer II,DefaultAdmin,This Job is for Project Engineer II Users only
+660211,Manufacturing Engineer I,DefaultAdmin,
+660212,Machinist,DefaultAdmin,
+660217,TPS Engineer I,DefaultAdmin,
+660219,Engineering Technician III,DefaultAdmin,
+660225,"Manager, Assistant",DefaultAdmin,
+660240,"Supervisor, Tech",DefaultAdmin,"This Job is for Supervisor, Tech Users only"
+660241,"Supervisor II, Tech",DefaultAdmin,"This Job is for Supervisor II, Tech Users only"
+660242,"Manager, Assistant, Tech",DefaultAdmin,"This Job is for Manager, Assistant, Tech Users only"
+660243,"Manager, Tech",DefaultAdmin,"This Job is for Manager, Tech Users only"
+660244,"Manager, Senior, Tech",DefaultAdmin,"This Job is for Manager, Senior, Tech Users only"
+660245,"General Manager, Asst, Tech",DefaultAdmin,"This Job is for General Manager, Asst, Tech Users only"
+660246,"General Manager, Tech",DefaultAdmin,"This Job is for General Manager, Tech Users only"
+660247,"General Manager, Senior, Tech",DefaultAdmin,"This Job is for General Manager, Senior, Tech Users only"
+660250,"Supervisor, Admin",DefaultAdmin,"This Job is for Supervisor, Admin Users only"
+660252,"Manager, Assistant, Admin",DefaultAdmin,"This Job is for Manager, Assistant, Admin Users only"
+660253,"Manager, Admin",DefaultAdmin,"This Job is for Manager, Admin Users only"
+660254,"Manager, Senior, Admin",DefaultAdmin,"This Job is for Manager, Senior, Admin Users only"
+660265,Pre Production Planner,DefaultAdmin,
+660269,Quality Engineer III,DefaultAdmin,
+660270,Manufacturing Engineer III,DefaultAdmin,
+660271,"Accountant, Senior",DefaultAdmin,
+660280,"Shift Leader I, MTM",DefaultAdmin,"This Job is for Shift Leader I, MTM Users only"
+660281,"Shift Leader II, MTM",DefaultAdmin,"This Job is for Shift Leader II, MTM Users only"
+660282,"Shift Leader III, MTM",DefaultAdmin,"This Job is for Shift Leader III, MTM Users only"
+660283,"Shift Leader IV, MTM",DefaultAdmin,"This Job is for Shift Leader IV, MTM Users only"
+660284,"Shift Leader V, MTM",DefaultAdmin,"This Job is for Shift Leader V, MTM Users only"
+660285,"Shift Leader VI, MTM",DefaultAdmin,"This Job is for Shift Leader VI, MTM Users only"
+660738,"General Manager, Senior",DefaultAdmin,
+660740,Design Engineer,DefaultAdmin,
+660741,Design Engineer II,DefaultAdmin,
+660742,Design Engineer III,DefaultAdmin,
+660743,Designer,DefaultAdmin,
+660744,"Designer, SR",DefaultAdmin,"This Job is for Designer, SR Users only"
+660805,Asst GM,DefaultAdmin,
+660810,President,DefaultAdmin,
+660813,"Tool and Die Maker, MTM",DefaultAdmin,"This Job is for Tool and Die Maker, MTM Users only"
+660815,Mold Engineer,DefaultAdmin,
+660817,Mold Engineer II,DefaultAdmin,
+660818,Mold Engineer III,DefaultAdmin,
+660830,"Human Resource Specialist, SR",DefaultAdmin,
+660831,"Payroll Specialist, SR",DefaultAdmin,"This Job is for Payroll Specialist, SR Users only"
+660833,TPS Engineer II,DefaultAdmin,
+660850,Other,DefaultAdmin,This Job is for Other Users only
+660944,Manager,DefaultAdmin,
+660966,"Shift Leader, Tool and Die Mak",DefaultAdmin,
+660968,"Specialist, Preventative Maintenance",DefaultAdmin,
+661003,Engineering Technician,DefaultAdmin,
+661004,"Engineering Technician, PT",DefaultAdmin,"This Job is for Engineering Technician, PT Users only"
+661014,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+661021,Engineering Technician II,DefaultAdmin,
+661136,Quality Resident Engineer,DefaultAdmin,
+661142,Safety Specialist,DefaultAdmin,
+661624,Principal Engineer,DefaultAdmin,
+661625,"Manager, Senior",DefaultAdmin,
+661627,Payroll Specialist,DefaultAdmin,
+661628,"Specialist, Engineering Admin",DefaultAdmin,
+661633,Shipping Team Member,DefaultAdmin,
+661634,Quality Team Member,DefaultAdmin,
+661636,Maintenance Engineer,DefaultAdmin,
+661637,Pre Production Specialist,DefaultAdmin,
+661638,PTM-Retiree,DefaultAdmin,This Job is for PTM-Retiree Users only
+661639,Machine Programmer,DefaultAdmin,
+661642,Quality Testing Technician,DefaultAdmin,
+661643,"Chrome Router, MTM",DefaultAdmin,"This Job is for Chrome Router, MTM Users only"
+661644,Chemist I,DefaultAdmin,
+661645,"Kaizen Shop Technician II, MTM",DefaultAdmin,"This Job is for Kaizen Shop Technician II, MTM Users only"
+661646,Direct-Production Team Member,DefaultAdmin,
+661647,Direct- Shipping Team Member,DefaultAdmin,
+661648,Direct- Quality Team Member,DefaultAdmin,
+661649,Direct- Lead Team Member,DefaultAdmin,
+661650,Direct- Mold Set-up Team Membe,DefaultAdmin,
+661651,Learning & Development Special,DefaultAdmin,bananas
+661652,"Enviromental Special, SR",DefaultAdmin,"This Job is for Enviromental Special, SR Users only"
+661653,System Specialist,DefaultAdmin,This Job is for System Specialist Users only
+661654,Direct3- Production Team Membe,DefaultAdmin,This Job is for Direct3- Production Team Membe Users only
+661655,Direct3- Shipping Team Member,DefaultAdmin,This Job is for Direct3- Shipping Team Member Users only
+661656,Direct3- Quality Team Member,DefaultAdmin,
+661657,Direct3- Lead Team Member,DefaultAdmin,
+661658,Direct3- Mold Set-up Team Memb,DefaultAdmin,This Job is for Direct3- Mold Set-up Team Memb Users only
+661659,Machine Programmer II,DefaultAdmin,This Job is for Machine Programmer II Users only
+661660,Machine Programmer III,DefaultAdmin,This Job is for Machine Programmer III Users only
+661661,Mold Engineer III,DefaultAdmin,This Job is for Mold Engineer III Users only
+661662,"Analyst, Service",DefaultAdmin,"This Job is for Analyst, Service Users only"
+661663,"Specialist, Accounting",DefaultAdmin,"This Job is for Specialist, Accounting Users only"
+661664,"Manufacturing Engineer, JR",DefaultAdmin,"This Job is for Manufacturing Engineer, JR Users only"
+661665,OJT Team Member,DefaultAdmin,This Job is for OJT Team Member Users only
+661666,"Shipping Specialist, Sr.",DefaultAdmin,"This Job is for Shipping Specialist, Sr. Users only"
+661667,Learning & Development Spec Sr,DefaultAdmin,This Job is for Learning & Development Spec Sr Users only
+661668,"Administrator, Accounting, Sr.",DefaultAdmin,"This Job is for Administrator, Accounting, Sr. Users only"
+661669,"Specialist, Project",DefaultAdmin,"This Job is for Specialist, Project Users only"
+661670,"Payroll Specialist, PT",DefaultAdmin,"This Job is for Payroll Specialist, PT Users only"
+770186,Specialist - AR,DefaultAdmin,This Job is for Specialist - AR Users only
+770201,Administrator - Accts Payable,DefaultAdmin,This Job is for Administrator - Accts Payable Users only
+880007,Mold Maintenance,DefaultAdmin,This Job is for Mold Maintenance Users only
+999997,Temp Agency Express,DefaultAdmin,This Job is for Temp Agency Express Users only
+999999,Temp Agency,DefaultAdmin,This Job is for Temp Agency Users only
+999999 (wrong number),Default Job Code,DefaultAdmin,
+ASK100258 (old),TEMP,DefaultAdmin,
+ASK110001,Accounting,DefaultAdmin,This Job is for Accounting Users only
+ASK110003,"Manager, Assistant",DefaultAdmin,"This Job is for Manager, Assistant Users only"
+ASK110006,Customer Service Rep,DefaultAdmin,This Job is for Customer Service Rep Users only
+ASK110007,Data Entry,DefaultAdmin,This Job is for Data Entry Users only
+ASK110008,Engineer,DefaultAdmin,This Job is for Engineer Users only
+ASK110010,General Manager,DefaultAdmin,This Job is for General Manager Users only
+ASK110011,Human Resources Administrative,DefaultAdmin,This Job is for Human Resources Administrative Users only
+ASK110013,"Maintenance Electrical, MTM",DefaultAdmin,"This Job is for Maintenance Electrical, MTM Users only"
+ASK110015,Manager,DefaultAdmin,This Job is for Manager Users only
+ASK110018,Maintenance Machinest Team Mem,DefaultAdmin,This Job is for Maintenance Machinest Team Mem Users only
+ASK110019,Production Control Team Member,DefaultAdmin,This Job is for Production Control Team Member Users only
+ASK110020,Planner,DefaultAdmin,This Job is for Planner Users only
+ASK110021,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+ASK110022,Quality Control Team Member,DefaultAdmin,This Job is for Quality Control Team Member Users only
+ASK110026,Specialist,DefaultAdmin,This Job is for Specialist Users only
+ASK110027,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+ASK110028,Team Leader,DefaultAdmin,This Job is for Team Leader Users only
+ASK110037,Packaging Specialist,DefaultAdmin,This Job is for Packaging Specialist Users only
+ASK110044,Janitor,DefaultAdmin,This Job is for Janitor Users only
+ASK110057,SCOUT LEADER,DefaultAdmin,This Job is for SCOUT LEADER Users only
+ASK110058,Extrusion Team Leader,DefaultAdmin,This Job is for Extrusion Team Leader Users only
+ASK110059,Extrusion Team Member,DefaultAdmin,This Job is for Extrusion Team Member Users only
+ASK110060,Vice President,DefaultAdmin,This Job is for Vice President Users only
+ASK110061,QC Lab Tech,DefaultAdmin,This Job is for QC Lab Tech Users only
+ASK110066,Supervisor TPS,DefaultAdmin,This Job is for Supervisor TPS Users only
+ASK110070,Molder Team Member,DefaultAdmin,This Job is for Molder Team Member Users only
+ASK110071,Relief Team Member,DefaultAdmin,This Job is for Relief Team Member Users only
+ASK110072,"General Manager, Asst",DefaultAdmin,"This Job is for General Manager, Asst Users only"
+ASK110073,Receiving Clerk,DefaultAdmin,This Job is for Receiving Clerk Users only
+ASK110074,Direct Production Team Member,DefaultAdmin,This Job is for Direct Production Team Member Users only
+ASK110075,Direct Production Control Team,DefaultAdmin,This Job is for Direct Production Control Team Users only
+ASK110076,Direct Quality Control Team Me,DefaultAdmin,This Job is for Direct Quality Control Team Me Users only
+ASK110077,Direct Team Leader,DefaultAdmin,This Job is for Direct Team Leader Users only
+ASK110079,Direct Area Relief Team Member,DefaultAdmin,This Job is for Direct Area Relief Team Member Users only
+ASK110080,Mold Set-up Team Member,DefaultAdmin,This Job is for Mold Set-up Team Member Users only
+ASK110081,Supervisor II,DefaultAdmin,This Job is for Supervisor II Users only
+ASK110082,"Manager, Senior",DefaultAdmin,"This Job is for Manager, Senior Users only"
+ASK110083,Mold Engineer II,DefaultAdmin,This Job is for Mold Engineer II Users only
+ASK110084,Shipping Specialist,DefaultAdmin,This Job is for Shipping Specialist Users only
+ASK110085,EHS Specialist,DefaultAdmin,This Job is for EHS Specialist Users only
+ASK110086,Process Engineer I,DefaultAdmin,This Job is for Process Engineer I Users only
+ASK110087,Process Engineer II,DefaultAdmin,This Job is for Process Engineer II Users only
+ASK110088,Human Resources Generalist,DefaultAdmin,This Job is for Human Resources Generalist Users only
+ASK110089,Intern,DefaultAdmin,This Job is for Intern Users only
+ASK110090,Shift Leader,DefaultAdmin,This Job is for Shift Leader Users only
+ASK110091,Maintenance Team Member I,DefaultAdmin,This Job is for Maintenance Team Member I Users only
+ASK110094,Maintenance Team Member IV,DefaultAdmin,This Job is for Maintenance Team Member IV Users only
+ASK110095,Maintenance Team Member V,DefaultAdmin,This Job is for Maintenance Team Member V Users only
+ASK110096,Quality Engineer I,DefaultAdmin,This Job is for Quality Engineer I Users only
+ASK110097,Quality Engineer II,DefaultAdmin,This Job is for Quality Engineer II Users only
+ASK110101,"Kaizen Shop Technician, MTM",DefaultAdmin,"This Job is for Kaizen Shop Technician, MTM Users only"
+ASK110102,"Kaizen Shop Technician II, MTM",DefaultAdmin,"This Job is for Kaizen Shop Technician II, MTM Users only"
+ASK110103,Translator,DefaultAdmin,This Job is for Translator Users only
+ASK110104,Pre Production Planner,DefaultAdmin,This Job is for Pre Production Planner Users only
+ASK110105,Project Engineer I,DefaultAdmin,This Job is for Project Engineer I Users only
+ASK110106,Direct Group Relief Team Membe,DefaultAdmin,This Job is for Direct Group Relief Team Membe Users only
+ASK110107,Learning & Development Special,DefaultAdmin,This Job is for Learning & Development Special Users only
+ASK110108,Learning & Development Spec PT,DefaultAdmin,This Job is for Learning & Development Spec PT Users only
+ASK110110,"Supervisor, Tech",DefaultAdmin,"This Job is for Supervisor, Tech Users only"
+ASK110112,"Manager, Assistant, Tech",DefaultAdmin,"This Job is for Manager, Assistant, Tech Users only"
+ASK110113,"Manager, Tech",DefaultAdmin,"This Job is for Manager, Tech Users only"
+ASK110114,"Manager, Senior, Tech",DefaultAdmin,"This Job is for Manager, Senior, Tech Users only"
+ASK110120,"Supervisor, Admin",DefaultAdmin,"This Job is for Supervisor, Admin Users only"
+ASK110122,"Manager, Assistant, Admin",DefaultAdmin,"This Job is for Manager, Assistant, Admin Users only"
+ASK110125,Administrator,DefaultAdmin,This Job is for Administrator Users only
+ASK110126,OJT Team Member,DefaultAdmin,This Job is for OJT Team Member Users only
+ASK110137,Program Manager,DefaultAdmin,This Job is for Program Manager Users only
+ASK110138,"Quality Engineer I, PT",DefaultAdmin,"This Job is for Quality Engineer I, PT Users only"
+ASK110140,Maintenance Team Member VI,DefaultAdmin,This Job is for Maintenance Team Member VI Users only
+ASK220008,"Manager, Production",DefaultAdmin,"This Job is for Manager, Production Users only"
+ASK220009,"Manager, Engineering/Facilitie",DefaultAdmin,"This Job is for Manager, Engineering/Facilitie Users only"
+ASK220015,Process Engineer,DefaultAdmin,This Job is for Process Engineer Users only
+ASK220021,Production Control Specialist,DefaultAdmin,This Job is for Production Control Specialist Users only
+ASK330005,Controls Engineer,DefaultAdmin,This Job is for Controls Engineer Users only
+ASK330015,Extrusion Team Leader,DefaultAdmin,This Job is for Extrusion Team Leader Users only
+ASK330025,Human Resources Mgr,DefaultAdmin,This Job is for Human Resources Mgr Users only
+ASK330044,Quality Manager,DefaultAdmin,This Job is for Quality Manager Users only
+ASK330091,Extrusion Process Engineer,DefaultAdmin,This Job is for Extrusion Process Engineer Users only
+ASK330116,Quality Specialist,DefaultAdmin,This Job is for Quality Specialist Users only
+ASK330119,GM of Manufacturing,DefaultAdmin,This Job is for GM of Manufacturing Users only
+ASK440024,Production Control Team Lead,DefaultAdmin,This Job is for Production Control Team Lead Users only
+ASK440041,Maintenance Team Member,DefaultAdmin,This Job is for Maintenance Team Member Users only
+ASK440042,Production Control Team Member,DefaultAdmin,This Job is for Production Control Team Member Users only
+ASK440043,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+ASK440054,HR Specialist,DefaultAdmin,This Job is for HR Specialist Users only
+ASK440067,Maintenance Technician,DefaultAdmin,This Job is for Maintenance Technician Users only
+ASK440070,Safety/Environ. Specialist,DefaultAdmin,This Job is for Safety/Environ. Specialist Users only
+ASK550027,General Affairs,DefaultAdmin,This Job is for General Affairs Users only
+ASK550047,PPCC SENIOR SPECIALIST,DefaultAdmin,This Job is for PPCC SENIOR SPECIALIST Users only
+ASK550129,Engineering Assistant,DefaultAdmin,This Job is for Engineering Assistant Users only
+ASK550140,EHS Specialist,DefaultAdmin,This Job is for EHS Specialist Users only
+ASK550147,TPS Team Member,DefaultAdmin,This Job is for TPS Team Member Users only
+ASK660003,Shipping Specialist,DefaultAdmin,This Job is for Shipping Specialist Users only
+ASK660005,Safety Tech,DefaultAdmin,This Job is for Safety Tech Users only
+ASK660007,Preproduction Planner,DefaultAdmin,This Job is for Preproduction Planner Users only
+ASK660009,Administrator,DefaultAdmin,This Job is for Administrator Users only
+ASK660021,Translator,DefaultAdmin,This Job is for Translator Users only
+ASK660027,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+ASK660036,Human Resources Generalist,DefaultAdmin,This Job is for Human Resources Generalist Users only
+ASK660053,Quality Engineer I,DefaultAdmin,This Job is for Quality Engineer I Users only
+ASK660107,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+ASK660126,Intern,DefaultAdmin,This Job is for Intern Users only
+ASK661628,"Specialist, Engineering Admin",DefaultAdmin,"This Job is for Specialist, Engineering Admin Users only"
+ASK661633,Shipping Team Member,DefaultAdmin,This Job is for Shipping Team Member Users only
+ASK661639,Machine Programmer,DefaultAdmin,This Job is for Machine Programmer Users only
+ASK880024,Maintenance Supervisor,DefaultAdmin,This Job is for Maintenance Supervisor Users only
+ASK880119,Maintenance Team Leader,DefaultAdmin,This Job is for Maintenance Team Leader Users only
+ASK880208,ASM Asst. Manager,DefaultAdmin,This Job is for ASM Asst. Manager Users only
+ASK999994,Temp Agency Traveling,DefaultAdmin,This Job is for Temp Agency Traveling Users only
+ASK999998,Temp Agency 1,DefaultAdmin,This Job is for Temp Agency 1 Users only
+ASK999999,Temp Agency,DefaultAdmin,This Job is for Temp Agency Users only
+ASKE77126,Specialist - HR,DefaultAdmin,This Job is for Specialist - HR Users only
+Contractor_Manual Build,Contractor (not in payroll system),DefaultAdmin,This Job is for Contractor (not in payroll system) Users only
+E55007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+E55008,SR COORDINATOR,DefaultAdmin,This Job is for SR COORDINATOR Users only
+E55060,Senior Coordinator,DefaultAdmin,This Job is for Senior Coordinator Users only
+E66967,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+E77161,Engineer,DefaultAdmin,This Job is for Engineer Users only
+E77232,VP - Senior,DefaultAdmin,This Job is for VP - Senior Users only
+ET1,Engineering Tech I,DefaultAdmin,This Job is for Engineering Tech I Users only
+EX550007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+EXE55007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+EXE55008,SR COORDINATOR,DefaultAdmin,This Job is for SR COORDINATOR Users only
+EXE55048,President,DefaultAdmin,This Job is for President Users only
+EXE55060,Senior Coordinator,DefaultAdmin,This Job is for Senior Coordinator Users only
+EXE66967,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+EXE77032,GM,DefaultAdmin,This Job is for GM Users only
+EXE77232,VP - Senior,DefaultAdmin,This Job is for VP - Senior Users only
+FS Corporate Advisor,Corporate Advisor,DefaultAdmin,For Japanese Coordinators
+FS330001,Accounts Payable,DefaultAdmin,This Job is for Accounts Payable Users only
+FS330002,Assembly Technician,DefaultAdmin,This Job is for Assembly Technician Users only
+FS330005,Controls Engineer,DefaultAdmin,This Job is for Controls Engineer Users only
+FS330006,Co-Op Student Maintenance,DefaultAdmin,This Job is for Co-Op Student Maintenance Users only
+FS330008,Controls Technician,DefaultAdmin,This Job is for Controls Technician Users only
+FS330012,Engineering Technician,DefaultAdmin,This Job is for Engineering Technician Users only
+FS330013,Executive Assistant,DefaultAdmin,This Job is for Executive Assistant Users only
+FS330015,Extrusion Team Leader,DefaultAdmin,This Job is for Extrusion Team Leader Users only
+FS330016,Extrusion Tech 1,DefaultAdmin,This Job is for Extrusion Tech 1 Users only
+FS330017,Extrusion Tech 2,DefaultAdmin,This Job is for Extrusion Tech 2 Users only
+FS330018,Extrusion Tech 3,DefaultAdmin,This Job is for Extrusion Tech 3 Users only
+FS330020,Extrustion Technician,DefaultAdmin,This Job is for Extrustion Technician Users only
+FS330023,HR Generalist III,DefaultAdmin,This Job is for HR Generalist III Users only
+FS330025,Human Resources Mgr,DefaultAdmin,This Job is for Human Resources Mgr Users only
+FS330026,Kettering Eng Tech,DefaultAdmin,This Job is for Kettering Eng Tech Users only
+FS330027,Logistics Team Leader,DefaultAdmin,This Job is for Logistics Team Leader Users only
+FS330028,Logistics Technician,DefaultAdmin,This Job is for Logistics Technician Users only
+FS330031,ME Process Improvement,DefaultAdmin,This Job is for ME Process Improvement Users only
+FS330033,Manufacturing Supervisor,DefaultAdmin,This Job is for Manufacturing Supervisor Users only
+FS330034,Material Handler,DefaultAdmin,This Job is for Material Handler Users only
+FS330035,Materials Manager,DefaultAdmin,This Job is for Materials Manager Users only
+FS330036,Mfg Manager,DefaultAdmin,This Job is for Mfg Manager Users only
+FS330037,MFG Systems Improvement Mgr,DefaultAdmin,This Job is for MFG Systems Improvement Mgr Users only
+FS330039,Operations Assistant,DefaultAdmin,This Job is for Operations Assistant Users only
+FS330040,President,DefaultAdmin,This Job is for President Users only
+FS330042,Project Engineer,DefaultAdmin,This Job is for Project Engineer Users only
+FS330043,Quality Inspector,DefaultAdmin,This Job is for Quality Inspector Users only
+FS330044,Quality Manager,DefaultAdmin,This Job is for Quality Manager Users only
+FS330045,Quality Team Leader,DefaultAdmin,This Job is for Quality Team Leader Users only
+FS330047,Quality Technician,DefaultAdmin,This Job is for Quality Technician Users only
+FS330049,Skill Trades Tech 1,DefaultAdmin,This Job is for Skill Trades Tech 1 Users only
+FS330050,Skill Trades Tech 2,DefaultAdmin,This Job is for Skill Trades Tech 2 Users only
+FS330051,Skill Trades Tech 3,DefaultAdmin,This Job is for Skill Trades Tech 3 Users only
+FS330052,Skill Trades Tech 4,DefaultAdmin,This Job is for Skill Trades Tech 4 Users only
+FS330055,Staff Accountant 2,DefaultAdmin,This Job is for Staff Accountant 2 Users only
+FS330057,Team Leader,DefaultAdmin,This Job is for Team Leader Users only
+FS330058,Test Technician,DefaultAdmin,This Job is for Test Technician Users only
+FS330062,TPS Technician,DefaultAdmin,This Job is for TPS Technician Users only
+FS330063,Tool Maker,DefaultAdmin,This Job is for Tool Maker Users only
+FS330069,HR Co-op,DefaultAdmin,This Job is for HR Co-op Users only
+FS330073,Operations Systems Engineer,DefaultAdmin,This Job is for Operations Systems Engineer Users only
+FS330075,Facilities Engineer,DefaultAdmin,This Job is for Facilities Engineer Users only
+FS330076,GM of Engineering,DefaultAdmin,This Job is for GM of Engineering Users only
+FS330080,Environ Health & Safety Mgr,DefaultAdmin,This Job is for Environ Health & Safety Mgr Users only
+FS330085,Quality Engineer,DefaultAdmin,This Job is for Quality Engineer Users only
+FS330087,MSI Assistant,DefaultAdmin,This Job is for MSI Assistant Users only
+FS330089,Logistics Supervisor,DefaultAdmin,This Job is for Logistics Supervisor Users only
+FS330091,Extrusion Process Engineer,DefaultAdmin,This Job is for Extrusion Process Engineer Users only
+FS330093,Process Engineering Manager,DefaultAdmin,This Job is for Process Engineering Manager Users only
+FS330094,Prototype Technician,DefaultAdmin,This Job is for Prototype Technician Users only
+FS330095,Supplier Quality Eng,DefaultAdmin,This Job is for Supplier Quality Eng Users only
+FS330096,ME Design,DefaultAdmin,This Job is for ME Design Users only
+FS330100,Engineering Coordinator,DefaultAdmin,This Job is for Engineering Coordinator Users only
+FS330103,Extrusion Manager,DefaultAdmin,This Job is for Extrusion Manager Users only
+FS330106,Engineer Manager,DefaultAdmin,This Job is for Engineer Manager Users only
+FS330108,Extrusion Assistant,DefaultAdmin,This Job is for Extrusion Assistant Users only
+FS330109,Cost Accountant,DefaultAdmin,This Job is for Cost Accountant Users only
+FS330110,Machine Builder,DefaultAdmin,This Job is for Machine Builder Users only
+FS330111,Sr Industrial Engineer,DefaultAdmin,This Job is for Sr Industrial Engineer Users only
+FS330112,Test Technician III,DefaultAdmin,This Job is for Test Technician III Users only
+FS330113,Program Manager,DefaultAdmin,This Job is for Program Manager Users only
+FS330114,Sr Material Planner,DefaultAdmin,This Job is for Sr Material Planner Users only
+FS330116,Quality Specialist,DefaultAdmin,This Job is for Quality Specialist Users only
+FS330117,Plant Manager,DefaultAdmin,This Job is for Plant Manager Users only
+FS330118,Electrical Engineer,DefaultAdmin,This Job is for Electrical Engineer Users only
+FS330119,GM of Manufacturing,DefaultAdmin,This Job is for GM of Manufacturing Users only
+FS330122,Operations Systems Analyst,DefaultAdmin,This Job is for Operations Systems Analyst Users only
+FS330123,Master Trainer,DefaultAdmin,This Job is for Master Trainer Users only
+FS330124,Receving Clerk,DefaultAdmin,This Job is for Receving Clerk Users only
+FS330125,Industrial Engineer,DefaultAdmin,This Job is for Industrial Engineer Users only
+FS330126,HR Assistant,DefaultAdmin,This Job is for HR Assistant Users only
+FS330127,Shipping Clerk,DefaultAdmin,This Job is for Shipping Clerk Users only
+FS330128,Sr. Manufacturing Engineer,DefaultAdmin,This Job is for Sr. Manufacturing Engineer Users only
+FS330131,Lab Supervisor,DefaultAdmin,This Job is for Lab Supervisor Users only
+FS330132,Product Eng,DefaultAdmin,This Job is for Product Eng Users only
+FS330135,PPP Manager,DefaultAdmin,This Job is for PPP Manager Users only
+FS330136,Service/Prototype Tech,DefaultAdmin,This Job is for Service/Prototype Tech Users only
+FS330138,Quality Supervisor,DefaultAdmin,This Job is for Quality Supervisor Users only
+FS330140,Asst GM of Engineering,DefaultAdmin,This Job is for Asst GM of Engineering Users only
+FS330141,Asst GM of HR,DefaultAdmin,This Job is for Asst GM of HR Users only
+FS330145,Sr. Controls Technician,DefaultAdmin,This Job is for Sr. Controls Technician Users only
+FS330160,AGGFS Intern,DefaultAdmin,This Job is for AGGFS Intern Users only
+FS330161,Skill Trades Supervisor,DefaultAdmin,This Job is for Skill Trades Supervisor Users only
+FS330162,"Sr GM of Quality, Log, R&D, an",DefaultAdmin,"This Job is for Sr GM of Quality, Log, R&D, an Users only"
+FS330163,"Sr GM Finance, HR & Info Sys",DefaultAdmin,"This Job is for Sr GM Finance, HR & Info Sys Users only"
+FS330165,Packaging Engineer,DefaultAdmin,This Job is for Packaging Engineer Users only
+FS330166,Indust Engineering Tech,DefaultAdmin,This Job is for Indust Engineering Tech Users only
+FS330167,Extrusion Coordinator,DefaultAdmin,This Job is for Extrusion Coordinator Users only
+FS330168,MRO Coordinator,DefaultAdmin,This Job is for MRO Coordinator Users only
+FS330169,Assistant HR Manager,DefaultAdmin,This Job is for Assistant HR Manager Users only
+FS330170,Org Development Specialist,DefaultAdmin,This Job is for Org Development Specialist Users only
+FS330177,Lead Industrial Engineering Te,DefaultAdmin,This Job is for Lead Industrial Engineering Te Users only
+FS330178,Maintenance Manager,DefaultAdmin,This Job is for Maintenance Manager Users only
+FS330179,Maintenance Tech I,DefaultAdmin,This Job is for Maintenance Tech I Users only
+FS330180,Maintenance Tech II,DefaultAdmin,This Job is for Maintenance Tech II Users only
+FS330181,Maintenance Tech III,DefaultAdmin,This Job is for Maintenance Tech III Users only
+FS330182,Maintenance Tech IV,DefaultAdmin,This Job is for Maintenance Tech IV Users only
+FS330334,Skill Trades Manager,DefaultAdmin,This Job is for Skill Trades Manager Users only
+FS330335,Training Supervisor,DefaultAdmin,This Job is for Training Supervisor Users only
+FS330336,GM of PPP,DefaultAdmin,This Job is for GM of PPP Users only
+FS330338,SGM of Treasury,DefaultAdmin,This Job is for SGM of Treasury Users only
+FS330339,SR EHS Coordinator,DefaultAdmin,This Job is for SR EHS Coordinator Users only
+FS330340,Sr. HR Manager,DefaultAdmin,This Job is for Sr. HR Manager Users only
+FS330341,HR Generalist II/ Training Su,DefaultAdmin,This Job is for HR Generalist II/ Training Su Users only
+FS330342,Sr. Engineering Technician,DefaultAdmin,This Job is for Sr. Engineering Technician Users only
+FS330343,Lead Industirial Engineer,DefaultAdmin,This Job is for Lead Industirial Engineer Users only
+FS330344,Sr Quality Eng,DefaultAdmin,This Job is for Sr Quality Eng Users only
+FS330445,Training Specialist,DefaultAdmin,This Job is for Training Specialist Users only
+FS33110,Lab Intern,DefaultAdmin,This Job is for Lab Intern Users only
+FS331111,Quality Specialist I,DefaultAdmin,This Job is for Quality Specialist I Users only
+FSAM1039,Asst Mgr I - Pay & Benefits,DefaultAdmin,This Job is for Asst Mgr I - Pay & Benefits Users only
+FSE55130,Senior Advisor,DefaultAdmin,This Job is for Senior Advisor Users only
+FSSG0026,SGM - Finance,DefaultAdmin,This Job is for SGM - Finance Users only
+FSSM1029,Sr Mgr I - HR,DefaultAdmin,This Job is for Sr Mgr I - HR Users only
+FSSP1029,Spec I - HR,DefaultAdmin,This Job is for Spec I - HR Users only
+FSSP2015,Spec II - Cost Accting,DefaultAdmin,This Job is for Spec II - Cost Accting Users only
+FSSP3002,Spec III - AP,DefaultAdmin,This Job is for Spec III - AP Users only
+FSSP4055,Spec IV - Sys Analyst,DefaultAdmin,This Job is for Spec IV - Sys Analyst Users only
+FSSS3021,Sr Spec III - EHS,DefaultAdmin,This Job is for Sr Spec III - EHS Users only
+FSSS3024,Sr Spec III - Operations Syste,DefaultAdmin,This Job is for Sr Spec III - Operations Syste Users only
+FSSU2076,Supervisor II - Training/HR,DefaultAdmin,This Job is for Supervisor II - Training/HR Users only
+GD00002,Gerente de Vendas,DefaultAdmin,This Job is for Gerente de Vendas Users only
+GD00003,Supervisor de Recursos Humanos,DefaultAdmin,This Job is for Supervisor de Recursos Humanos Users only
+GD00005,Supervisor TI,DefaultAdmin,This Job is for Supervisor TI Users only
+GD00007,Analista de TI,DefaultAdmin,
+GD00009,Inspetor de Qualidade,DefaultAdmin,This Job is for Inspetor de Qualidade Users only
+GD00010,Engenheiro de Processos,DefaultAdmin,This Job is for Engenheiro de Processos Users only
+GD00011,Supervisor de Produção,DefaultAdmin,This Job is for Supervisor de Produção Users only
+GD00012,Analista Fiscal,DefaultAdmin,This Job is for Analista Fiscal Users only
+GD00017,Líder de Qualidade,DefaultAdmin,This Job is for Líder de Qualidade Users only
+GD00021,Supervisor Contabil,DefaultAdmin,This Job is for Supervisor Contabil Users only
+GD00023,Técnico de Segurança do Trabal,DefaultAdmin,This Job is for Técnico de Segurança do Trabal Users only
+GD00025,Vice Presidente,DefaultAdmin,This Job is for Vice Presidente Users only
+GD00026,Gerente de Produção,DefaultAdmin,This Job is for Gerente de Produção Users only
+GD00028,Gerente Geral Administrativo,DefaultAdmin,This Job is for Gerente Geral Administrativo Users only
+GD00031,Supervisor de Qualidade,DefaultAdmin,This Job is for Supervisor de Qualidade Users only
+GD00033,Líder de Manutenção,DefaultAdmin,This Job is for Líder de Manutenção Users only
+GD00037,Operador de Empilhadeira Elétr,DefaultAdmin,This Job is for Operador de Empilhadeira Elétr Users only
+GD00038,Presidente,DefaultAdmin,This Job is for Presidente Users only
+GD00043,SUPERVISOR DE PRODUÇÃO SR,DefaultAdmin,This Job is for SUPERVISOR DE PRODUÇÃO SR Users only
+GD00044,Lider de Produção,DefaultAdmin,This Job is for Lider de Produção Users only
+GD00052,Assistente de TI,DefaultAdmin,This Job is for Assistente de TI Users only
+GD00053,Assistente de Compras,DefaultAdmin,This Job is for Assistente de Compras Users only
+GD00055,Analista de Qualidade,DefaultAdmin,
+GD00062,ASSISTENTE ADMINISTRATIVO PROD,DefaultAdmin,This Job is for ASSISTENTE ADMINISTRATIVO PROD Users only
+GD00066,Supervisor de Compras,DefaultAdmin,This Job is for Supervisor de Compras Users only
+GD00069,Analista de PCP,DefaultAdmin,
+GD00070,Supervisor de PCP,DefaultAdmin,This Job is for Supervisor de PCP Users only
+GD00080,Inspetor de Qualidade,DefaultAdmin,This Job is for Inspetor de Qualidade Users only
+GD00089,Assistente de Recursos Humanos,DefaultAdmin,This Job is for Assistente de Recursos Humanos Users only
+GD00093,Assistente Financeiro,DefaultAdmin,This Job is for Assistente Financeiro Users only
+GD00094,Analista de Compras,DefaultAdmin,
+GD00099,Operador de Máquinas,DefaultAdmin,This Job is for Operador de Máquinas Users only
+GD00101,ANALISTA DE SGA,DefaultAdmin,
+GD00102,Analista de SGI,DefaultAdmin,
+GD00104,Jovem Aprendiz,DefaultAdmin,This Job is for Jovem Aprendiz Users only
+GD00106,Facilitador de Produção,DefaultAdmin,This Job is for Facilitador de Produção Users only
+GD00108,Operador de Produção,DefaultAdmin,This Job is for Operador de Produção Users only
+GD00117,Gerente de RH e Meio Ambiente,DefaultAdmin,This Job is for Gerente de RH e Meio Ambiente Users only
+GD00123,Gerente de Qualidade,DefaultAdmin,This Job is for Gerente de Qualidade Users only
+GD00134,Assistente de PCP,DefaultAdmin,This Job is for Assistente de PCP Users only
+GD00141,Assistente de Melhoria de Proc,DefaultAdmin,This Job is for Assistente de Melhoria de Proc Users only
+GD00149,Facilitador de Logísitica,DefaultAdmin,This Job is for Facilitador de Logísitica Users only
+GD00157,Assistente de Qualidade,DefaultAdmin,This Job is for Assistente de Qualidade Users only
+GD00171,ASSISTENTE DE PROCESSOS,DefaultAdmin,This Job is for ASSISTENTE DE PROCESSOS Users only
+GD00179,FERRAMENTEIRO,DefaultAdmin,This Job is for FERRAMENTEIRO Users only
+GD00180,ASSIST DE FERRAMENTEIRO,DefaultAdmin,This Job is for ASSIST DE FERRAMENTEIRO Users only
+GD00184,ASSIST DE MANUT,DefaultAdmin,This Job is for ASSIST DE MANUT Users only
+GD00186,GERENTE GERAL ENGENHARIA,DefaultAdmin,This Job is for GERENTE GERAL ENGENHARIA Users only
+GD00187,AUXILIAR MELHORIA,DefaultAdmin,This Job is for AUXILIAR MELHORIA Users only
+GD00195,OPERADOR LOGISTICA,DefaultAdmin,This Job is for OPERADOR LOGISTICA Users only
+GD00196,SUPERVISOR(A) DE CUSTOS,DefaultAdmin,This Job is for SUPERVISOR(A) DE CUSTOS Users only
+GD00197,ANALISTA FINANCEIRO,DefaultAdmin,This Job is for ANALISTA FINANCEIRO Users only
+GD00198,ANALISTA DE PROJETOS,DefaultAdmin,
+GD00199,ASSISTENTE DE PROJETOS,DefaultAdmin,This Job is for ASSISTENTE DE PROJETOS Users only
+GD00200,ENGENHEIRO,DefaultAdmin,This Job is for ENGENHEIRO Users only
+GD00203,ANALISTA DE RH,DefaultAdmin,
+GD00204,SUP SEG TRAB E MEIO AMBIENTE,DefaultAdmin,This Job is for SUP SEG TRAB E MEIO AMBIENTE Users only
+GD00205,SECRETARIA EXECUTIVA,DefaultAdmin,This Job is for SECRETARIA EXECUTIVA Users only
+GD00206,ANALISTA DE PROC DE PRODUCAO,DefaultAdmin,
+GD00207,LIDER DE LOGISTICA,DefaultAdmin,This Job is for LIDER DE LOGISTICA Users only
+GD00208,ANALISTA DE LOGISTICA,DefaultAdmin,
+GD00209,TECN MANUTENCAO ELETRICA,DefaultAdmin,This Job is for TECN MANUTENCAO ELETRICA Users only
+GD00210,SUP MANUTENCAO,DefaultAdmin,This Job is for SUP MANUTENCAO Users only
+GD00211,TECN MANUT MECANICA,DefaultAdmin,This Job is for TECN MANUT MECANICA Users only
+GD00212,LIDER DE FERRAMENTARIA,DefaultAdmin,This Job is for LIDER DE FERRAMENTARIA Users only
+GD00213,METROLOGISTA,DefaultAdmin,This Job is for METROLOGISTA Users only
+GD00214,ASSISTENTE BILINGUE,DefaultAdmin,This Job is for ASSISTENTE BILINGUE Users only
+GD00216,GERENTE COMPRAS,DefaultAdmin,This Job is for GERENTE COMPRAS Users only
+GD00217,GERENTE GERAL,DefaultAdmin,This Job is for GERENTE GERAL Users only
+GD00218,ENGENHEIRO DE PROJETOS,DefaultAdmin,This Job is for ENGENHEIRO DE PROJETOS Users only
+GD00220,SUPERV ENGENHARIA PROJETOS,DefaultAdmin,This Job is for SUPERV ENGENHARIA PROJETOS Users only
+GD00221,ASSISTENTE SGA,DefaultAdmin,This Job is for ASSISTENTE SGA Users only
+GD00222,VICE PRESIDENTE PRODUTIVO,DefaultAdmin,This Job is for VICE PRESIDENTE PRODUTIVO Users only
+GD00224,GERENTE PCP E LOGISTICA,DefaultAdmin,This Job is for GERENTE PCP E LOGISTICA Users only
+GD00225,COORDENADOR ENGENHARIA,DefaultAdmin,This Job is for COORDENADOR ENGENHARIA Users only
+GD00226,SUPERVISOR PPCC,DefaultAdmin,This Job is for SUPERVISOR PPCC Users only
+GD00229,ASSISTENTE FERRAMENTARIA,DefaultAdmin,This Job is for ASSISTENTE FERRAMENTARIA Users only
+GD00230,ASSISTENTE DE LOGISTICA,DefaultAdmin,This Job is for ASSISTENTE DE LOGISTICA Users only
+GD00231,ASSISTENTE DE CUSTOS,DefaultAdmin,This Job is for ASSISTENTE DE CUSTOS Users only
+GD00232,ASSISTENTE DE PCM,DefaultAdmin,This Job is for ASSISTENTE DE PCM Users only
+GD00235,TECNICO DE ENFERMAGEM,DefaultAdmin,This Job is for TECNICO DE ENFERMAGEM Users only
+GD00236,ANALISTA PCM,DefaultAdmin,This Job is for ANALISTA PCM Users only
+GD00237,FACILITADOR DE QUALIDADE,DefaultAdmin,This Job is for FACILITADOR DE QUALIDADE Users only
+GD00239,ANALISTA MELHORIA DE PROCESSO,DefaultAdmin,This Job is for ANALISTA MELHORIA DE PROCESSO Users only
+GD00240,ANALISTA ADM PRODUCAO,DefaultAdmin,
+GD00241,COORDENADOR (A) MEIO AMBIENTE,DefaultAdmin,This Job is for COORDENADOR (A) MEIO AMBIENTE Users only
+GD00242,GERENTE DE MANUTENCAO,DefaultAdmin,This Job is for GERENTE DE MANUTENCAO Users only
+GD00244,LIDER DE MANUTENCAO,DefaultAdmin,This Job is for LIDER DE MANUTENCAO Users only
+GD00246,GERENTE PLANEJ VENDAS,DefaultAdmin,This Job is for GERENTE PLANEJ VENDAS Users only
+GD00247,ANALISTA CONTABIL,DefaultAdmin,
+GD00248,ASSISTENTE DE PPCC,DefaultAdmin,This Job is for ASSISTENTE DE PPCC Users only
+GD00249,OPERADOR MULTIFUNCIONAL,DefaultAdmin,This Job is for OPERADOR MULTIFUNCIONAL Users only
+GD00250,ASSISTENTE PLANEJ DE VENDAS,DefaultAdmin,This Job is for ASSISTENTE PLANEJ DE VENDAS Users only
+GD00251,SUPERVISOR LOGISTICA,DefaultAdmin,This Job is for SUPERVISOR LOGISTICA Users only
+GD00252,SUPERVISOR TPS,DefaultAdmin,This Job is for SUPERVISOR TPS Users only
+GD00254,ANALISTA DE CUSTOS,DefaultAdmin,
+GD00255,ASSISTENTE SGI,DefaultAdmin,This Job is for ASSISTENTE SGI Users only
+GD00256,COORDENADOR TI,DefaultAdmin,This Job is for COORDENADOR TI Users only
+GD00257,COORDENADOR PCP,DefaultAdmin,This Job is for COORDENADOR PCP Users only
+GD00260,ANALISTA DE VENDAS,DefaultAdmin,This Job is for ANALISTA DE VENDAS Users only
+HRG1,HR Generalist,DefaultAdmin,This Job is for HR Generalist Users only
+IMX_ADMIN_GENERAL_MANAGER,Admin General Manager,DefaultAdmin,This Job is for Admin General Manager Users only
+IMX_ENGINEERING_MANAGER,Engineering Manager,DefaultAdmin,This Job is for Engineering Manager Users only
+IMX_GENERAL_MANAGER,General Manager,DefaultAdmin,This Job is for General Manager Users only
+IMX_PLATING_GENERAL_MANAGER,Plating General Manager,DefaultAdmin,This Job is for Plating General Manager Users only
+IMX_PLATING_SENIOR_MANAGER,Plating Senior Manager,DefaultAdmin,This Job is for Plating Senior Manager Users only
+IMX_PRESIDENT,President,DefaultAdmin,This Job is for President Users only
+IMX_PRODUCTION_GENERAL_MANAGER,Production General Manager,DefaultAdmin,This Job is for Production General Manager Users only
+IMX_VICE_PRESIDENT,Vice President,DefaultAdmin,This Job is for Vice President Users only
+IMX000056,Asistente de Administración,DefaultAdmin,
+IMX000057,Asistente de Administración Pintura,DefaultAdmin,This Job is for Asistente de Administración Pintura Users only
+IMX000058,Asistente de Almacén de Pintura,DefaultAdmin,
+IMX000059,Asistente de Contador de Impuestos,DefaultAdmin,
+IMX000060,Asistente de Control de Producción,DefaultAdmin,
+IMX000061,Asistente de costos,DefaultAdmin,
+IMX000062,Asistente de JDE,DefaultAdmin,
+IMX000063,Asistente de Logística Administracion de la Produc,DefaultAdmin,
+IMX000065,Asistente de relaciones laborales,DefaultAdmin,
+IMX000066,Asistente de Seguridad Medio Ambiente y Salud Ocup.,DefaultAdmin,
+IMX000067,Asistente Ejecutivo,DefaultAdmin,
+IMX000068,Asistente Laboral,DefaultAdmin,
+IMX000069,Asistente Medico,DefaultAdmin,
+IMX000070,Auxiliar de Proyectos,DefaultAdmin,
+IMX000071,Capacitador de Personal,DefaultAdmin,
+IMX000072,Contador,DefaultAdmin,
+IMX000073,Contador de Activos Fijos,DefaultAdmin,
+IMX000074,Contador de Costos,DefaultAdmin,
+IMX000075,Contador de cuentas por cobrar,DefaultAdmin,
+IMX000077,Contador de Estados Financieros,DefaultAdmin,
+IMX000078,Contador de impuestos,DefaultAdmin,
+IMX000079,Control de Costo y Traductor,DefaultAdmin,
+IMX000080,Diseñador Jr,DefaultAdmin,
+IMX000081,Entrenador de Gemba,DefaultAdmin,
+IMX000082,Especialista Administrativo,DefaultAdmin,
+IMX000083,Especialista de administración de la producción,DefaultAdmin,
+IMX000084,Especialista de control de la producción,DefaultAdmin,
+IMX000085,Especialista de empaque,DefaultAdmin,
+IMX000086,Especialista de Import/Export,DefaultAdmin,
+IMX000087,Especialista de JDE,DefaultAdmin,
+IMX000088,Especialista de reclutamiento,DefaultAdmin,
+IMX000089,Especialista de Seguridad e Higiene,DefaultAdmin,
+IMX000090,Especialista de Seguridad Medio Ambiente y Salud Ocup.,DefaultAdmin,This Job is for Especialista de Seguridad Medio Ambiente y Salud Ocup. Users only
+IMX000091,Especialista de Tecnologías de la información,DefaultAdmin,
+IMX000092,Especialista de Ventas,DefaultAdmin,
+IMX000093,Especialista de Ventas Sr.,DefaultAdmin,
+IMX000094,Especialista del Sistema de Produccion Toyota (TPS),DefaultAdmin,
+IMX000096,Especialista en Administración de La Producción,DefaultAdmin,
+IMX000097,Especialista en Control de la Producción,DefaultAdmin,
+IMX000098,Especialista en Entrenamiento,DefaultAdmin,
+IMX000099,Especialista en Importaciones y Exportaciones,DefaultAdmin,
+IMX000100,Especialista en Nómina,DefaultAdmin,
+IMX000101,Especialista en Tecnologías de la Información,DefaultAdmin,
+IMX000102,Especialista JDE,DefaultAdmin,
+IMX000103,Especialista Laboral,DefaultAdmin,
+IMX000104,Especialista Planeador de Materiales,DefaultAdmin,
+IMX000105,Generalista de Recursos Humanos,DefaultAdmin,
+IMX000106,Gerente Asistente de Calidad,DefaultAdmin,This Job is for Gerente Asistente de Calidad Users only
+IMX000108,Gerente Asistente de Herramientas,DefaultAdmin,
+IMX000109,Gerente Asistente de Inyección,DefaultAdmin,
+IMX000110,Gerente Asistente de Mantenimiento,DefaultAdmin,
+IMX000111,Gerente Asistente de Pintura,DefaultAdmin,
+IMX000112,Gerente Asistente de Platinado,DefaultAdmin,This Job is for Gerente Asistente de Platinado Users only
+IMX000113,Gerente Asistente de producción,DefaultAdmin,
+IMX000114,Gerente Asistente de TPS,DefaultAdmin,This Job is for Gerente Asistente de TPS Users only
+IMX000115,Gerente de Administración de Producción,DefaultAdmin,
+IMX000116,Gerente de Calidad,DefaultAdmin,
+IMX000117,Gerente de Centro de Control de PreProducción,DefaultAdmin,
+IMX000118,Gerente de Contabilidad,DefaultAdmin,
+IMX000119,Gerente de Herramientas,DefaultAdmin,
+IMX000120,Gerente de Ingeniería de Equipos,DefaultAdmin,
+IMX000121,Gerente de Ingeniería de Procesos,DefaultAdmin,
+IMX000122,Gerente de Inyección y Filler pipe,DefaultAdmin,
+IMX000123,Gerente de Producción,DefaultAdmin,
+IMX000124,Gerente de Recursos Humanos,DefaultAdmin,
+IMX000125,Gerente de Ventas,DefaultAdmin,
+IMX000126,Gerente Senior de Aseguramiento de Calidad,DefaultAdmin,
+IMX000127,Gerente Senior de Producción,DefaultAdmin,
+IMX000128,Ingeniero Asistente de Finanzas,DefaultAdmin,This Job is for Ingeniero Asistente de Finanzas Users only
+IMX000129,Ingeniero de Calidad,DefaultAdmin,This Job is for Ingeniero de Calidad Users only
+IMX000130,Ingeniero de Costos,DefaultAdmin,
+IMX000131,Ingeniero de diseño senior,DefaultAdmin,
+IMX000132,Ingeniero de Equipamiento,DefaultAdmin,
+IMX000133,Ingeniero de Filler Pipe,DefaultAdmin,
+IMX000134,Ingeniero de Inyección,DefaultAdmin,
+IMX000135,Ingeniero de Mantenimiento,DefaultAdmin,This Job is for Ingeniero de Mantenimiento Users only
+IMX000136,Ingeniero de Mantenimiento en Instalaciones,DefaultAdmin,
+IMX000137,Ingeniero de Mantenimiento en Instalaciones Equipa,DefaultAdmin,This Job is for Ingeniero de Mantenimiento en Instalaciones Equipa Users only
+IMX000138,Ingeniero de Mantenimiento Pintura,DefaultAdmin,This Job is for Ingeniero de Mantenimiento Pintura Users only
+IMX000139,Ingeniero de Máquinas y Herramientas (Tooling),DefaultAdmin,
+IMX000140,Ingeniero de pintura,DefaultAdmin,
+IMX000141,Ingeniero de Pintura (Material),DefaultAdmin,
+IMX000142,Ingeniero de Platinado,DefaultAdmin,
+IMX000143,Ingeniero de Procesos de inyección,DefaultAdmin,
+IMX000144,Ingeniero de Procesos Ensamble,DefaultAdmin,
+IMX000145,Ingeniero de Procesos Filler pipe,DefaultAdmin,
+IMX000146,Ingeniero de procesos Pintura,DefaultAdmin,
+IMX000147,Ingeniero de Producción,DefaultAdmin,
+IMX000148,Ingeniero de Proyectos,DefaultAdmin,
+IMX000149,Ingeniero General de Procesos,DefaultAdmin,
+IMX000150,Ingeniero Quimico,DefaultAdmin,
+IMX000151,Ingeniero Residente de Calidad,DefaultAdmin,
+IMX000152,Ingeniero Senior de Calidad,DefaultAdmin,
+IMX000153,Ingeniero Sr. De Procesos Inyección,DefaultAdmin,
+IMX000154,ISO TS Líder,DefaultAdmin,
+IMX000155,ISO/TSIATF SUPERVISOR,DefaultAdmin,
+IMX000156,Líder de Costura,DefaultAdmin,
+IMX000157,Líder de embarque,DefaultAdmin,
+IMX000158,Líder de Embarques,DefaultAdmin,
+IMX000159,Líder de Engrapado,DefaultAdmin,
+IMX000160,Líder de Ensamble,DefaultAdmin,
+IMX000161,Líder de equipo de empuje,DefaultAdmin,
+IMX000162,Líder de inyección,DefaultAdmin,
+IMX000163,Líder de Pintura,DefaultAdmin,
+IMX000164,Líder de Recibo,DefaultAdmin,
+IMX000165,Líder de Registro,DefaultAdmin,
+IMX000166,Líder de Tacoma Transfer,DefaultAdmin,
+IMX000168,Metrólogo,DefaultAdmin,
+IMX000169,Operador de Administración de la Producción,DefaultAdmin,
+IMX000170,Operador de Calidad,DefaultAdmin,
+IMX000171,Operador de Corte,DefaultAdmin,
+IMX000172,Operador de Costura,DefaultAdmin,
+IMX000173,Operador de Engrapado,DefaultAdmin,
+IMX000174,Operador de Ensamble,DefaultAdmin,
+IMX000175,Operador de Filler Pipe,DefaultAdmin,
+IMX000176,Operador de Garnizh Console,DefaultAdmin,
+IMX000177,Operador de Inyección,DefaultAdmin,
+IMX000178,Operador de J59W,DefaultAdmin,
+IMX000179,Operador de Kaizen,DefaultAdmin,
+IMX000180,Operador de Mantenimiento y mejora,DefaultAdmin,
+IMX000181,Operador de Maquinas y Herramientas,DefaultAdmin,
+IMX000182,Operador de Pintura,DefaultAdmin,
+IMX000183,Operador de Pipe (Rework),DefaultAdmin,
+IMX000184,Operador de Platinado,DefaultAdmin,
+IMX000185,Operador de Refacciones,DefaultAdmin,
+IMX000186,Operador de Registro,DefaultAdmin,
+IMX000187,Operador de Tacoma Transfer,DefaultAdmin,
+IMX000188,Operador de TPS,DefaultAdmin,
+IMX000189,Operador de Vacuum forming,DefaultAdmin,
+IMX000190,Operador Líder de Administración de la producción,DefaultAdmin,
+IMX000191,Operador Líder de Calidad,DefaultAdmin,
+IMX000192,Operador Líder de Costura,DefaultAdmin,This Job is for Operador Líder de Costura Users only
+IMX000193,Operador Líder de Engrapado,DefaultAdmin,
+IMX000194,Operador Líder de Ensamble,DefaultAdmin,
+IMX000195,Operador Líder de Filler Pipe,DefaultAdmin,
+IMX000196,Operador Líder de Inyección,DefaultAdmin,
+IMX000197,Operador Líder de Mantenimiento y Mejora,DefaultAdmin,
+IMX000198,Operador Líder de Pintura,DefaultAdmin,
+IMX000199,Operador Líder de Pipe (Rework),DefaultAdmin,
+IMX000200,Operador Líder de Platinado,DefaultAdmin,
+IMX000201,Operador Líder de Registro,DefaultAdmin,
+IMX000202,Operador Líder de TPS,DefaultAdmin,
+IMX000203,Operador Líder de Vacuum forming,DefaultAdmin,
+IMX000204,Reclutador,DefaultAdmin,
+IMX000205,Residente de Control de Calidad,DefaultAdmin,
+IMX000206,Supervisor de Administración de la Producción,DefaultAdmin,
+IMX000207,Supervisor de Costura,DefaultAdmin,
+IMX000208,Supervisor de Engrapado,DefaultAdmin,
+IMX000209,Supervisor de Ensamble,DefaultAdmin,
+IMX000210,Supervisor de Filler pipe,DefaultAdmin,
+IMX000211,Supervisor de Inyección,DefaultAdmin,
+IMX000212,Supervisor de Pintura,DefaultAdmin,
+IMX000213,Supervisor de Platinado,DefaultAdmin,
+IMX000214,Supervisor de Registro,DefaultAdmin,
+IMX000215,Supervisor de Tacoma Transfer,DefaultAdmin,
+IMX000216,Supervisor de Vacuum forming,DefaultAdmin,
+IMX000217,Team líder de capacitación,DefaultAdmin,
+IMX000218,Team Líder de Embarques,DefaultAdmin,
+IMX000219,Tecnico de calidad,DefaultAdmin,
+IMX000220,Técnico de Calidad,DefaultAdmin,
+IMX000221,Tecnico de EHS,DefaultAdmin,
+IMX000222,Técnico de Engrapado,DefaultAdmin,
+IMX000223,Técnico de Herramientas,DefaultAdmin,
+IMX000224,Técnico de Inyección,DefaultAdmin,
+IMX000225,Técnico de Mantenimiento,DefaultAdmin,
+IMX000226,Técnico de Mantenimiento Costura,DefaultAdmin,
+IMX000227,Técnico de Mantenimiento de Costura,DefaultAdmin,
+IMX000229,Técnico de Máquinas y Herramientas (Tooling),DefaultAdmin,
+IMX000230,Técnico de Pintura,DefaultAdmin,
+IMX000231,Tecnico de procesos,DefaultAdmin,
+IMX000232,Técnico de Procesos de inyección,DefaultAdmin,
+IMX000233,Técnico de registro,DefaultAdmin,
+IMX000234,Técnico de Tecnologías de la información,DefaultAdmin,
+IMX000235,Técnico de TPS,DefaultAdmin,
+IMX000236,Técnico en Ingenieria Equipamiento Y Mantenimiento,DefaultAdmin,
+IMX000237,Técnico senior de Inyección,DefaultAdmin,
+IMX000238,Tesorero,DefaultAdmin,
+IMX000239,Tranductor Ingles Japones,DefaultAdmin,
+IMX000240,Tugger Leader/ Prod Planner de Administración de la producción,DefaultAdmin,
+IMX000241,Asistente de Sistema,DefaultAdmin,This Job is for Asistente de Sistema Users only
+IMX000242,Gerente de Pintura,DefaultAdmin,This Job is for Gerente de Pintura Users only
+IMX000243,Gerente de Platinado,DefaultAdmin,
+IMX000244,Gerente de TPS,DefaultAdmin,This Job is for Gerente de TPS Users only
+IMX000245,Ingeniero Senior de Platinado,DefaultAdmin,This Job is for Ingeniero Senior de Platinado Users only
+IMX000246,Ingeniero Senior de Procesos de Pintura,DefaultAdmin,This Job is for Ingeniero Senior de Procesos de Pintura Users only
+IMX000247,Ingeniero Senior de Proyectos,DefaultAdmin,This Job is for Ingeniero Senior de Proyectos Users only
+IMX000248,Líder de Administración de la Producción,DefaultAdmin,This Job is for Líder de Administración de la Producción Users only
+IMX000249,Líder de Platinado,DefaultAdmin,This Job is for Líder de Platinado Users only
+IMX000250,Técnico de Mantenimiento de Pintura,DefaultAdmin,This Job is for Técnico de Mantenimiento de Pintura Users only
+IMX000251,Líder de vacuum forming,DefaultAdmin,This Job is for Líder de vacuum forming Users only
+IMX000252,Operador de 2S1F,DefaultAdmin,This Job is for Operador de 2S1F Users only
+IMX000253,Técnico de EHS,DefaultAdmin,This Job is for Técnico de EHS Users only
+IMX000254,Técnico de procesos,DefaultAdmin,This Job is for Técnico de procesos Users only
+IMX000261,Asistente de Reclutamiento,DefaultAdmin,This Job is for Asistente de Reclutamiento Users only
+IMX000262,Contador Ciclico,DefaultAdmin,This Job is for Contador Ciclico Users only
+IMX000263,Asistente de Administración de la Prducción,DefaultAdmin,This Job is for Asistente de Administración de la Prducción Users only
+IMX000267,Gerente Asistente de Administración de la Producción,DefaultAdmin,This Job is for Gerente Asistente de Administración de la Producción Users only
+IMX000268,Operador de Inyeccion,DefaultAdmin,This Job is for Operador de Inyeccion Users only
+IMX000270,Asistente de Administración de la Producción,DefaultAdmin,This Job is for Asistente de Administración de la Producción Users only
+IMX000271,Supervisor de Recursos Humanos,DefaultAdmin,This Job is for Supervisor de Recursos Humanos Users only
+IMX000274,Ingeniero de Procesos de PA,DefaultAdmin,This Job is for Ingeniero de Procesos de PA Users only
+IMX000295,Operación de inyeccion,DefaultAdmin,This Job is for Operación de inyeccion Users only
+IMX000297,Gerente General Asistente de Calidad & PPCC,DefaultAdmin,This Job is for Gerente General Asistente de Calidad & PPCC Users only
+IMX000298,Gerente General Asistente de Finanzas y Recursos Humanos,DefaultAdmin,This Job is for Gerente General Asistente de Finanzas y Recursos Humanos Users only
+IMX000299,Gerente General Asistente de Producción,DefaultAdmin,This Job is for Gerente General Asistente de Producción Users only
+IMX000300,Gerente General Asistente de TPS e ingenieria,DefaultAdmin,This Job is for Gerente General Asistente de TPS e ingenieria Users only
+IMX000302,Supervisor de Costura y Engrapado,DefaultAdmin,This Job is for Supervisor de Costura y Engrapado Users only
+IMX000303,Técnico de Filler Pipe,DefaultAdmin,This Job is for Técnico de Filler Pipe Users only
+IMX000304,Asesor Senior de Mantenimiento y Herramientas,DefaultAdmin,This Job is for Asesor Senior de Mantenimiento y Herramientas Users only
+IMX000306,Asistente de capacitación,DefaultAdmin,This Job is for Asistente de capacitación Users only
+IMX000307,Assistente de Clima Laboral,DefaultAdmin,This Job is for Assistente de Clima Laboral Users only
+IMX000308,Especialista de Clima Laboral,DefaultAdmin,This Job is for Especialista de Clima Laboral Users only
+IMX000309,Especialista de Control de Producción,DefaultAdmin,This Job is for Especialista de Control de Producción Users only
+IMX000310,Gerente Asistente de IMS,DefaultAdmin,This Job is for Gerente Asistente de IMS Users only
+IMX000311,Gerente de Inyección,DefaultAdmin,This Job is for Gerente de Inyección Users only
+IMX000312,Ingeniero de IMS,DefaultAdmin,This Job is for Ingeniero de IMS Users only
+IMX000313,Ingeniero de Mantenimiento de Pintura,DefaultAdmin,This Job is for Ingeniero de Mantenimiento de Pintura Users only
+IMX000314,Ingeniero de Tecnologías de la información,DefaultAdmin,This Job is for Ingeniero de Tecnologías de la información Users only
+IMX000315,Ingeniero de TPS,DefaultAdmin,This Job is for Ingeniero de TPS Users only
+IMX000316,Ingeniero Senior de Máquinas y Herramientas (Tooling),DefaultAdmin,This Job is for Ingeniero Senior de Máquinas y Herramientas (Tooling) Users only
+IMX000317,Líder de Filler Pipe,DefaultAdmin,This Job is for Líder de Filler Pipe Users only
+IMX000318,Líder de Kaizen,DefaultAdmin,This Job is for Líder de Kaizen Users only
+IMX000319,Líder de Máquinas y Herramientas (Tooling),DefaultAdmin,This Job is for Líder de Máquinas y Herramientas (Tooling) Users only
+IMX000320,Líder de Tacoma,DefaultAdmin,This Job is for Líder de Tacoma Users only
+IMX000321,Supervisor de Contabilidad,DefaultAdmin,This Job is for Supervisor de Contabilidad Users only
+IMX000322,Supervisor de Ingeniero de Mantenimiento,DefaultAdmin,This Job is for Supervisor de Ingeniero de Mantenimiento Users only
+IMX000323,Supervisor de Ingeniero de Platinado,DefaultAdmin,This Job is for Supervisor de Ingeniero de Platinado Users only
+IMX000324,Supervisor de Máquinas y Herramientas (Tooling),DefaultAdmin,This Job is for Supervisor de Máquinas y Herramientas (Tooling) Users only
+IMX000325,Supervisor de Procesos de inyección,DefaultAdmin,This Job is for Supervisor de Procesos de inyección Users only
+IMX000326,Supervisor de Procesos Ensamble,DefaultAdmin,This Job is for Supervisor de Procesos Ensamble Users only
+IMX000327,Supervisor De Procesos Inyección,DefaultAdmin,This Job is for Supervisor De Procesos Inyección Users only
+IMX000328,Supervisor de Proyectos,DefaultAdmin,This Job is for Supervisor de Proyectos Users only
+IMX000329,Supervisor de Sistema de Produccion Toyota (TPS),DefaultAdmin,This Job is for Supervisor de Sistema de Produccion Toyota (TPS) Users only
+IMX000330,Supervisor Senior de Ensamble,DefaultAdmin,This Job is for Supervisor Senior de Ensamble Users only
+IMX000331,Técnico de Equipamiento de Inyección,DefaultAdmin,This Job is for Técnico de Equipamiento de Inyección Users only
+IMX000332,Técnico de Maquinas y herramientas,DefaultAdmin,This Job is for Técnico de Maquinas y herramientas Users only
+IMX000333,AGM de Produccion,DefaultAdmin,This Job is for AGM de Produccion Users only
+IMX000334,Operador de IMS,DefaultAdmin,This Job is for Operador de IMS Users only
+IMX000335,Supervisor de Calidad,DefaultAdmin,This Job is for Supervisor de Calidad Users only
+IMX000336,Supervisor de Mantenimiento,DefaultAdmin,This Job is for Supervisor de Mantenimiento Users only
+IMX000338,Ingeniero de empaque,DefaultAdmin,This Job is for Ingeniero de empaque Users only
+IMX000339,Operador dn Pintura,DefaultAdmin,This Job is for Operador dn Pintura Users only
+IMX000340,Operador do Pintura,DefaultAdmin,This Job is for Operador do Pintura Users only
+IMX000341,Operador dt Calidad,DefaultAdmin,This Job is for Operador dt Calidad Users only
+IMX000342,Asistente de Contabilidad,DefaultAdmin,This Job is for Asistente de Contabilidad Users only
+IMX000343,Técnico de Mantenimiento de Inyección,DefaultAdmin,This Job is for Técnico de Mantenimiento de Inyección Users only
+IMX000348,Gerente General Asistente de Produccion,DefaultAdmin,This Job is for Gerente General Asistente de Produccion Users only
+IMX000349,Asistente de Clima Laboral,DefaultAdmin,This Job is for Asistente de Clima Laboral Users only
+IMX000350,Técnico de Mantenimiento de platinado,DefaultAdmin,This Job is for Técnico de Mantenimiento de platinado Users only
+IMX000351,Técnico de manufactura de inyección,DefaultAdmin,This Job is for Técnico de manufactura de inyección Users only
+IMX000354,Técnico de análisis químico,DefaultAdmin,This Job is for Técnico de análisis químico Users only
+IMX000355,Operador de Pintura,DefaultAdmin,This Job is for Operador de Pintura Users only
+IMX000356,Operador de Vacuum forming,DefaultAdmin,This Job is for Operador de Vacuum forming Users only
+IMX000387,Supervisor Senior de Administración de la Producción,DefaultAdmin,This Job is for Supervisor Senior de Administración de la Producción Users only
+IMX000390,Especialista de entrenamiento,DefaultAdmin,This Job is for Especialista de entrenamiento Users only
+IMX000396,Operador de Pintura Mantenimiento,DefaultAdmin,This Job is for Operador de Pintura Mantenimiento Users only
+IMX000397,Asistente de entrenamiento,DefaultAdmin,This Job is for Asistente de entrenamiento Users only
+IMX000398,Líder Junio de Recibo,DefaultAdmin,This Job is for Líder Junio de Recibo Users only
+IMX000399,Líder Junior de Administración de la Producción,DefaultAdmin,This Job is for Líder Junior de Administración de la Producción Users only
+IMX000400,Líder Junior de Costura,DefaultAdmin,This Job is for Líder Junior de Costura Users only
+IMX000401,Líder Junior de Embarques,DefaultAdmin,This Job is for Líder Junior de Embarques Users only
+IMX000402,Líder Junior de Engrapado,DefaultAdmin,This Job is for Líder Junior de Engrapado Users only
+IMX000403,Líder Junior de Ensamble,DefaultAdmin,This Job is for Líder Junior de Ensamble Users only
+IMX000404,Líder Junior de Filler Pipe,DefaultAdmin,This Job is for Líder Junior de Filler Pipe Users only
+IMX000405,Líder junior de inyección,DefaultAdmin,This Job is for Líder junior de inyección Users only
+IMX000406,Líder Junior de Kaizen,DefaultAdmin,This Job is for Líder Junior de Kaizen Users only
+IMX000407,Líder Junior de Pintura,DefaultAdmin,This Job is for Líder Junior de Pintura Users only
+IMX000408,Líder Junior de Platinado,DefaultAdmin,This Job is for Líder Junior de Platinado Users only
+IMX000409,Líder Junior de Registro,DefaultAdmin,This Job is for Líder Junior de Registro Users only
+IMX000410,Líder Junior de Tacoma Transfer,DefaultAdmin,This Job is for Líder Junior de Tacoma Transfer Users only
+IMX000411,Líder Junior de vacuum forming,DefaultAdmin,This Job is for Líder Junior de vacuum forming Users only
+IMX000412,Líder Senior de Máquinas y Herramientas (Tooling),DefaultAdmin,This Job is for Líder Senior de Máquinas y Herramientas (Tooling) Users only
+IMX000413,Asesor de Procesos Ensamble,DefaultAdmin,This Job is for Asesor de Procesos Ensamble Users only
+IMX000414,Asistente de IMS,DefaultAdmin,This Job is for Asistente de IMS Users only
+IMX000415,Gerente de IMS,DefaultAdmin,This Job is for Gerente de IMS Users only
+IMX000416,Gerente de Mantenimiento,DefaultAdmin,This Job is for Gerente de Mantenimiento Users only
+IMX000417,Gerente General Asistente de TPS Ingenieria y PA,DefaultAdmin,This Job is for Gerente General Asistente de TPS Ingenieria y PA Users only
+IMX000418,Ingeniero Senior de Mantenimiento,DefaultAdmin,This Job is for Ingeniero Senior de Mantenimiento Users only
+IMX000419,Ingeniero Senior de Procesos Filler pipe,DefaultAdmin,This Job is for Ingeniero Senior de Procesos Filler pipe Users only
+IMX000420,Ingeniero Senior de procesos Pintura,DefaultAdmin,This Job is for Ingeniero Senior de procesos Pintura Users only
+IMX000421,Ingeniero Senior de TPS,DefaultAdmin,This Job is for Ingeniero Senior de TPS Users only
+IMX000422,Líder de Embarques,DefaultAdmin,This Job is for Líder de Embarques Users only
+IMX000423,Líder de Tacoma Transfer,DefaultAdmin,This Job is for Líder de Tacoma Transfer Users only
+IMX000424,Líder de vacuum forming,DefaultAdmin,This Job is for Líder de vacuum forming Users only
+IMX000425,Líder Junior de Recibo,DefaultAdmin,This Job is for Líder Junior de Recibo Users only
+IMX000426,Supervisor Senior de Procesos de inyección,DefaultAdmin,This Job is for Supervisor Senior de Procesos de inyección Users only
+IMX000427,Supervisor Senior de Producción,DefaultAdmin,This Job is for Supervisor Senior de Producción Users only
+IMX000428,Supervisor Senior de Registro y Filler Pipe,DefaultAdmin,This Job is for Supervisor Senior de Registro y Filler Pipe Users only
+IMX000429,Supervisor Senior de Vacuum forming y Ensamble,DefaultAdmin,This Job is for Supervisor Senior de Vacuum forming y Ensamble Users only
+IMX000430,Especialista Ambiental,DefaultAdmin,This Job is for Especialista Ambiental Users only
+IMX000431,Traductor,DefaultAdmin,This Job is for Traductor Users only
+IMX000558,Ingeniero de Procesos,DefaultAdmin,This Job is for Ingeniero de Procesos Users only
+IMX000560,Asistente de Import/Export,DefaultAdmin,This Job is for Asistente de Import/Export Users only
+IMX000561,Ingeniero Senior de Procesos de PA,DefaultAdmin,This Job is for Ingeniero Senior de Procesos de PA Users only
+IMX000565,Montador de moldes,DefaultAdmin,This Job is for Montador de moldes Users only
+IMX000568,Operador de Recursos Humanos,DefaultAdmin,This Job is for Operador de Recursos Humanos Users only
+IMX000569,Técnico de Platinado,DefaultAdmin,This Job is for Técnico de Platinado Users only
+IMX000571,Operador de Ensamble Retrabajo,DefaultAdmin,This Job is for Operador de Ensamble Retrabajo Users only
+IMX000583,Asistente de Importaciones y Exportaciones,DefaultAdmin,This Job is for Asistente de Importaciones y Exportaciones Users only
+IMX000584,Operador de Tecnologías de la Información,DefaultAdmin,This Job is for Operador de Tecnologías de la Información Users only
+IMX000586,Supervisor de Control de Producción,DefaultAdmin,This Job is for Supervisor de Control de Producción Users only
+IMX000587,Técnico de procesos de Administracion de la producción,DefaultAdmin,This Job is for Técnico de procesos de Administracion de la producción Users only
+IMX000709,Especialista de Compras,DefaultAdmin,This Job is for Especialista de Compras Users only
+IMX000734,Gerente Asistente de Proyectos,DefaultAdmin,This Job is for Gerente Asistente de Proyectos Users only
+IMX000847,Asistente de Recursos Humanos,DefaultAdmin,This Job is for Asistente de Recursos Humanos Users only
+IMX000849,Especialista de Certificaciones Logisticas,DefaultAdmin,This Job is for Especialista de Certificaciones Logisticas Users only
+IMX000850,Líder Junior de Calidad,DefaultAdmin,This Job is for Líder Junior de Calidad Users only
+IMX000851,Asistente de producción,DefaultAdmin,This Job is for Asistente de producción Users only
+IMX000852,Gerente Asistente de Ensamble,DefaultAdmin,This Job is for Gerente Asistente de Ensamble Users only
+IMX000853,Gerente Asistente de Ingenieria de Equipo,DefaultAdmin,This Job is for Gerente Asistente de Ingenieria de Equipo Users only
+IMX000854,Gerente Asistente de Procesos de Inyección,DefaultAdmin,This Job is for Gerente Asistente de Procesos de Inyección Users only
+IMX000855,Ingeniero de Mantenimiento de Costura,DefaultAdmin,This Job is for Ingeniero de Mantenimiento de Costura Users only
+IMX000856,Ingeniero Senior de Procesos de Inyección,DefaultAdmin,This Job is for Ingeniero Senior de Procesos de Inyección Users only
+IMX000857,Líder Senior de Engrapado,DefaultAdmin,This Job is for Líder Senior de Engrapado Users only
+IMX000858,Líder Senior de Filler Pipe,DefaultAdmin,This Job is for Líder Senior de Filler Pipe Users only
+IMX000859,Líder Senior de Pintura,DefaultAdmin,This Job is for Líder Senior de Pintura Users only
+IMX000860,Líder Senior de vacuum forming,DefaultAdmin,This Job is for Líder Senior de vacuum forming Users only
+IMX000861,Supervisor de Ingenieria de Equipo,DefaultAdmin,This Job is for Supervisor de Ingenieria de Equipo Users only
+IMX000862,Supervisor de Tacoma Interior,DefaultAdmin,This Job is for Supervisor de Tacoma Interior Users only
+IMX000863,Supervisor Senior de Pintura,DefaultAdmin,This Job is for Supervisor Senior de Pintura Users only
+IMX000866,Técnico Residente de Calidad,DefaultAdmin,This Job is for Técnico Residente de Calidad Users only
+IMX000868,Técnico de Proyectos,DefaultAdmin,This Job is for Técnico de Proyectos Users only
+IMX000970,Ingeniero de Ensamble,DefaultAdmin,This Job is for Ingeniero de Ensamble Users only
+IMX000972,Gerente de Proyectos de AGGNA,DefaultAdmin,This Job is for Gerente de Proyectos de AGGNA Users only
+IMX000973,Líder Junior de Vacuum,DefaultAdmin,This Job is for Líder Junior de Vacuum Users only
+IMX000974,Operador de Tacoma Exterior,DefaultAdmin,This Job is for Operador de Tacoma Exterior Users only
+IMX000975,Operador de Tacoma Interior,DefaultAdmin,This Job is for Operador de Tacoma Interior Users only
+IMX000976,Operador Líder de Tacoma Exterior,DefaultAdmin,This Job is for Operador Líder de Tacoma Exterior Users only
+IMX000977,Supervisor de TPS,DefaultAdmin,This Job is for Supervisor de TPS Users only
+IMX001064,Contador de impuestos senior,DefaultAdmin,This Job is for Contador de impuestos senior Users only
+IMX001065,Operador de Contabilidad,DefaultAdmin,This Job is for Operador de Contabilidad Users only
+IMX001066,Técnico de empaque,DefaultAdmin,This Job is for Técnico de empaque Users only
+IMX001068,Técnico de Procesos de Ensamble,DefaultAdmin,This Job is for Técnico de Procesos de Ensamble Users only
+IMX001069,Especialista Senior de Planeación de materiales,DefaultAdmin,This Job is for Especialista Senior de Planeación de materiales Users only
+KY550000,"Specialist, Accounting",DefaultAdmin,"This Job is for Specialist, Accounting Users only"
+KY550002,Administrative Asst,DefaultAdmin,This Job is for Administrative Asst Users only
+KY550004,"General Manager, Assistant",DefaultAdmin,"This Job is for General Manager, Assistant Users only"
+KY550005,"Manager, Assistant, Production",DefaultAdmin,"This Job is for Manager, Assistant, Production Users only"
+KY550007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+KY550008,"Specialist, Cost Accountant",DefaultAdmin,"This Job is for Specialist, Cost Accountant Users only"
+KY550010,DDC Administrator,DefaultAdmin,This Job is for DDC Administrator Users only
+KY550012,"Engineer I, Technical",DefaultAdmin,"This Job is for Engineer I, Technical Users only"
+KY550013,"Engineer III, Technical",DefaultAdmin,"This Job is for Engineer III, Technical Users only"
+KY550014,"Engineer I, Quality",DefaultAdmin,"This Job is for Engineer I, Quality Users only"
+KY550015,Engineer - QC,DefaultAdmin,This Job is for Engineer - QC Users only
+KY550016,Engineering Tech I,DefaultAdmin,This Job is for Engineering Tech I Users only
+KY550019,"Engineer I, Production",DefaultAdmin,"This Job is for Engineer I, Production Users only"
+KY550020,"Engineer I, QRE Canada",DefaultAdmin,"This Job is for Engineer I, QRE Canada Users only"
+KY550021,"Engineer I, QRE Indiana",DefaultAdmin,"This Job is for Engineer I, QRE Indiana Users only"
+KY550023,Environmental Specialist,DefaultAdmin,This Job is for Environmental Specialist Users only
+KY550024,Maintenance Team Member I,DefaultAdmin,This Job is for Maintenance Team Member I Users only
+KY550028,General Manager,DefaultAdmin,This Job is for General Manager Users only
+KY550030,"Team Member, General Maintenan",DefaultAdmin,"This Job is for Team Member, General Maintenan Users only"
+KY550031,"Specialist, Human Resources",DefaultAdmin,"This Job is for Specialist, Human Resources Users only"
+KY550032,"Administrator, ERP",DefaultAdmin,"This Job is for Administrator, ERP Users only"
+KY550033,Kaizen,DefaultAdmin,This Job is for Kaizen Users only
+KY550036,Administrator,DefaultAdmin,This Job is for Administrator Users only
+KY550038,"Specialist, Manufacturing",DefaultAdmin,"This Job is for Specialist, Manufacturing Users only"
+KY550039,"Manager, Production",DefaultAdmin,"This Job is for Manager, Production Users only"
+KY550040,Maintenance Team Member II,DefaultAdmin,This Job is for Maintenance Team Member II Users only
+KY550041,"Specialist, Occupational Healt",DefaultAdmin,"This Job is for Specialist, Occupational Healt Users only"
+KY550042,"Administrator, Packaging",DefaultAdmin,"This Job is for Administrator, Packaging Users only"
+KY550044,"Administrator, Planning",DefaultAdmin,"This Job is for Administrator, Planning Users only"
+KY550051,Purchasing Specialist,DefaultAdmin,This Job is for Purchasing Specialist Users only
+KY550052,QA Technician,DefaultAdmin,This Job is for QA Technician Users only
+KY550057,"Specialist, EHS",DefaultAdmin,"This Job is for Specialist, EHS Users only"
+KY550058,"Specialist III, IT",DefaultAdmin,"This Job is for Specialist III, IT Users only"
+KY550059,"Administrator III, Planning",DefaultAdmin,"This Job is for Administrator III, Planning Users only"
+KY550061,"Administrator, IT",DefaultAdmin,"This Job is for Administrator, IT Users only"
+KY550063,"Specialist, Staff Accountant",DefaultAdmin,"This Job is for Specialist, Staff Accountant Users only"
+KY550064,Supplier Quality Adm,DefaultAdmin,This Job is for Supplier Quality Adm Users only
+KY550066,"Supervisor, Production",DefaultAdmin,"This Job is for Supervisor, Production Users only"
+KY550068,Supervisor - Maintenance,DefaultAdmin,This Job is for Supervisor - Maintenance Users only
+KY550069,"Supervisor, Sr",DefaultAdmin,"This Job is for Supervisor, Sr Users only"
+KY550071,"Team Member, TL",DefaultAdmin,"This Job is for Team Member, TL Users only"
+KY550072,Team Member,DefaultAdmin,This Job is for Team Member Users only
+KY550075,Technical Translator,DefaultAdmin,This Job is for Technical Translator Users only
+KY550076,Vice President,DefaultAdmin,This Job is for Vice President Users only
+KY550078,"Specialist, Quality",DefaultAdmin,"This Job is for Specialist, Quality Users only"
+KY550111,Data Entry Clerk,DefaultAdmin,This Job is for Data Entry Clerk Users only
+KY550112,Finish Good Planner,DefaultAdmin,This Job is for Finish Good Planner Users only
+KY550116,"Maintenance Team Member, Train",DefaultAdmin,"This Job is for Maintenance Team Member, Train Users only"
+KY550118,Maint - Equip - Facilities,DefaultAdmin,This Job is for Maint - Equip - Facilities Users only
+KY550123,Temp Agency Belflex,DefaultAdmin,This Job is for Temp Agency Belflex Users only
+KY550131,Warranty QE,DefaultAdmin,This Job is for Warranty QE Users only
+KY550132,"Team Member, LO",DefaultAdmin,"This Job is for Team Member, LO Users only"
+KY550134,"General Manager, Senior",DefaultAdmin,"This Job is for General Manager, Senior Users only"
+KY550137,"Specialist, PPCC",DefaultAdmin,"This Job is for Specialist, PPCC Users only"
+KY550139,"Specialist, Training",DefaultAdmin,"This Job is for Specialist, Training Users only"
+KY550142,Supervisor - EHS,DefaultAdmin,This Job is for Supervisor - EHS Users only
+KY550144,Senior Quality Engineer,DefaultAdmin,This Job is for Senior Quality Engineer Users only
+KY550145,Payroll/Benefits Specialist,DefaultAdmin,This Job is for Payroll/Benefits Specialist Users only
+KY550146,Payroll/Benefits Administrator,DefaultAdmin,This Job is for Payroll/Benefits Administrator Users only
+KY550147,TPS Team Member,DefaultAdmin,This Job is for TPS Team Member Users only
+KY550148,TPS Team Leader,DefaultAdmin,This Job is for TPS Team Leader Users only
+KY550149,"Team Member, Kaizen",DefaultAdmin,"This Job is for Team Member, Kaizen Users only"
+KY550150,"Team Lead, Kaizen",DefaultAdmin,"This Job is for Team Lead, Kaizen Users only"
+KY550151,Consultant,DefaultAdmin,This Job is for Consultant Users only
+KY550152,"Manager, Senior, Production",DefaultAdmin,"This Job is for Manager, Senior, Production Users only"
+KY550155,"Supervisor, Sr-QE",DefaultAdmin,"This Job is for Supervisor, Sr-QE Users only"
+KY550156,"Supervisor, Sr-QC",DefaultAdmin,"This Job is for Supervisor, Sr-QC Users only"
+KY550157,"Specialist, Project",DefaultAdmin,"This Job is for Specialist, Project Users only"
+KY550158,"Supervisor, Engineering",DefaultAdmin,"This Job is for Supervisor, Engineering Users only"
+KY550159,550159 - Administrative Coordi,DefaultAdmin,This Job is for 550159 - Administrative Coordi Users only
+KY550160,Strategic Planning Analyst,DefaultAdmin,This Job is for Strategic Planning Analyst Users only
+KY550161,Engineer - Controls,DefaultAdmin,This Job is for Engineer - Controls Users only
+KY550162,HR Supervisor,DefaultAdmin,This Job is for HR Supervisor Users only
+KY550163,"Team Member, Tech Level I",DefaultAdmin,"This Job is for Team Member, Tech Level I Users only"
+KY550164,"Specialist, Translator",DefaultAdmin,"This Job is for Specialist, Translator Users only"
+KY550165,"Supervisor II, Production",DefaultAdmin,"This Job is for Supervisor II, Production Users only"
+KY550166,"General Manager, Executive",DefaultAdmin,"This Job is for General Manager, Executive Users only"
+KY550170,"Engineer III, Quality",DefaultAdmin,"This Job is for Engineer III, Quality Users only"
+KY550172,"Specialist III, Accounting",DefaultAdmin,"This Job is for Specialist III, Accounting Users only"
+KY550173,"Supervisor, Administrative",DefaultAdmin,"This Job is for Supervisor, Administrative Users only"
+KY550174,"Supervisor, Maintenance",DefaultAdmin,"This Job is for Supervisor, Maintenance Users only"
+KY550175,"Supervisor, Technical",DefaultAdmin,"This Job is for Supervisor, Technical Users only"
+KY550180,"Manager, Assistant, Maintenanc",DefaultAdmin,"This Job is for Manager, Assistant, Maintenanc Users only"
+KY550181,"Manager, Assistant, Technical",DefaultAdmin,"This Job is for Manager, Assistant, Technical Users only"
+KY550182,"Manager, Administrative",DefaultAdmin,"This Job is for Manager, Administrative Users only"
+KY550183,"Manager, Maintenance",DefaultAdmin,"This Job is for Manager, Maintenance Users only"
+KY550184,"Manager, Technical",DefaultAdmin,"This Job is for Manager, Technical Users only"
+KY550187,"Manager, Senior, Technical",DefaultAdmin,"This Job is for Manager, Senior, Technical Users only"
+KY550188,"Administrator, Translator",DefaultAdmin,"This Job is for Administrator, Translator Users only"
+KY550190,"Specialist III, PPCC",DefaultAdmin,"This Job is for Specialist III, PPCC Users only"
+KY999999,Temp Agency,DefaultAdmin,This Job is for Temp Agency Users only
+KYE55007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+KYE55048,President,DefaultAdmin,This Job is for President Users only
+KYE55060,Senior Coordinator,DefaultAdmin,This Job is for Senior Coordinator Users only
+KYE77089,VP,DefaultAdmin,This Job is for VP Users only
+KYSS1054,Sr Spec I - Sys Admin,DefaultAdmin,This Job is for Sr Spec I - Sys Admin Users only
+MAN1,Manager,DefaultAdmin,This Job is for Manager Users only
+MT000001,Accounting Specialist,DefaultAdmin,This Job is for Accounting Specialist Users only
+MT000002,Accounts Payable Assistant,DefaultAdmin,This Job is for Accounts Payable Assistant Users only
+MT000003,Accounts Payable Specialist,DefaultAdmin,This Job is for Accounts Payable Specialist Users only
+MT000004,Advisor,DefaultAdmin,This Job is for Advisor Users only
+MT000005,Assistant General Manager,DefaultAdmin,This Job is for Assistant General Manager Users only
+MT000006,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+MT000007,Cost Accountant,DefaultAdmin,This Job is for Cost Accountant Users only
+MT000008,Customer Service,DefaultAdmin,This Job is for Customer Service Users only
+MT000009,Document Admin.,DefaultAdmin,This Job is for Document Admin. Users only
+MT000010,Electrician,DefaultAdmin,This Job is for Electrician Users only
+MT000011,Engineer - Technical,DefaultAdmin,This Job is for Engineer - Technical Users only
+MT000012,Engineer-Process,DefaultAdmin,This Job is for Engineer-Process Users only
+MT000013,Env. Health and Safety Specialist,DefaultAdmin,This Job is for Env. Health and Safety Specialist Users only
+MT000014,Factory Team Member FTM,DefaultAdmin,This Job is for Factory Team Member FTM Users only
+MT000015,General Manager,DefaultAdmin,This Job is for General Manager Users only
+MT000016,HR Specialist,DefaultAdmin,This Job is for HR Specialist Users only
+MT000017,Lead Operator,DefaultAdmin,This Job is for Lead Operator Users only
+MT000018,Leader Tech,DefaultAdmin,This Job is for Leader Tech Users only
+MT000019,Machine Group,DefaultAdmin,This Job is for Machine Group Users only
+MT000020,Maintenance,DefaultAdmin,This Job is for Maintenance Users only
+MT000021,Maintenance Clerk,DefaultAdmin,This Job is for Maintenance Clerk Users only
+MT000022,Maintenance Helper,DefaultAdmin,This Job is for Maintenance Helper Users only
+MT000023,Manager,DefaultAdmin,This Job is for Manager Users only
+MT000024,Material Handler,DefaultAdmin,This Job is for Material Handler Users only
+MT000025,MIS Specialist,DefaultAdmin,This Job is for MIS Specialist Users only
+MT000026,Mold Helper,DefaultAdmin,This Job is for Mold Helper Users only
+MT000027,Mold Technician,DefaultAdmin,This Job is for Mold Technician Users only
+MT000028,Packaging Specialist,DefaultAdmin,This Job is for Packaging Specialist Users only
+MT000029,Payroll Specialist,DefaultAdmin,This Job is for Payroll Specialist Users only
+MT000030,PC Assistant,DefaultAdmin,This Job is for PC Assistant Users only
+MT000031,PC FTM,DefaultAdmin,This Job is for PC FTM Users only
+MT000032,PC Planner,DefaultAdmin,This Job is for PC Planner Users only
+MT000033,PC Specialist,DefaultAdmin,This Job is for PC Specialist Users only
+MT000034,PPCC Specialist,DefaultAdmin,This Job is for PPCC Specialist Users only
+MT000035,Quality Engineer,DefaultAdmin,This Job is for Quality Engineer Users only
+MT000036,Quality Inspector FTM,DefaultAdmin,This Job is for Quality Inspector FTM Users only
+MT000037,Quality Resident Engineer,DefaultAdmin,This Job is for Quality Resident Engineer Users only
+MT000038,Quality Specialist,DefaultAdmin,This Job is for Quality Specialist Users only
+MT000039,Receiver,DefaultAdmin,This Job is for Receiver Users only
+MT000040,Receiving Inspection,DefaultAdmin,This Job is for Receiving Inspection Users only
+MT000041,Receptionist,DefaultAdmin,This Job is for Receptionist Users only
+MT000042,Regrind Operator,DefaultAdmin,This Job is for Regrind Operator Users only
+MT000043,Senior General Manager,DefaultAdmin,This Job is for Senior General Manager Users only
+MT000044,Set Up Tech,DefaultAdmin,This Job is for Set Up Tech Users only
+MT000045,Shipper,DefaultAdmin,This Job is for Shipper Users only
+MT000046,Special Projects Leader,DefaultAdmin,This Job is for Special Projects Leader Users only
+MT000047,Specialist,DefaultAdmin,This Job is for Specialist Users only
+MT000048,Student,DefaultAdmin,This Job is for Student Users only
+MT000049,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+MT000050,Technician,DefaultAdmin,This Job is for Technician Users only
+MT000051,Temporary Job Assignment,DefaultAdmin,This Job is for Temporary Job Assignment Users only
+MT000052,TPS Engineer,DefaultAdmin,This Job is for TPS Engineer Users only
+MT000053,TPS Specialist,DefaultAdmin,This Job is for TPS Specialist Users only
+MT000054,TPS Tech,DefaultAdmin,This Job is for TPS Tech Users only
+MT000055,Translator,DefaultAdmin,This Job is for Translator Users only
+MT000255,Sr Manager,DefaultAdmin,This Job is for Sr Manager Users only
+MT000257,Co-Ordinator,DefaultAdmin,This Job is for Co-Ordinator Users only
+MT000258,Contract,DefaultAdmin,This Job is for Contract Users only
+MT000259,HR Assistant,DefaultAdmin,This Job is for HR Assistant Users only
+MT000260,Sr Specialist,DefaultAdmin,This Job is for Sr Specialist Users only
+MT000264,Injection Molding Technician,DefaultAdmin,This Job is for Injection Molding Technician Users only
+MT000265,Sr Payroll Specialist,DefaultAdmin,This Job is for Sr Payroll Specialist Users only
+MT000289,Engineering Administration,DefaultAdmin,This Job is for Engineering Administration Users only
+MT000291,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+MT000293,IT Specialist,DefaultAdmin,This Job is for IT Specialist Users only
+MT000294,Jr Specialist,DefaultAdmin,This Job is for Jr Specialist Users only
+MT000301,Generalist,DefaultAdmin,This Job is for Generalist Users only
+MT000305,Apprentice,DefaultAdmin,This Job is for Apprentice Users only
+MT000337,Administrator,DefaultAdmin,This Job is for Administrator Users only
+MT000344,Production Team Member Paint Assy,DefaultAdmin,This Job is for Production Team Member Paint Assy Users only
+MT000345,Lead Operator Paint Assy,DefaultAdmin,This Job is for Lead Operator Paint Assy Users only
+MT000346,Leader Tech Paint Assy,DefaultAdmin,This Job is for Leader Tech Paint Assy Users only
+MT000347,Student Paint Assy,DefaultAdmin,This Job is for Student Paint Assy Users only
+MT000352,Intern,DefaultAdmin,This Job is for Intern Users only
+MT000353,Director,DefaultAdmin,This Job is for Director Users only
+MT000357,Production Team Member Student,DefaultAdmin,This Job is for Production Team Member Student Users only
+MT000358,Sr Generalist,DefaultAdmin,This Job is for Sr Generalist Users only
+MT000385,On The Job Trainer,DefaultAdmin,This Job is for On The Job Trainer Users only
+MT000386,Production Team Member Student Paint Assy,DefaultAdmin,This Job is for Production Team Member Student Paint Assy Users only
+MT000388,Liaison,DefaultAdmin,This Job is for Liaison Users only
+MT000389,Journeyperson Candidate,DefaultAdmin,This Job is for Journeyperson Candidate Users only
+MT000555,Sr Engineer,DefaultAdmin,This Job is for Sr Engineer Users only
+MT000556,OJT Team Member,DefaultAdmin,This Job is for OJT Team Member Users only
+MT000557,Production Data Support,DefaultAdmin,This Job is for Production Data Support Users only
+MT000563,Journeyperson,DefaultAdmin,This Job is for Journeyperson Users only
+MT000564,Millwright,DefaultAdmin,This Job is for Millwright Users only
+MT000572,Analyst,DefaultAdmin,This Job is for Analyst Users only
+MT000585,OJT,DefaultAdmin,This Job is for OJT Users only
+MT003000,President,DefaultAdmin,
+MTM1,Maintenance Team Member I,DefaultAdmin,This Job is for Maintenance Team Member I Users only
+NA550003,Advisor,DefaultAdmin,This Job is for Advisor Users only
+NA550005,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+NA550007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+NA550048,President,DefaultAdmin,This Job is for President Users only
+NA550077,Engineer - QRE - TMMK,DefaultAdmin,This Job is for Engineer - QRE - TMMK Users only
+NA550127,Executive Cooordinator,DefaultAdmin,This Job is for Executive Cooordinator Users only
+NA550152,Sr Manager,DefaultAdmin,This Job is for Sr Manager Users only
+NA660041,Cost Accountant,DefaultAdmin,This Job is for Cost Accountant Users only
+NA660088,General Manager,DefaultAdmin,This Job is for General Manager Users only
+NA660096,"General Manager, Asst",DefaultAdmin,"This Job is for General Manager, Asst Users only"
+NA660104,Vice President,DefaultAdmin,This Job is for Vice President Users only
+NA660219,Engineering Technician III,DefaultAdmin,This Job is for Engineering Technician III Users only
+NA660815,Mold Engineer,DefaultAdmin,This Job is for Mold Engineer Users only
+NA660944,Manager,DefaultAdmin,This Job is for Manager Users only
+NA660967,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+NA661136,Quality Resident Engineer,DefaultAdmin,This Job is for Quality Resident Engineer Users only
+NA661625,"Manager, Senior",DefaultAdmin,"This Job is for Manager, Senior Users only"
+NA770004,Administrator,DefaultAdmin,This Job is for Administrator Users only
+NA770005,Assistant GM - Technical,DefaultAdmin,This Job is for Assistant GM - Technical Users only
+NA770007,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+NA770009,Assistant Manager - Eng'g,DefaultAdmin,This Job is for Assistant Manager - Eng'g Users only
+NA770010,Assistant Manager - Quality,DefaultAdmin,This Job is for Assistant Manager - Quality Users only
+NA770011,Assistant Manager - Sales,DefaultAdmin,This Job is for Assistant Manager - Sales Users only
+NA770013,Assistant Manager - HR,DefaultAdmin,This Job is for Assistant Manager - HR Users only
+NA770025,Engineer I,DefaultAdmin,This Job is for Engineer I Users only
+NA770032,GM,DefaultAdmin,This Job is for GM Users only
+NA770033,GM - Corp Purchasing,DefaultAdmin,This Job is for GM - Corp Purchasing Users only
+NA770037,GM - Human Resources,DefaultAdmin,This Job is for GM - Human Resources Users only
+NA770038,GM - Sales,DefaultAdmin,This Job is for GM - Sales Users only
+NA770045,Manager,DefaultAdmin,This Job is for Manager Users only
+NA770047,Manager - Accounting,DefaultAdmin,This Job is for Manager - Accounting Users only
+NA770049,Manager - Engineering,DefaultAdmin,This Job is for Manager - Engineering Users only
+NA770055,Program Manager,DefaultAdmin,This Job is for Program Manager Users only
+NA770058,Manager - Sales,DefaultAdmin,This Job is for Manager - Sales Users only
+NA770075,"Designer, Sr.",DefaultAdmin,"This Job is for Designer, Sr. Users only"
+NA770076,"Engineer, Sr.",DefaultAdmin,"This Job is for Engineer, Sr. Users only"
+NA770084,Specialist - Support,DefaultAdmin,This Job is for Specialist - Support Users only
+NA770089,VP,DefaultAdmin,This Job is for VP Users only
+NA770101,"Specialist, Sr. - HR",DefaultAdmin,"This Job is for Specialist, Sr. - HR Users only"
+NA770107,Manager- Human Resources,DefaultAdmin,This Job is for Manager- Human Resources Users only
+NA770111,Assistant GM - Sales,DefaultAdmin,This Job is for Assistant GM - Sales Users only
+NA770112,Assistant GM - Quality,DefaultAdmin,This Job is for Assistant GM - Quality Users only
+NA770113,Assistant Manager - Purchasing,DefaultAdmin,This Job is for Assistant Manager - Purchasing Users only
+NA770126,Specialist - HR,DefaultAdmin,This Job is for Specialist - HR Users only
+NA770127,Assistant GM - Accounting,DefaultAdmin,This Job is for Assistant GM - Accounting Users only
+NA770129,Assistant GM - Finance,DefaultAdmin,This Job is for Assistant GM - Finance Users only
+NA770131,Manager - Purchasing,DefaultAdmin,This Job is for Manager - Purchasing Users only
+NA770134,VP Sales,DefaultAdmin,This Job is for VP Sales Users only
+NA770148,GM - Technical,DefaultAdmin,This Job is for GM - Technical Users only
+NA770149,Assistant GM - Corporate IS,DefaultAdmin,This Job is for Assistant GM - Corporate IS Users only
+NA770152,VP Purchasing,DefaultAdmin,This Job is for VP Purchasing Users only
+NA770156,Specialist - Quality,DefaultAdmin,This Job is for Specialist - Quality Users only
+NA770160,"Specialist, Sr. - Sales",DefaultAdmin,"This Job is for Specialist, Sr. - Sales Users only"
+NA770161,Engineer,DefaultAdmin,This Job is for Engineer Users only
+NA770163,GM - Finance,DefaultAdmin,This Job is for GM - Finance Users only
+NA770164,Specialist - Sales,DefaultAdmin,This Job is for Specialist - Sales Users only
+NA770165,Manager - CIS,DefaultAdmin,This Job is for Manager - CIS Users only
+NA770166,Manager - Technical,DefaultAdmin,This Job is for Manager - Technical Users only
+NA770167,"Engineer, Principle",DefaultAdmin,"This Job is for Engineer, Principle Users only"
+NA770171,Specialist - Purchasing,DefaultAdmin,This Job is for Specialist - Purchasing Users only
+NA770172,Specialist - Cost Planning,DefaultAdmin,This Job is for Specialist - Cost Planning Users only
+NA770173,Specialist - SAM,DefaultAdmin,This Job is for Specialist - SAM Users only
+NA770174,Specialist - CIS,DefaultAdmin,This Job is for Specialist - CIS Users only
+NA770175,Specialist - Help Desk (NE),DefaultAdmin,This Job is for Specialist - Help Desk (NE) Users only
+NA770176,Specialist - Sales Rep,DefaultAdmin,This Job is for Specialist - Sales Rep Users only
+NA770181,Specialist - Tax,DefaultAdmin,This Job is for Specialist - Tax Users only
+NA770184,Specialist - Legal,DefaultAdmin,This Job is for Specialist - Legal Users only
+NA770186,Specialist - AR,DefaultAdmin,This Job is for Specialist - AR Users only
+NA770187,Specialist - AR Admin (NE),DefaultAdmin,This Job is for Specialist - AR Admin (NE) Users only
+NA770192,"Specialist, Sr. - Accounting",DefaultAdmin,"This Job is for Specialist, Sr. - Accounting Users only"
+NA770193,"Specialist, Sr. - Purchasing",DefaultAdmin,"This Job is for Specialist, Sr. - Purchasing Users only"
+NA770195,"Specialist, Sr. - SAM",DefaultAdmin,"This Job is for Specialist, Sr. - SAM Users only"
+NA770196,"Specialist, Sr. - GA",DefaultAdmin,"This Job is for Specialist, Sr. - GA Users only"
+NA770197,Specialist - Finance,DefaultAdmin,This Job is for Specialist - Finance Users only
+NA770198,"Specialist, Sr. - Sales Plan",DefaultAdmin,"This Job is for Specialist, Sr. - Sales Plan Users only"
+NA770199,"Specialist, Sr. Purchasing PT",DefaultAdmin,"This Job is for Specialist, Sr. Purchasing PT Users only"
+NA770200,"Specialist, Sr. - CIS",DefaultAdmin,"This Job is for Specialist, Sr. - CIS Users only"
+NA770202,"Specialist, Sr. - Quality",DefaultAdmin,"This Job is for Specialist, Sr. - Quality Users only"
+NA770203,"CAE Engineer, Sr",DefaultAdmin,"This Job is for CAE Engineer, Sr Users only"
+NA770204,Corporate Counsel,DefaultAdmin,This Job is for Corporate Counsel Users only
+NA770205,Specialist - GA,DefaultAdmin,This Job is for Specialist - GA Users only
+NA770206,"Specialist, Sr. - JDE",DefaultAdmin,"This Job is for Specialist, Sr. - JDE Users only"
+NA770208,"Advisor, Sr",DefaultAdmin,"This Job is for Advisor, Sr Users only"
+NA770210,Specialist - Warranty,DefaultAdmin,This Job is for Specialist - Warranty Users only
+NA770211,Specialist - Accounting,DefaultAdmin,This Job is for Specialist - Accounting Users only
+NA770212,CAE Engineer,DefaultAdmin,This Job is for CAE Engineer Users only
+NA770213,Assistant GM - HR,DefaultAdmin,This Job is for Assistant GM - HR Users only
+NA770215,"GM, Sr.",DefaultAdmin,"This Job is for GM, Sr. Users only"
+NA770216,"Specialist, Sr. - Customs (PT)",DefaultAdmin,"This Job is for Specialist, Sr. - Customs (PT) Users only"
+NA770219,"Specialist, Sr. - Corp Plan",DefaultAdmin,"This Job is for Specialist, Sr. - Corp Plan Users only"
+NA770220,Designer,DefaultAdmin,This Job is for Designer Users only
+NA770223,Assistant Manager - CIS,DefaultAdmin,This Job is for Assistant Manager - CIS Users only
+NA770226,Assistant GM,DefaultAdmin,This Job is for Assistant GM Users only
+NA770227,Specialist - Corp Planning,DefaultAdmin,This Job is for Specialist - Corp Planning Users only
+NA770231,Principle,DefaultAdmin,This Job is for Principle Users only
+NA770233,Specialist - Production Ctrl,DefaultAdmin,This Job is for Specialist - Production Ctrl Users only
+NA770235,"Manager, Sr. - Project",DefaultAdmin,"This Job is for Manager, Sr. - Project Users only"
+NA770236,"Manager, Project",DefaultAdmin,"This Job is for Manager, Project Users only"
+NA770237,Executive Business Manager,DefaultAdmin,This Job is for Executive Business Manager Users only
+NA770238,AGM - Corporate Counsel,DefaultAdmin,This Job is for AGM - Corporate Counsel Users only
+NA770302,"Specialist, Sr. - Legal",DefaultAdmin,"This Job is for Specialist, Sr. - Legal Users only"
+NA770303,TPS Engineer,DefaultAdmin,This Job is for TPS Engineer Users only
+NA770306,Senior Principal,DefaultAdmin,This Job is for Senior Principal Users only
+NA770307,Sales Engineer II,DefaultAdmin,This Job is for Sales Engineer II Users only
+NA770888,Manager,DefaultAdmin,This Job is for Manager Users only
+NA770999,GM,DefaultAdmin,This Job is for GM Users only
+NA771002,Lead Specialist - OneFA,DefaultAdmin,This Job is for Lead Specialist - OneFA Users only
+NA771003,Lead Specialist - CIS,DefaultAdmin,This Job is for Lead Specialist - CIS Users only
+NA771004,Intern,DefaultAdmin,This Job is for Intern Users only
+NA771005,Specialist - Engineering Techn,DefaultAdmin,This Job is for Specialist - Engineering Techn Users only
+NA771006,Specialist Sr. - Engineering T,DefaultAdmin,This Job is for Specialist Sr. - Engineering T Users only
+NA771007,Specialist - Tech Plan,DefaultAdmin,This Job is for Specialist - Tech Plan Users only
+NA771008,"Lead Specialist, Sales",DefaultAdmin,"This Job is for Lead Specialist, Sales Users only"
+NA771009,"Sr, Manager",DefaultAdmin,"This Job is for Sr, Manager Users only"
+NA771010,Specialist - EHS,DefaultAdmin,This Job is for Specialist - EHS Users only
+NA771011,Lead Specialist OneHR,DefaultAdmin,This Job is for Lead Specialist OneHR Users only
+NA771012,General Counsel,DefaultAdmin,This Job is for General Counsel Users only
+NA990001,Sr Test Technician,DefaultAdmin,This Job is for Sr Test Technician Users only
+NA990002,Engineer,DefaultAdmin,This Job is for Engineer Users only
+NA990006,Test Technician,DefaultAdmin,This Job is for Test Technician Users only
+NA990008,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+NAAG1023,AGM I - Eng,DefaultAdmin,This Job is for AGM I - Eng Users only
+NAAG1047,AGM I - Sales,DefaultAdmin,This Job is for AGM I - Sales Users only
+NAAM1023,Asst Mgr I - Eng,DefaultAdmin,This Job is for Asst Mgr I - Eng Users only
+NAAM1047,Asst Mgr I - Sales,DefaultAdmin,This Job is for Asst Mgr I - Sales Users only
+NACO1000,Co-Op - Non-Technical,DefaultAdmin,This Job is for Co-Op - Non-Technical Users only
+NACO2000,Co-Op - Technical,DefaultAdmin,This Job is for Co-Op - Technical Users only
+NAE55007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+NAE55008,SR COORDINATOR,DefaultAdmin,This Job is for SR COORDINATOR Users only
+NAE55048,President,DefaultAdmin,This Job is for President Users only
+NAE55060,Senior Coordinator,DefaultAdmin,This Job is for Senior Coordinator Users only
+NAE55151,Consultant,DefaultAdmin,This Job is for Consultant Users only
+NAE66125,Chairman of Board,DefaultAdmin,This Job is for Chairman of Board Users only
+NAE66967,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+NAE77002,SPECIALIST,DefaultAdmin,This Job is for SPECIALIST Users only
+NAE77003,EXEC ADVISOR,DefaultAdmin,This Job is for EXEC ADVISOR Users only
+NAE77004,Manager,DefaultAdmin,This Job is for Manager Users only
+NAE77006,AGM,DefaultAdmin,This Job is for AGM Users only
+NAE77032,GM,DefaultAdmin,This Job is for GM Users only
+NAE77076,"Engineer, Sr.",DefaultAdmin,"This Job is for Engineer, Sr. Users only"
+NAE77089,VP,DefaultAdmin,This Job is for VP Users only
+NAE77125,President,DefaultAdmin,This Job is for President Users only
+NAE77134,VP Sales,DefaultAdmin,This Job is for VP Sales Users only
+NAE77148,GM - Technical,DefaultAdmin,This Job is for GM - Technical Users only
+NAE77161,Engineer,DefaultAdmin,This Job is for Engineer Users only
+NAE77232,VP - Senior,DefaultAdmin,This Job is for VP - Senior Users only
+NAE77233,Chief of IE BP,DefaultAdmin,This Job is for Chief of IE BP Users only
+NAEG1023,Eng I - Eng,DefaultAdmin,This Job is for Eng I - Eng Users only
+NALS1006,Lead Spec I - CAD,DefaultAdmin,This Job is for Lead Spec I - CAD Users only
+NALS1010,Lead Spec I - CIS,DefaultAdmin,This Job is for Lead Spec I - CIS Users only
+NAMG1001,Mgr I - Accounting,DefaultAdmin,This Job is for Mgr I - Accounting Users only
+NAMG1009,Mgr I - CAE,DefaultAdmin,This Job is for Mgr I - CAE Users only
+NAMG1014,Mgr I - Corp Purch,DefaultAdmin,This Job is for Mgr I - Corp Purch Users only
+NASD1023,Sr Designer I - Eng,DefaultAdmin,This Job is for Sr Designer I - Eng Users only
+NASG0029,SGM - HR,DefaultAdmin,This Job is for SGM - HR Users only
+NASM1044,Sr Mgr I - Quality,DefaultAdmin,This Job is for Sr Mgr I - Quality Users only
+NASM2029,Sr Mgr II - HR,DefaultAdmin,This Job is for Sr Mgr II - HR Users only
+NASP2003,Spec II - AR,DefaultAdmin,This Job is for Spec II - AR Users only
+NASP2018,Spec II - Cybersecurity,DefaultAdmin,This Job is for Spec II - Cybersecurity Users only
+NASP2096,Spec II - HRIS,DefaultAdmin,This Job is for Spec II - HRIS Users only
+NASP3047,Spec III - Sales,DefaultAdmin,This Job is for Spec III - Sales Users only
+NASP3054,Spec III - Sys Admin,DefaultAdmin,This Job is for Spec III - Sys Admin Users only
+NASS1001,Sr Spec I - Accounting,DefaultAdmin,This Job is for Sr Spec I - Accounting Users only
+NASS1012,Sr Spec I - Comp Analyst,DefaultAdmin,This Job is for Sr Spec I - Comp Analyst Users only
+NASS1047,Sr Spec I - Sales,DefaultAdmin,This Job is for Sr Spec I - Sales Users only
+NASS1048,Sr Spec I - SAM,DefaultAdmin,This Job is for Sr Spec I - SAM Users only
+NASS1049,Sr Spec I - Sales Planning,DefaultAdmin,This Job is for Sr Spec I - Sales Planning Users only
+NASS1052,Sr Spec I - Software Eng,DefaultAdmin,This Job is for Sr Spec I - Software Eng Users only
+NASS1056,Sr Spec I - Tax,DefaultAdmin,This Job is for Sr Spec I - Tax Users only
+NASS1074,Sr Spec I - Treasury,DefaultAdmin,This Job is for Sr Spec I - Treasury Users only
+NASS1087,Sr Spec I - Tech Plan,DefaultAdmin,This Job is for Sr Spec I - Tech Plan Users only
+PS550048,President,DefaultAdmin,This Job is for President Users only
+PS550077,Engineer - QRE - TMMK,DefaultAdmin,This Job is for Engineer - QRE - TMMK Users only
+PS550134,Sr General Manager,DefaultAdmin,This Job is for Sr General Manager Users only
+PS660088,General Manager,DefaultAdmin,This Job is for General Manager Users only
+PS660096,"General Manager, Asst",DefaultAdmin,"This Job is for General Manager, Asst Users only"
+PS660944,Manager,DefaultAdmin,This Job is for Manager Users only
+PS661136,Quality Resident Engineer,DefaultAdmin,This Job is for Quality Resident Engineer Users only
+PS661625,"Manager, Senior",DefaultAdmin,"This Job is for Manager, Senior Users only"
+PS770007,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+PS770055,Program Manager,DefaultAdmin,This Job is for Program Manager Users only
+PS770076,"Engineer, Sr.",DefaultAdmin,"This Job is for Engineer, Sr. Users only"
+PS770084,Specialist - Support,DefaultAdmin,This Job is for Specialist - Support Users only
+PS770101,"Specialist, Sr. - HR",DefaultAdmin,"This Job is for Specialist, Sr. - HR Users only"
+PS770126,Specialist - HR,DefaultAdmin,This Job is for Specialist - HR Users only
+PS770161,Engineer,DefaultAdmin,This Job is for Engineer Users only
+PS770172,Specialist - Cost Planning,DefaultAdmin,This Job is for Specialist - Cost Planning Users only
+PS770192,"Specialist, Sr. - Accounting",DefaultAdmin,"This Job is for Specialist, Sr. - Accounting Users only"
+PS770193,"Specialist, Sr. - Purchasing",DefaultAdmin,"This Job is for Specialist, Sr. - Purchasing Users only"
+PS770228,Executive Vice President,DefaultAdmin,This Job is for Executive Vice President Users only
+PS770307,Sales Engineer II,DefaultAdmin,This Job is for Sales Engineer II Users only
+PSAG2004,AGM II - AIM,DefaultAdmin,This Job is for AGM II - AIM Users only
+PSAM1041,Asst Mgr I - Program Mgr,DefaultAdmin,This Job is for Asst Mgr I - Program Mgr Users only
+PSE77192,"Specialist, Sr. - Accounting",DefaultAdmin,"This Job is for Specialist, Sr. - Accounting Users only"
+PSSE1023,Sr Eng I - Eng,DefaultAdmin,This Job is for Sr Eng I - Eng Users only
+PSSS3029,Sr Spec III - HR,DefaultAdmin,This Job is for Sr Spec III - HR Users only
+PTM1,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+PV123105,DIRETOR VICE PRESIDENTE,DefaultAdmin,This Job is for DIRETOR VICE PRESIDENTE Users only
+PV1231051,DIRETOR EXECUTIVO,DefaultAdmin,This Job is for DIRETOR EXECUTIVO Users only
+PV141205,GERENTE DE PRODUÇÃO,DefaultAdmin,This Job is for GERENTE DE PRODUÇÃO Users only
+PV1421051,GERENTE GERAL ASSISTENTE,DefaultAdmin,This Job is for GERENTE GERAL ASSISTENTE Users only
+PV1421052,GERENTE DE CONTROLADORIA,DefaultAdmin,This Job is for GERENTE DE CONTROLADORIA Users only
+PV142320,GERENTE DE VENDAS,DefaultAdmin,This Job is for GERENTE DE VENDAS Users only
+PV212410,ANALISTA DE TI,DefaultAdmin,This Job is for ANALISTA DE TI Users only
+PV214905,SUPERVISOR DE ENGENHARIA,DefaultAdmin,This Job is for SUPERVISOR DE ENGENHARIA Users only
+PV214910,GERENTE DE QUALIDADE,DefaultAdmin,This Job is for GERENTE DE QUALIDADE Users only
+PV252105,ANALISTA FINANCEIRO,DefaultAdmin,This Job is for ANALISTA FINANCEIRO Users only
+PV2521051,ANALISTA DE CONTROLE DE PROJETOS,DefaultAdmin,This Job is for ANALISTA DE CONTROLE DE PROJETOS Users only
+PV252210,ANALISTA CONTABIL,DefaultAdmin,This Job is for ANALISTA CONTABIL Users only
+PV2522101,ANALISTA FISCAL,DefaultAdmin,This Job is for ANALISTA FISCAL Users only
+PV2522102,SUPERVISOR DE CONTROLADORIA,DefaultAdmin,This Job is for SUPERVISOR DE CONTROLADORIA Users only
+PV2522103,ANALISTA DE CONTROLADORIA,DefaultAdmin,This Job is for ANALISTA DE CONTROLADORIA Users only
+PV252310,ANALISTA BILINGUE,DefaultAdmin,This Job is for ANALISTA BILINGUE Users only
+PV252405,ANALISTA DE RH,DefaultAdmin,This Job is for ANALISTA DE RH Users only
+PV311715,PREPARADOR DE PINTURA,DefaultAdmin,This Job is for PREPARADOR DE PINTURA Users only
+PV314410,TECNICO DE MANUTENÇÃO,DefaultAdmin,This Job is for TECNICO DE MANUTENÇÃO Users only
+PV317210,ASSISTENTE DE TI,DefaultAdmin,This Job is for ASSISTENTE DE TI Users only
+PV318605,ANALISTA DE DESENVOLVIMENTO,DefaultAdmin,This Job is for ANALISTA DE DESENVOLVIMENTO Users only
+PV3186051,ANALISTA DE ENGENHARIA,DefaultAdmin,This Job is for ANALISTA DE ENGENHARIA Users only
+PV351605,TECNICO SEGURANÇA TRABALHO,DefaultAdmin,This Job is for TECNICO SEGURANÇA TRABALHO Users only
+PV352205,ANALISTA DE MEIO AMBIENTE,DefaultAdmin,This Job is for ANALISTA DE MEIO AMBIENTE Users only
+PV352305,METROLOGISTA,DefaultAdmin,This Job is for METROLOGISTA Users only
+PV354125,ASSISTENTE DE VENDAS,DefaultAdmin,This Job is for ASSISTENTE DE VENDAS Users only
+PV354205,ANALISTA DE COMPRAS,DefaultAdmin,This Job is for ANALISTA DE COMPRAS Users only
+PV354210,SUPERVISOR DE COMPRAS,DefaultAdmin,This Job is for SUPERVISOR DE COMPRAS Users only
+PV391125,PROGRAMADOR DE PRODUÇÃO,DefaultAdmin,This Job is for PROGRAMADOR DE PRODUÇÃO Users only
+PV3911251,ANALISTA DE PCP,DefaultAdmin,This Job is for ANALISTA DE PCP Users only
+PV3911252,ASSISTENTE DE PCP,DefaultAdmin,This Job is for ASSISTENTE DE PCP Users only
+PV3911253,AUXILIAR DE PCP,DefaultAdmin,This Job is for AUXILIAR DE PCP Users only
+PV391205,ASSISTENTE DE QUALIDADE,DefaultAdmin,This Job is for ASSISTENTE DE QUALIDADE Users only
+PV3912051,INSPETOR DE QUALIDADE,DefaultAdmin,This Job is for INSPETOR DE QUALIDADE Users only
+PV3912052,LIDER DA QUALIDADE,DefaultAdmin,This Job is for LIDER DA QUALIDADE Users only
+PV391210,ANALISTA DE ENG QUALIDADE,DefaultAdmin,This Job is for ANALISTA DE ENG QUALIDADE Users only
+PV3912101,ANALISTA DE QUALIDADE,DefaultAdmin,This Job is for ANALISTA DE QUALIDADE Users only
+PV3912102,ANALISTA SISTEMA GESTÃO QUALID,DefaultAdmin,This Job is for ANALISTA SISTEMA GESTÃO QUALID Users only
+PV391215,AUXILIAR DE QUALIDADE,DefaultAdmin,This Job is for AUXILIAR DE QUALIDADE Users only
+PV410105,SUPERVISOR DE QUALIDADE,DefaultAdmin,This Job is for SUPERVISOR DE QUALIDADE Users only
+PV4101051,SUPERVISOR DE RH,DefaultAdmin,This Job is for SUPERVISOR DE RH Users only
+PV410240,SUPERVISOR DE LOGISTICA,DefaultAdmin,This Job is for SUPERVISOR DE LOGISTICA Users only
+PV411005,ASSISTENTE DE ENGENHARIA,DefaultAdmin,This Job is for ASSISTENTE DE ENGENHARIA Users only
+PV4110052,AUXILIAR ADMINISTRATIVO,DefaultAdmin,This Job is for AUXILIAR ADMINISTRATIVO Users only
+PV4110053,AUXILIAR DE COMPRAS,DefaultAdmin,This Job is for AUXILIAR DE COMPRAS Users only
+PV4110054,AUXILIAR DE ENGENHARIA,DefaultAdmin,This Job is for AUXILIAR DE ENGENHARIA Users only
+PV4110055,JOVEM APRENDIZ,DefaultAdmin,This Job is for JOVEM APRENDIZ Users only
+PV4110056,AUXILIAR DE CONTROLE DE PROJETOS,DefaultAdmin,This Job is for AUXILIAR DE CONTROLE DE PROJETOS Users only
+PV411010,ANALISTA ADMINISTRATIVO,DefaultAdmin,This Job is for ANALISTA ADMINISTRATIVO Users only
+PV4110101,ASSISTENTE ADMINISTRATIVO,DefaultAdmin,This Job is for ASSISTENTE ADMINISTRATIVO Users only
+PV4110102,ASSISTENTE DE COMPRAS,DefaultAdmin,This Job is for ASSISTENTE DE COMPRAS Users only
+PV4110103,ASSISTENTE DE RH,DefaultAdmin,This Job is for ASSISTENTE DE RH Users only
+PV4110104,ASSISTENTE DE MELHORIA CONTINUA,DefaultAdmin,This Job is for ASSISTENTE DE MELHORIA CONTINUA Users only
+PV413110,ASSISTENTE FISCAL,DefaultAdmin,This Job is for ASSISTENTE FISCAL Users only
+PV4131101,AUXILIAR FISCAL,DefaultAdmin,This Job is for AUXILIAR FISCAL Users only
+PV414105,ALMOXARIFE,DefaultAdmin,This Job is for ALMOXARIFE Users only
+PV414140,LIDER DE LOGISTICA,DefaultAdmin,This Job is for LIDER DE LOGISTICA Users only
+PV4141401,OPERADOR LOGISTICO,DefaultAdmin,This Job is for OPERADOR LOGISTICO Users only
+PV514310,AUXILIAR DE MELHORIA CONTINUA,DefaultAdmin,This Job is for AUXILIAR DE MELHORIA CONTINUA Users only
+PV5143101,FACILITADOR MELHORIA CONTINUA,DefaultAdmin,This Job is for FACILITADOR MELHORIA CONTINUA Users only
+PV720135,SUPERVISOR DE PINTURA,DefaultAdmin,This Job is for SUPERVISOR DE PINTURA Users only
+PV720215,LIDER DE PINTURA,DefaultAdmin,This Job is for LIDER DE PINTURA Users only
+PV7202151,LIDER DE PRODUÇÃO,DefaultAdmin,This Job is for LIDER DE PRODUÇÃO Users only
+PV7202152,LIDER DE MELHORIA CONTINUA,DefaultAdmin,This Job is for LIDER DE MELHORIA CONTINUA Users only
+PV721105,ASSISTENTE DE FERRAMENTARIA,DefaultAdmin,This Job is for ASSISTENTE DE FERRAMENTARIA Users only
+PV7211051,FERRAMENTEIRO,DefaultAdmin,This Job is for FERRAMENTEIRO Users only
+PV7211052,LIDER DE FERRAMENTARIA,DefaultAdmin,This Job is for LIDER DE FERRAMENTARIA Users only
+PV7211053,LIDER DE MANUTENÇÃO,DefaultAdmin,This Job is for LIDER DE MANUTENÇÃO Users only
+PV723330,PINTOR,DefaultAdmin,This Job is for PINTOR Users only
+PV784205,ABASTECEDOR LINHA DE PRODUÇÃO,DefaultAdmin,This Job is for ABASTECEDOR LINHA DE PRODUÇÃO Users only
+PV7842051,FACILITADOR,DefaultAdmin,This Job is for FACILITADOR Users only
+PV810205,SUPERVISOR DE PRODUÇÃO,DefaultAdmin,This Job is for SUPERVISOR DE PRODUÇÃO Users only
+PV811105,AUXILIAR DE SERVIÇOS GERAIS,DefaultAdmin,This Job is for AUXILIAR DE SERVIÇOS GERAIS Users only
+PV811770,OPERADOR DE PRODUÇÃO,DefaultAdmin,This Job is for OPERADOR DE PRODUÇÃO Users only
+PV8117701,PREPARADOR DE MAQUINA,DefaultAdmin,This Job is for PREPARADOR DE MAQUINA Users only
+PV911305,AUXILIAR DE MANUTENÇÃO,DefaultAdmin,This Job is for AUXILIAR DE MANUTENÇÃO Users only
+PV950305,SUPERVISOR DE MANUTENÇÃO,DefaultAdmin,This Job is for SUPERVISOR DE MANUTENÇÃO Users only
+RMX1,PRESIDENTE,DefaultAdmin,This Job is for PRESIDENTE Users only
+RMX100,OPERADOR LIDER DE EMBARQUES,DefaultAdmin,This Job is for OPERADOR LIDER DE EMBARQUES Users only
+RMX101,OPERADOR LIDER JR EXTRUCCION,DefaultAdmin,This Job is for OPERADOR LIDER JR EXTRUCCION Users only
+RMX102,OPERADOR ASISTENTE DE PLANEACION,DefaultAdmin,This Job is for OPERADOR ASISTENTE DE PLANEACION Users only
+RMX103,OPERADOR LIDER KAIZEN,DefaultAdmin,This Job is for OPERADOR LIDER KAIZEN Users only
+RMX104,OPERADOR ESPECIALISTA DE CALIDAD,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA DE CALIDAD Users only
+RMX105,OPERADOR ESPECIALISTA DE MEZCLADO,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA DE MEZCLADO Users only
+RMX106,OPERADOR ESPECIALISTA DE EMBARQUES,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA DE EMBARQUES Users only
+RMX107,OPERADOR ESPECIALISTA DE EXTRUCCION,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA DE EXTRUCCION Users only
+RMX108,OPERADOR DE CALIDAD,DefaultAdmin,This Job is for OPERADOR DE CALIDAD Users only
+RMX109,OPERADOR DE ENSAMBLE,DefaultAdmin,This Job is for OPERADOR DE ENSAMBLE Users only
+RMX11,OPERADOR TECNICO DE MANDRILES,DefaultAdmin,This Job is for OPERADOR TECNICO DE MANDRILES Users only
+RMX110,OPERADOR DE HORNO,DefaultAdmin,This Job is for OPERADOR DE HORNO Users only
+RMX111,OPERADOR GENERAL DE EMBARQUES,DefaultAdmin,This Job is for OPERADOR GENERAL DE EMBARQUES Users only
+RMX112,SUBGERENTE DE PPCC,DefaultAdmin,This Job is for SUBGERENTE DE PPCC Users only
+RMX113,OPERADOR ESPECIALISTA MOLINO,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA MOLINO Users only
+RMX114,OPERADOR EHS,DefaultAdmin,This Job is for OPERADOR EHS Users only
+RMX115,OPERADOR CAPTURISTA DE CALIDAD,DefaultAdmin,This Job is for OPERADOR CAPTURISTA DE CALIDAD Users only
+RMX117,OPERADOR RELEVO/ENTRENADOR DE EMBARQUES,DefaultAdmin,This Job is for OPERADOR RELEVO/ENTRENADOR DE EMBARQUES Users only
+RMX118,OPERADOR DE MANTENIMIENTO PREVENTIVO,DefaultAdmin,This Job is for OPERADOR DE MANTENIMIENTO PREVENTIVO Users only
+RMX119,OPERADOR MATERIALISTA,DefaultAdmin,This Job is for OPERADOR MATERIALISTA Users only
+RMX12,OPERADOR LIDER,DefaultAdmin,This Job is for OPERADOR LIDER Users only
+RMX120,OPERADOR ASISTENTE DE MTTO-TOOL CRIB,DefaultAdmin,This Job is for OPERADOR ASISTENTE DE MTTO-TOOL CRIB Users only
+RMX121,INGENIERO DE PRODUCCION,DefaultAdmin,This Job is for INGENIERO DE PRODUCCION Users only
+RMX122,COORDINADOR DE IOT,DefaultAdmin,This Job is for COORDINADOR DE IOT Users only
+RMX123,OPERADOR LIDER JR DE CALIDAD,DefaultAdmin,This Job is for OPERADOR LIDER JR DE CALIDAD Users only
+RMX124,SUPERVISOR DE EXTRUSION,DefaultAdmin,This Job is for SUPERVISOR DE EXTRUSION Users only
+RMX125,ESPECIALISTA DE CONTABILIDAD,DefaultAdmin,This Job is for ESPECIALISTA DE CONTABILIDAD Users only
+RMX126,OPERADOR AUDITOR DE CALIDAD,DefaultAdmin,This Job is for OPERADOR AUDITOR DE CALIDAD Users only
+RMX128,GERENTE GENERAL SR DE OPERACIONES,DefaultAdmin,This Job is for GERENTE GENERAL SR DE OPERACIONES Users only
+RMX129,GERENTE GENERAL SR DE ADMINISTRACION,DefaultAdmin,This Job is for GERENTE GENERAL SR DE ADMINISTRACION Users only
+RMX13,SUPERVISOR DE HORNO,DefaultAdmin,This Job is for SUPERVISOR DE HORNO Users only
+RMX130,INGENIERO DE DISEÑO DE FIXTURES,DefaultAdmin,This Job is for INGENIERO DE DISEÑO DE FIXTURES Users only
+RMX131,GERENTE GENERAL DE CALIDAD,DefaultAdmin,This Job is for GERENTE GENERAL DE CALIDAD Users only
+RMX132,SUB-GERENTE DE ENSAMBLE,DefaultAdmin,This Job is for SUB-GERENTE DE ENSAMBLE Users only
+RMX133,SUB-GERENTE DE KAIZEN TPS,DefaultAdmin,This Job is for SUB-GERENTE DE KAIZEN TPS Users only
+RMX134,OPERADOR ASISTENTE DE CONTROL DE PRE-PRODUCCION,DefaultAdmin,This Job is for OPERADOR ASISTENTE DE CONTROL DE PRE-PRODUCCION Users only
+RMX136,OPERADOR GENERAL DE PARTES DE SERVICIO,DefaultAdmin,This Job is for OPERADOR GENERAL DE PARTES DE SERVICIO Users only
+RMX137,SUB-GERENTE DE MANUFACTURA,DefaultAdmin,This Job is for SUB-GERENTE DE MANUFACTURA Users only
+RMX138,SUPERVISOR SR DE ENSAMBLE,DefaultAdmin,This Job is for SUPERVISOR SR DE ENSAMBLE Users only
+RMX139,OPERADOR CAPTURISTA/RECECIONISTA,DefaultAdmin,This Job is for OPERADOR CAPTURISTA/RECECIONISTA Users only
+RMX14,MECANICO,DefaultAdmin,This Job is for MECANICO Users only
+RMX140,TECNICO EN IT Y SERV. GENERALES,DefaultAdmin,This Job is for TECNICO EN IT Y SERV. GENERALES Users only
+RMX141,OPERADOR DE IT,DefaultAdmin,This Job is for OPERADOR DE IT Users only
+RMX142,OPERADOR CAPTURISTA DE EMBARQUES,DefaultAdmin,This Job is for OPERADOR CAPTURISTA DE EMBARQUES Users only
+RMX143,TECNICO DE MAQUINADOS,DefaultAdmin,This Job is for TECNICO DE MAQUINADOS Users only
+RMX144,TECNICO DE CONTROL Y NUEVOS PROGRAMAS,DefaultAdmin,This Job is for TECNICO DE CONTROL Y NUEVOS PROGRAMAS Users only
+RMX145,OPERADOR LIDER RECIBA - INSPECCION,DefaultAdmin,This Job is for OPERADOR LIDER RECIBA - INSPECCION Users only
+RMX15,SUPERVISOR DE MANTENIMIENTO,DefaultAdmin,This Job is for SUPERVISOR DE MANTENIMIENTO Users only
+RMX16,OPERADOR GENERAL,DefaultAdmin,This Job is for OPERADOR GENERAL Users only
+RMX2,GERENTE DE OPERACIONES,DefaultAdmin,This Job is for GERENTE DE OPERACIONES Users only
+RMX20,ASISTENTE DE CONTROL DE PRODUCCION,DefaultAdmin,This Job is for ASISTENTE DE CONTROL DE PRODUCCION Users only
+RMX22,ASISTENTE DE CONTABILIDAD,DefaultAdmin,This Job is for ASISTENTE DE CONTABILIDAD Users only
+RMX23,OPERADOR SAND BLASTER,DefaultAdmin,This Job is for OPERADOR SAND BLASTER Users only
+RMX24,INGENIERO DE MANUFACTURA SR,DefaultAdmin,This Job is for INGENIERO DE MANUFACTURA SR Users only
+RMX25,ASISTENTE DE RECURSOS HUMANOS,DefaultAdmin,This Job is for ASISTENTE DE RECURSOS HUMANOS Users only
+RMX26,COORDINADOR DE SEGURIDAD E HIGIENE,DefaultAdmin,This Job is for COORDINADOR DE SEGURIDAD E HIGIENE Users only
+RMX30,GERENTE DE ENSAMBLE,DefaultAdmin,This Job is for GERENTE DE ENSAMBLE Users only
+RMX31,TECNICO EN MANTENIMIENTO,DefaultAdmin,This Job is for TECNICO EN MANTENIMIENTO Users only
+RMX33,OPERADOR RELEVO,DefaultAdmin,This Job is for OPERADOR RELEVO Users only
+RMX35,SUPERVISOR DE RECIBA/EMBARQUES,DefaultAdmin,This Job is for SUPERVISOR DE RECIBA/EMBARQUES Users only
+RMX37,SUB-DIRECTOR DE INGENIERIA/PPCC Y PROYECTOS,DefaultAdmin,This Job is for SUB-DIRECTOR DE INGENIERIA/PPCC Y PROYECTOS Users only
+RMX38,OPERADOR ENTRENADOR,DefaultAdmin,This Job is for OPERADOR ENTRENADOR Users only
+RMX39,OPERADOR LIDER JR.,DefaultAdmin,This Job is for OPERADOR LIDER JR. Users only
+RMX4,OPERADOR CAPTURISTA,DefaultAdmin,This Job is for OPERADOR CAPTURISTA Users only
+RMX41,TECNICO DE MANUFACTURA,DefaultAdmin,This Job is for TECNICO DE MANUFACTURA Users only
+RMX46,SUPERVISOR IMPORTACION Y EXPORTACION,DefaultAdmin,This Job is for SUPERVISOR IMPORTACION Y EXPORTACION Users only
+RMX47,OPERADOR ESPECIALISTA,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA Users only
+RMX48,OPERADOR TECNICO DE EXTRUDER,DefaultAdmin,This Job is for OPERADOR TECNICO DE EXTRUDER Users only
+RMX49,OPERADOR ASISTENTE DE MTTO.,DefaultAdmin,This Job is for OPERADOR ASISTENTE DE MTTO. Users only
+RMX51,SUPERVISOR DE CALIDAD,DefaultAdmin,This Job is for SUPERVISOR DE CALIDAD Users only
+RMX52,GERENTE DE PREPARACION DE MATERIALES,DefaultAdmin,This Job is for GERENTE DE PREPARACION DE MATERIALES Users only
+RMX53,SUPER INTENDENTE DE OPERACIONES-MTTO.,DefaultAdmin,This Job is for SUPER INTENDENTE DE OPERACIONES-MTTO. Users only
+RMX55,TECNICO EN SISTEMAS,DefaultAdmin,This Job is for TECNICO EN SISTEMAS Users only
+RMX58,GERENTE DE HORNO&KAIZEN/TPS,DefaultAdmin,This Job is for GERENTE DE HORNO&KAIZEN/TPS Users only
+RMX59,ESPECIALISTA EN RECURSOS HUMANOS,DefaultAdmin,This Job is for ESPECIALISTA EN RECURSOS HUMANOS Users only
+RMX6,INGENIERO DE MANUFACTURA,DefaultAdmin,This Job is for INGENIERO DE MANUFACTURA Users only
+RMX60,INGENIERO DE PRODUCCION SR.,DefaultAdmin,This Job is for INGENIERO DE PRODUCCION SR. Users only
+RMX61,OPERADOR ESPECIALISTA HORNO,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA HORNO Users only
+RMX62,ASISTENTE DE PCR,DefaultAdmin,This Job is for ASISTENTE DE PCR Users only
+RMX63,GERENTE DE PLANEACION & TPS/SP,DefaultAdmin,This Job is for GERENTE DE PLANEACION & TPS/SP Users only
+RMX64,SUBDIRECTOR DE CALIDAD Y FLUJO DE MATERIALES,DefaultAdmin,This Job is for SUBDIRECTOR DE CALIDAD Y FLUJO DE MATERIALES Users only
+RMX65,TECNICO DE MAQUINAS Y HERRAMIENTAS,DefaultAdmin,This Job is for TECNICO DE MAQUINAS Y HERRAMIENTAS Users only
+RMX66,GERENTE DE RECURSOS HUMANOS Y EHS,DefaultAdmin,This Job is for GERENTE DE RECURSOS HUMANOS Y EHS Users only
+RMX67,TECNICO DE EQUIPO DE MANTENIMIENTO,DefaultAdmin,This Job is for TECNICO DE EQUIPO DE MANTENIMIENTO Users only
+RMX68,PLANEADOR DE INVENTARIOS,DefaultAdmin,This Job is for PLANEADOR DE INVENTARIOS Users only
+RMX70,GERENTE GENERAL DE ADMINISTRACION,DefaultAdmin,This Job is for GERENTE GENERAL DE ADMINISTRACION Users only
+RMX71,SUPERVISOR DE CALIDAD SR,DefaultAdmin,This Job is for SUPERVISOR DE CALIDAD SR Users only
+RMX72,SUPERVISOR DE ENSAMBLE,DefaultAdmin,This Job is for SUPERVISOR DE ENSAMBLE Users only
+RMX73,SUPERVISOR DE MEZCLADO Y EXTRUCCION,DefaultAdmin,This Job is for SUPERVISOR DE MEZCLADO Y EXTRUCCION Users only
+RMX74,SUPERVISOR SR. DE KAIZEN & TPS,DefaultAdmin,This Job is for SUPERVISOR SR. DE KAIZEN & TPS Users only
+RMX75,ESPECIALISTA JDE,DefaultAdmin,This Job is for ESPECIALISTA JDE Users only
+RMX77,TECNICO EN SEGURIDAD E HIGIENE,DefaultAdmin,This Job is for TECNICO EN SEGURIDAD E HIGIENE Users only
+RMX80,OPERADOR ASISTENTE DE INGENIERIA,DefaultAdmin,This Job is for OPERADOR ASISTENTE DE INGENIERIA Users only
+RMX81,ASISTENTE DE ENTRENAMIENTO,DefaultAdmin,This Job is for ASISTENTE DE ENTRENAMIENTO Users only
+RMX82,ESPECIALISTA EN PARTES DE SERVICIO,DefaultAdmin,This Job is for ESPECIALISTA EN PARTES DE SERVICIO Users only
+RMX83,PLANEADOR JR,DefaultAdmin,This Job is for PLANEADOR JR Users only
+RMX84,SUPERVISOR SR DE PROCESOS Y ASEG. CALIDAD,DefaultAdmin,This Job is for SUPERVISOR SR DE PROCESOS Y ASEG. CALIDAD Users only
+RMX85,SUB-GERENTE DE CONTABILIDAD,DefaultAdmin,This Job is for SUB-GERENTE DE CONTABILIDAD Users only
+RMX86,ASISTENTE DE MAQUINAS Y HERRAMIENTAS,DefaultAdmin,This Job is for ASISTENTE DE MAQUINAS Y HERRAMIENTAS Users only
+RMX88,OPERADOR CAPTURISTA RELACIONES LABORALES,DefaultAdmin,This Job is for OPERADOR CAPTURISTA RELACIONES LABORALES Users only
+RMX89,TECNICO DE EQUIPO E INSTRUMENTACION,DefaultAdmin,This Job is for TECNICO DE EQUIPO E INSTRUMENTACION Users only
+RMX9,INGENIERO DE MANUFACTURA JR,DefaultAdmin,This Job is for INGENIERO DE MANUFACTURA JR Users only
+RMX90,OPERADOR EN CAPACITACION INICIAL/EVENTUAL,DefaultAdmin,This Job is for OPERADOR EN CAPACITACION INICIAL/EVENTUAL Users only
+RMX91,OPERADOR ESPECIALISTA DE ENSAMBLE,DefaultAdmin,This Job is for OPERADOR ESPECIALISTA DE ENSAMBLE Users only
+RMX92,OPERADOR RELEVO DE ENSAMBLE,DefaultAdmin,This Job is for OPERADOR RELEVO DE ENSAMBLE Users only
+RMX93,OPERADOR RELEVO DE CALIDAD,DefaultAdmin,This Job is for OPERADOR RELEVO DE CALIDAD Users only
+RMX94,OPERADOR LIDER JR DE HORNO,DefaultAdmin,This Job is for OPERADOR LIDER JR DE HORNO Users only
+RMX95,OPERADOR LIDER DE HORNO,DefaultAdmin,This Job is for OPERADOR LIDER DE HORNO Users only
+RMX96,OPERADOR LIDER DE ENSAMBLE,DefaultAdmin,This Job is for OPERADOR LIDER DE ENSAMBLE Users only
+RMX97,OPERADOR LIDER DE MEZCLADO,DefaultAdmin,This Job is for OPERADOR LIDER DE MEZCLADO Users only
+RMX98,OPERADOR LIDER DE EXTRUCCION,DefaultAdmin,This Job is for OPERADOR LIDER DE EXTRUCCION Users only
+RMX99,OPERADOR LIDER DE CALIDAD,DefaultAdmin,This Job is for OPERADOR LIDER DE CALIDAD Users only
+RTC770196,"Specialist, Sr. - GA",DefaultAdmin,"This Job is for Specialist, Sr. - GA Users only"
+RTC770227,Specialist - Corp Planning,DefaultAdmin,This Job is for Specialist - Corp Planning Users only
+RTC770888,Manager,DefaultAdmin,This Job is for Manager Users only
+RTC770999,GM,DefaultAdmin,This Job is for GM Users only
+RTC990001,Sr Test Technician,DefaultAdmin,This Job is for Sr Test Technician Users only
+RTC990006,Test Technician,DefaultAdmin,This Job is for Test Technician Users only
+RTC990008,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+RTCAG1046,AGM I - RTC,DefaultAdmin,This Job is for AGM I - RTC Users only
+RTCAM1046,Asst Mgr I - RTC,DefaultAdmin,This Job is for Asst Mgr I - RTC Users only
+RTCCO2000,Co-Op - Technical,DefaultAdmin,This Job is for Co-Op - Technical Users only
+RTCMG1046,Mgr I - RTC,DefaultAdmin,This Job is for Mgr I - RTC Users only
+RTCPT1058,Prin Tech I - Test,DefaultAdmin,This Job is for Prin Tech I - Test Users only
+SUP1,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+TPX1,ENFERMERA,DefaultAdmin,This Job is for ENFERMERA Users only
+TPX10,AUXILIAR DE RECURSOS HUMANOS,DefaultAdmin,This Job is for AUXILIAR DE RECURSOS HUMANOS Users only
+TPX13,GERENTE DE CONTRALORIA,DefaultAdmin,This Job is for GERENTE DE CONTRALORIA Users only
+TPX14,GERENTE DE PLANTA,DefaultAdmin,This Job is for GERENTE DE PLANTA Users only
+TPX15,GERENTE DE OPERACIONES,DefaultAdmin,This Job is for GERENTE DE OPERACIONES Users only
+TPX16,SUPERVISOR DE PRODUCCION,DefaultAdmin,This Job is for SUPERVISOR DE PRODUCCION Users only
+TPX17,SUPERVISOR DE MANTENIMIENTO,DefaultAdmin,This Job is for SUPERVISOR DE MANTENIMIENTO Users only
+TPX2,INGENIERO APQP,DefaultAdmin,This Job is for INGENIERO APQP Users only
+TPX20,ENCARGADA DE COMPRAS,DefaultAdmin,This Job is for ENCARGADA DE COMPRAS Users only
+TPX21,IMPORT EXPORT,DefaultAdmin,This Job is for IMPORT EXPORT Users only
+TPX22,GERENTE DE CALIDAD,DefaultAdmin,This Job is for GERENTE DE CALIDAD Users only
+TPX24,CONTADOR,DefaultAdmin,This Job is for CONTADOR Users only
+TPX25,ENCARGADA DE INVENTARIOS,DefaultAdmin,This Job is for ENCARGADA DE INVENTARIOS Users only
+TPX26,TECNICO DE MANTENIMIENTO,DefaultAdmin,This Job is for TECNICO DE MANTENIMIENTO Users only
+TPX28,AUXILIAR DE ALMACEN,DefaultAdmin,This Job is for AUXILIAR DE ALMACEN Users only
+TPX29,COORDINADOR DE EMBARQUES,DefaultAdmin,This Job is for COORDINADOR DE EMBARQUES Users only
+TPX3,ENCARGADA DE NOMINAS,DefaultAdmin,This Job is for ENCARGADA DE NOMINAS Users only
+TPX31,LIDER ENTRENADOR,DefaultAdmin,This Job is for LIDER ENTRENADOR Users only
+TPX32,SUPERVISOR GENERAL DE MOLDEO,DefaultAdmin,This Job is for SUPERVISOR GENERAL DE MOLDEO Users only
+TPX34,PROGRAMADOR DE PLC,DefaultAdmin,This Job is for PROGRAMADOR DE PLC Users only
+TPX35,GERENTE DE MANTENIMIENTO,DefaultAdmin,This Job is for GERENTE DE MANTENIMIENTO Users only
+TPX36,AUXILIAR DE COMPRAS,DefaultAdmin,This Job is for AUXILIAR DE COMPRAS Users only
+TPX37,RELACIONES LABORALES,DefaultAdmin,This Job is for RELACIONES LABORALES Users only
+TPX38,ING. DE SISTEMAS DE CALIDAD / CTRL. DE DOCS.,DefaultAdmin,This Job is for ING. DE SISTEMAS DE CALIDAD / CTRL. DE DOCS. Users only
+TPX39,"ING. DE CALIDAD A PROVEDORES, LAT Y CALIBRACION",DefaultAdmin,"This Job is for ING. DE CALIDAD A PROVEDORES, LAT Y CALIBRACION Users only"
+TPX40,SUPERVISOR DE LAT Y CALIBRACION,DefaultAdmin,This Job is for SUPERVISOR DE LAT Y CALIBRACION Users only
+TPX42,AUDITOR DE CALIDAD,DefaultAdmin,This Job is for AUDITOR DE CALIDAD Users only
+TPX43,AUXILIAR SISTEMAS,DefaultAdmin,This Job is for AUXILIAR SISTEMAS Users only
+TPX44,GUARDIA SEGURIDAD,DefaultAdmin,This Job is for GUARDIA SEGURIDAD Users only
+TPX46,ASISTENTE NOMINAS,DefaultAdmin,This Job is for ASISTENTE NOMINAS Users only
+TPX47,MECANICO,DefaultAdmin,This Job is for MECANICO Users only
+TPX5,INGENIERO DE CALIDAD,DefaultAdmin,This Job is for INGENIERO DE CALIDAD Users only
+TPX50,INGENIERO DE AUTOMATIZACION,DefaultAdmin,This Job is for INGENIERO DE AUTOMATIZACION Users only
+TPX51,INGENIERO DE SISTEMAS,DefaultAdmin,This Job is for INGENIERO DE SISTEMAS Users only
+TPX52,COORDINADOR DE EHS,DefaultAdmin,This Job is for COORDINADOR DE EHS Users only
+TPX53,PRACTICANTE,DefaultAdmin,This Job is for PRACTICANTE Users only
+TPX54,GERENTE SISTEMAS,DefaultAdmin,This Job is for GERENTE SISTEMAS Users only
+TPX55,ASIST MANAGER,DefaultAdmin,This Job is for ASIST MANAGER Users only
+TPX56,TRADUCTOR,DefaultAdmin,This Job is for TRADUCTOR Users only
+TPX57,SUPERVISOR SEGURIDAD,DefaultAdmin,This Job is for SUPERVISOR SEGURIDAD Users only
+TPX6,PLANEADOR,DefaultAdmin,This Job is for PLANEADOR Users only
+TPX8,OPERADOR,DefaultAdmin,This Job is for OPERADOR Users only
+TPXW1,ENFERMERA,DefaultAdmin,This Job is for ENFERMERA Users only
+TPXW10,AUXILIAR DE RECURSOS HUMANOS,DefaultAdmin,This Job is for AUXILIAR DE RECURSOS HUMANOS Users only
+TPXW16,SUPERVISOR DE PRODUCCION,DefaultAdmin,This Job is for SUPERVISOR DE PRODUCCION Users only
+TPXW17,SUPERVISOR DE MANTENIMIENTO,DefaultAdmin,This Job is for SUPERVISOR DE MANTENIMIENTO Users only
+TPXW18,AUXILIAR CONTABLE,DefaultAdmin,This Job is for AUXILIAR CONTABLE Users only
+TPXW23,INGENIERO DE MANUFACTURA,DefaultAdmin,This Job is for INGENIERO DE MANUFACTURA Users only
+TPXW24,CONTADOR,DefaultAdmin,This Job is for CONTADOR Users only
+TPXW26,TECNICO DE MANTENIMIENTO,DefaultAdmin,This Job is for TECNICO DE MANTENIMIENTO Users only
+TPXW31,LIDER ENTRENADOR,DefaultAdmin,This Job is for LIDER ENTRENADOR Users only
+TPXW35,GERENTE DE MANTENIMIENTO,DefaultAdmin,This Job is for GERENTE DE MANTENIMIENTO Users only
+TPXW37,RELACIONES LABORALES,DefaultAdmin,This Job is for RELACIONES LABORALES Users only
+TPXW38,ING. DE SISTEMAS DE CALIDAD / CTRL. DE DOCS.,DefaultAdmin,This Job is for ING. DE SISTEMAS DE CALIDAD / CTRL. DE DOCS. Users only
+TPXW4,SUPERVISOR,DefaultAdmin,This Job is for SUPERVISOR Users only
+TPXW43,AUXILIAR SISTEMAS,DefaultAdmin,This Job is for AUXILIAR SISTEMAS Users only
+TPXW48,GERENTE ADMINISTRATIVO,DefaultAdmin,This Job is for GERENTE ADMINISTRATIVO Users only
+TPXW5,INGENIERO DE CALIDAD,DefaultAdmin,This Job is for INGENIERO DE CALIDAD Users only
+TPXW50,LOGISTICA,DefaultAdmin,This Job is for LOGISTICA Users only
+TPXW51,ENTRENADOR,DefaultAdmin,This Job is for ENTRENADOR Users only
+TPXW52,LIDER DE LINEA,DefaultAdmin,This Job is for LIDER DE LINEA Users only
+TPXW53,SEGURIDAD E HIGIENE,DefaultAdmin,This Job is for SEGURIDAD E HIGIENE Users only
+TPXW55,ALMACEN,DefaultAdmin,This Job is for ALMACEN Users only
+TPXW57,SUPERVISOR SENIOR,DefaultAdmin,This Job is for SUPERVISOR SENIOR Users only
+TPXW58,GERENTE DE PRODUCCION,DefaultAdmin,This Job is for GERENTE DE PRODUCCION Users only
+TPXW8,OPERADOR,DefaultAdmin,This Job is for OPERADOR Users only
+TX110003,"Manager, Assistant",DefaultAdmin,"This Job is for Manager, Assistant Users only"
+TX110021,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+TX110084,Shipping Specialist,DefaultAdmin,This Job is for Shipping Specialist Users only
+TX440054,HR Specialist,DefaultAdmin,This Job is for HR Specialist Users only
+TX440067,Maintenance Technician,DefaultAdmin,This Job is for Maintenance Technician Users only
+TX550149,Kaizen Team Member,DefaultAdmin,This Job is for Kaizen Team Member Users only
+TX660107,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+TX660108,Lead Team Member,DefaultAdmin,This Job is for Lead Team Member Users only
+TX661633,Shipping Team Member,DefaultAdmin,This Job is for Shipping Team Member Users only
+TX661634,Quality Team Member,DefaultAdmin,This Job is for Quality Team Member Users only
+TX880001,"Specialist, Accounting",DefaultAdmin,"This Job is for Specialist, Accounting Users only"
+TX880002,Maintenance Team Member,DefaultAdmin,This Job is for Maintenance Team Member Users only
+TX880003,Administrator,DefaultAdmin,This Job is for Administrator Users only
+TX880006,IS Staff,DefaultAdmin,This Job is for IS Staff Users only
+TX880007,Mold Maintenance Team Member,DefaultAdmin,This Job is for Mold Maintenance Team Member Users only
+TX880008,Manager,DefaultAdmin,This Job is for Manager Users only
+TX880009,Paint Engineer,DefaultAdmin,This Job is for Paint Engineer Users only
+TX880012,Planner,DefaultAdmin,This Job is for Planner Users only
+TX880013,Production Manager,DefaultAdmin,This Job is for Production Manager Users only
+TX880014,Engineering Technician,DefaultAdmin,This Job is for Engineering Technician Users only
+TX880015,Quality Engineer,DefaultAdmin,This Job is for Quality Engineer Users only
+TX880016,Safety Specialist,DefaultAdmin,This Job is for Safety Specialist Users only
+TX880017,Lead Team Member,DefaultAdmin,This Job is for Lead Team Member Users only
+TX880018,Team Member-PA,DefaultAdmin,This Job is for Team Member-PA Users only
+TX880019,Production Team Member,DefaultAdmin,This Job is for Production Team Member Users only
+TX880020,Manufacturing Engineer,DefaultAdmin,This Job is for Manufacturing Engineer Users only
+TX880022,Engineer,DefaultAdmin,This Job is for Engineer Users only
+TX880023,Coop Intern Engineer,DefaultAdmin,This Job is for Coop Intern Engineer Users only
+TX880024,Maintenance Supervisor,DefaultAdmin,This Job is for Maintenance Supervisor Users only
+TX880025,GA HR Specialist,DefaultAdmin,This Job is for GA HR Specialist Users only
+TX880027,Accounting Manager,DefaultAdmin,This Job is for Accounting Manager Users only
+TX880028,Shipping Specialist,DefaultAdmin,This Job is for Shipping Specialist Users only
+TX880031,"Manager, Assistant",DefaultAdmin,"This Job is for Manager, Assistant Users only"
+TX880032,Supervisor,DefaultAdmin,This Job is for Supervisor Users only
+TX880033,Team Member-Maintenance,DefaultAdmin,This Job is for Team Member-Maintenance Users only
+TX880034,Quality Team Member,DefaultAdmin,This Job is for Quality Team Member Users only
+TX880035,Team Member-Paint,DefaultAdmin,This Job is for Team Member-Paint Users only
+TX880036,Team Member-Injection,DefaultAdmin,This Job is for Team Member-Injection Users only
+TX880037,Team Member-Regrind,DefaultAdmin,This Job is for Team Member-Regrind Users only
+TX880040,Admin Assistant,DefaultAdmin,This Job is for Admin Assistant Users only
+TX880042,IM MOLD SETTER,DefaultAdmin,This Job is for IM MOLD SETTER Users only
+TX880043,Kaizen Shop Team Member,DefaultAdmin,This Job is for Kaizen Shop Team Member Users only
+TX880054,Maint Administrative Assistant,DefaultAdmin,This Job is for Maint Administrative Assistant Users only
+TX880055,Shipping Team Member,DefaultAdmin,This Job is for Shipping Team Member Users only
+TX880057,Team Leader PA Nights,DefaultAdmin,This Job is for Team Leader PA Nights Users only
+TX880072,PA Team Member Receiving,DefaultAdmin,This Job is for PA Team Member Receiving Users only
+TX880094,Technical Manager,DefaultAdmin,This Job is for Technical Manager Users only
+TX880095,Assistant General Manager,DefaultAdmin,This Job is for Assistant General Manager Users only
+TX880101,Facility Maintenance Team Memb,DefaultAdmin,This Job is for Facility Maintenance Team Memb Users only
+TX880102,HR Specialist,DefaultAdmin,This Job is for HR Specialist Users only
+TX880103,Specialist,DefaultAdmin,This Job is for Specialist Users only
+TX880105,Technical Team Member,DefaultAdmin,This Job is for Technical Team Member Users only
+TX880112,General Manager,DefaultAdmin,This Job is for General Manager Users only
+TX880113,HR Manager,DefaultAdmin,This Job is for HR Manager Users only
+TX880116,Trainer,DefaultAdmin,This Job is for Trainer Users only
+TX880118,PPCC Admin Assistant,DefaultAdmin,This Job is for PPCC Admin Assistant Users only
+TX880119,Maintenance Team Leader,DefaultAdmin,This Job is for Maintenance Team Leader Users only
+TX880120,Maintenance Team Leader,DefaultAdmin,This Job is for Maintenance Team Leader Users only
+TX880133,Kaizen Days Only,DefaultAdmin,This Job is for Kaizen Days Only Users only
+TX880134,Team Member - Material Handler,DefaultAdmin,This Job is for Team Member - Material Handler Users only
+TX880141,Project Coordinator,DefaultAdmin,This Job is for Project Coordinator Users only
+TX880146,GA/EHS Specialist,DefaultAdmin,This Job is for GA/EHS Specialist Users only
+TX880154,Team Member ASM Sec B Nights,DefaultAdmin,This Job is for Team Member ASM Sec B Nights Users only
+TX880156,Team Member Paint Nights,DefaultAdmin,This Job is for Team Member Paint Nights Users only
+TX880157,Team Member PA Days,DefaultAdmin,This Job is for Team Member PA Days Users only
+TX880159,Mold Set-up Team Member,DefaultAdmin,This Job is for Mold Set-up Team Member Users only
+TX880165,Materials Procurement Spe,DefaultAdmin,This Job is for Materials Procurement Spe Users only
+TX880166,Executive Assistant to Pres,DefaultAdmin,This Job is for Executive Assistant to Pres Users only
+TX880176,Team Leader Production,DefaultAdmin,This Job is for Team Leader Production Users only
+TX880177,Waste Management Team Member,DefaultAdmin,This Job is for Waste Management Team Member Users only
+TX880183,Team Member ASM Sec A Nights,DefaultAdmin,This Job is for Team Member ASM Sec A Nights Users only
+TX880188,TPS/Production Engineer,DefaultAdmin,This Job is for TPS/Production Engineer Users only
+TX880191,Team Member Quality Days,DefaultAdmin,This Job is for Team Member Quality Days Users only
+TX880192,Facility Manager,DefaultAdmin,This Job is for Facility Manager Users only
+TX880204,Mold Maintenance Supervisor,DefaultAdmin,This Job is for Mold Maintenance Supervisor Users only
+TX880205,Assistant Manager Production,DefaultAdmin,This Job is for Assistant Manager Production Users only
+TX880213,Team Member - Warehouse Offsit,DefaultAdmin,This Job is for Team Member - Warehouse Offsit Users only
+TX880215,Team Leader - Shipping,DefaultAdmin,This Job is for Team Leader - Shipping Users only
+TX880220,Sr. Manager,DefaultAdmin,This Job is for Sr. Manager Users only
+TX880221,OJT Team Member,DefaultAdmin,This Job is for OJT Team Member Users only
+TX990008,Assistant Manager,DefaultAdmin,This Job is for Assistant Manager Users only
+TX999991,Temp Agency BBM,DefaultAdmin,This Job is for Temp Agency BBM Users only
+TX999992,Temp Agency 1st Option,DefaultAdmin,This Job is for Temp Agency 1st Option Users only
+TX999993,Temp Agency Malone,DefaultAdmin,This Job is for Temp Agency Malone Users only
+TX999999,Temp Agency,DefaultAdmin,This Job is for Temp Agency Users only
+TXE55007,Coordinator,DefaultAdmin,This Job is for Coordinator Users only
+TXE55008,SR COORDINATOR,DefaultAdmin,This Job is for SR COORDINATOR Users only
+TXE55048,President,DefaultAdmin,This Job is for President Users only

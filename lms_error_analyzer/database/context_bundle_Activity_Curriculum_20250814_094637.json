@@ -1,0 +1,445 @@
+{
+  "file_name": "Activity_Curriculum.csv",
+  "file_key": "Activity_Curriculum",
+  "table_name": "activity_curriculum",
+  "overview": {
+    "exists": true,
+    "row_count": 1154,
+    "column_count": 12,
+    "columns": [
+      "id",
+      "ActivityName",
+      "Activity Code",
+      "SectionName",
+      "Child ActivityCode",
+      "Active",
+      "Activity Description",
+      "Owner",
+      "Provider",
+      "Topic",
+      "created_at",
+      "updated_at"
+    ],
+    "column_details": [
+      {
+        "COLUMN_NAME": "id",
+        "DATA_TYPE": "int",
+        "IS_NULLABLE": "NO",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      },
+      {
+        "COLUMN_NAME": "ActivityName",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Activity Code",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "SectionName",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 255
+      },
+      {
+        "COLUMN_NAME": "Child ActivityCode",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Active",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Activity Description",
+        "DATA_TYPE": "text",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 65535
+      },
+      {
+        "COLUMN_NAME": "Owner",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Provider",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Topic",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 255
+      },
+      {
+        "COLUMN_NAME": "created_at",
+        "DATA_TYPE": "timestamp",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      },
+      {
+        "COLUMN_NAME": "updated_at",
+        "DATA_TYPE": "timestamp",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      }
+    ]
+  },
+  "field_profiles": [
+    {
+      "sumtotal_field_name": "Child ActivityCode",
+      "metrics": {
+        "column_name": "Child ActivityCode",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 1154,
+        "max_length": 151,
+        "avg_length": "58.4055",
+        "sample_values": [
+          "Problem Solving - A3_The Proposal A3 (AGG)_Library",
+          "Problem Solving - 7 Tools_Measures of Dispersion_Library",
+          "TWI Job Instruction_Day 2: Day 2 Summary (Studio) (AGG)_Library",
+          "Hoshin_Annual Objectives (AGG)_Library_SP",
+          "TWI Job Instruction for Facilitators_Day 5: Leslie's First Attempt at Teaching How to Insert Hearing Protection (AGG)_Library"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Child LO ID",
+          "mandatory": "Optional",
+          "field_type": "Char",
+          "char_length": "100",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [
+        "Max length 151 exceeds limit 100"
+      ],
+      "severity": "Medium",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Activity Code",
+      "metrics": {
+        "column_name": "Activity Code",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 121,
+        "max_length": 92,
+        "avg_length": "61.4671",
+        "sample_values": [
+          "Succession Planning_ Angie Prost FY21",
+          "Compliance_Forklift Certification (AGGASK)",
+          "TWI - Job Instruction for Facilitators_TWI-JI for Facilitators (All Modules) (AGG)_Library",
+          "Succession Planning_ Scott Abernathy FY21",
+          "Compliance_Overhead Crane Certification (AGGFS)"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Curriculum ID*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "100",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "SectionName",
+      "metrics": {
+        "column_name": "SectionName",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 122,
+        "max_length": 91,
+        "avg_length": "57.1386",
+        "sample_values": [
+          "Test Section for Rubber Mold",
+          "Test Section for Succession Plan for Susan Davis",
+          "Test Section for Just In Time (All Modules)",
+          "Test Section for Succession Plan for Angie Prost",
+          "Test Section for Lockout Tagout (Authorized) Certification (AGGFS)"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Section Name",
+          "mandatory": "Optional",
+          "field_type": "Char",
+          "char_length": "500",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "ActivityName",
+      "metrics": {
+        "column_name": "ActivityName",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 122,
+        "max_length": 74,
+        "avg_length": "40.1386",
+        "sample_values": [
+          "Just In Time (All Modules)",
+          "Lean Accounting (All Modules)",
+          "Data Science",
+          "Forklift Certification (MINTO)",
+          "TestCur_inactivate"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Curriculum Title*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "500",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Provider",
+      "metrics": {
+        "column_name": "Provider",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 1,
+        "max_length": 14,
+        "avg_length": "14.0000",
+        "sample_values": [
+          "Online Content"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Vendor/Provider*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "100",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Active",
+      "metrics": {
+        "column_name": "Active",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 2,
+        "max_length": 1,
+        "avg_length": "1.0000",
+        "sample_values": [
+          "1",
+          "0"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Active",
+          "mandatory": "Optional",
+          "field_type": "Boolean",
+          "char_length": "",
+          "accepted_values": "1, 0, y, n, yes, no, t, f, true, false, on, off, active, inactive",
+          "default_value": "False",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Topic",
+      "metrics": {
+        "column_name": "Topic",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 46,
+        "max_length": 47,
+        "avg_length": "22.6170",
+        "sample_values": [
+          "ADP",
+          "First Time Manager Career Journey",
+          "Base Programmer",
+          "AGG Leadership",
+          "Building DEI Leadership Skills"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Subject IDs*",
+          "mandatory": "Mandatory",
+          "field_type": "subjectType",
+          "char_length": "",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": "CASE WHEN input_value = 'Production Preparation Process' THEN 1000 WHEN input_value = 'Programming Languages' THEN 1001 WHEN input_value = 'QC Circle' THEN 1002 WHEN input_value = 'Quality' THEN 1003 WHEN input_value = 'Quick Changeover' THEN 1004 WHEN input_value = 'Reference' THEN 1005 WHEN input_value = 'Safety' THEN 1006 WHEN input_value = 'SCP Resources' THEN 1007 WHEN input_value = 'Secure Programming' THEN 1008 WHEN input_value = 'Six Sigma' THEN 1009 WHEN input_value = 'Skillsoft' THEN 1010 WHEN input_value = 'Productivity Tools forDevOps Automated Testers' THEN 1011 WHEN input_value = 'Productivity Tools for SecOps Engineers' THEN 1012 WHEN input_value = 'Business & Leadership for Apprentice Programmers' THEN 1013 WHEN input_value = 'Productivity Tools for Apprentice Programmers' THEN 1014 WHEN input_value = 'Productivity Tools for Cloud Architects' THEN 1015 WHEN input_value = 'Productivity Tools for CloudOps Engineers' THEN 1016 WHEN input_value = 'Productivity Tools for Business Analyst to Data Analysts' THEN 1017 WHEN input_value = 'Efficiency & Productivity in the New Normal' THEN 1018 WHEN input_value = 'Managing & Leading through Unexpected Disruption' THEN 1019 WHEN input_value = 'Productivity Tools for Data Visualization' THEN 1020 WHEN input_value = 'Business & Leadership for Data Analysis with R' THEN 1021 WHEN input_value = 'Productivity Tools for Data Analysis with R' THEN 1022 WHEN input_value = 'Productivity Tools with Agile for Software Development' THEN 1023 WHEN input_value = 'Productivity Tools for Web App Vulnerability Analyst' THEN 1024 WHEN input_value = 'Productivity Tools for 5G Technologies and Practices' THEN 1025 WHEN input_value = 'Business & Leadership for Enriched Web Development with Angular 11' THEN 1026 WHEN input_value = 'Business & Leadership for Pythonista' THEN 1027 WHEN input_value = 'Business & Leadership for Javanista to Java Master' THEN 1028 WHEN input_value = 'Business & Leadership for Developer Fundamentals' THEN 1029 WHEN input_value = 'Business & Leadership for Programming Python in Action' THEN 1030 WHEN input_value = 'Business & Leadership for Software Product Management' THEN 1031 WHEN input_value = 'Productivity Tools for senior Software Project Managers' THEN 1032 WHEN input_value = 'Productivity Tools for Security Architects' THEN 1033 WHEN input_value = 'Business & Leadership for Enterprise Development to Full Stack Developers' THEN 1034 WHEN input_value = 'Productivity Tools for Full Stack Developer' THEN 1035 WHEN input_value = 'Productivity Tools for DevOps Engineer' THEN 1036 WHEN input_value = 'Skype 2016' THEN 1037 WHEN input_value = 'Standard Work' THEN 1038 WHEN input_value = 'Standard Work - Leader' THEN 1039 WHEN input_value = 'T1' THEN 1040 WHEN input_value = 'TACTIS' THEN 1041 WHEN input_value = 'Total Productive Maintenance' THEN 1042 WHEN input_value = 'TQM (Total Quality Management)' THEN 1043 WHEN input_value = 'TWI for Facilitators' THEN 1044 WHEN input_value = 'TWI for Learners' THEN 1045 WHEN input_value = 'US Federal Government Compliance (US Edition)' THEN 1046 WHEN input_value = 'Value Stream' THEN 1047 WHEN input_value = 'Visual Management' THEN 1048 WHEN input_value = 'Web Development' THEN 1049 WHEN input_value = 'Workplace Compliance Essentials (Brazilian Portuguese Edition)' THEN 1050 WHEN input_value = 'Workplace Compliance Essentials (UK English Edition)' THEN 1051 WHEN input_value = 'Workplace Compliance Essentials (Canadian Edition)' THEN 1052 WHEN input_value = 'Workplace Compliance Essentials (Castilian Spanish Edition)' THEN 1053 WHEN input_value = 'Workplace Compliance Essentials (Turkish Edition)' THEN 1054 WHEN input_value = 'Workplace Compliance Essentials (Australian Edition)' THEN 1055 WHEN input_value = 'Workplace Compliance Essentials (Thai Edition)' THEN 1056 WHEN input_value = 'Workplace Compliance Essentials (Swedish Edition)' THEN 1057 WHEN input_value = 'Workplace Compliance Essentials (Bahasa Malay Edition)' THEN 1058 WHEN input_value = 'Workplace Compliance Essentials (Vietnamese Edition)' THEN 1059 WHEN input_value = 'Workplace Compliance Essentials (Dutch Edition)' THEN 1060 WHEN input_value = 'Workplace Compliance Essentials (Norwegian Edition)' THEN 1061 WHEN input_value = 'Workplace Compliance Essentials (New Zealand Edition)' THEN 1062 WHEN input_value = 'Workplace Compliance Essentials (French Edition)' THEN 1063 WHEN input_value = 'Workplace Compliance Essentials (German Edition)' THEN 1064 WHEN input_value = 'Workplace Compliance Essentials (Italian Edition)' THEN 1065 WHEN input_value = 'Workplace Compliance Essentials (Japanese Edition)' THEN 1066 WHEN input_value = 'XML' THEN 1067 WHEN input_value = 'Communicating Tactfully and Diplomatically' THEN 1068 WHEN input_value = 'Leading Virtual Teams' THEN 1069 WHEN input_value = 'Thinking Strategically and Managing Risk' THEN 1070 WHEN input_value = 'Virtual Teams' THEN 1071 WHEN input_value = 'Communication' THEN 1072 WHEN input_value = 'Microsoft 365: Teams' THEN 1073 WHEN input_value = 'EHS Impacts (US Edition)' THEN 1074 WHEN input_value = 'Environmental (Latin American Spanish Edition)' THEN 1075 WHEN input_value = 'Environmental (US Edition)' THEN 1076 WHEN input_value = 'Environmental (Canadian Edition)' THEN 1077 WHEN input_value = 'Environmental (Canadian French Edition)' THEN 1078 WHEN input_value = 'Harassment (Australian Edition)' THEN 1079 WHEN input_value = 'Harassment (Bahasa Indonesian Edition)' THEN 1080 WHEN input_value = 'Harassment (Bahasa Malay Edition)' THEN 1081 WHEN input_value = 'Harassment (Brazilian Portuguese Edition)' THEN 1082 WHEN input_value = 'Harassment (Canadian Edition)' THEN 1083 WHEN input_value = 'Harassment (Czech Edition)' THEN 1084 WHEN input_value = 'Harassment (French Edition)' THEN 1085 WHEN input_value = 'Harassment (German Edition)' THEN 1086 WHEN input_value = 'Harassment (Hindi Edition)' THEN 1087 WHEN input_value = 'Harassment (Indian Edition)' THEN 1088 WHEN input_value = 'Harassment (Italian Edition)' THEN 1089 WHEN input_value = 'Harassment (Japanese Edition)' THEN 1090 WHEN input_value = 'Harassment (Korean Edition)' THEN 1091 WHEN input_value = 'Harassment (Latin American Spanish Edition)' THEN 1092 WHEN input_value = 'Harassment (New Zealand Edition)' THEN 1093 WHEN input_value = 'Harassment (Polish Edition)' THEN 1094 WHEN input_value = 'Harassment (Thai Edition)' THEN 1095 WHEN input_value = 'Harassment (Vietnamese Edition)' THEN 1096 WHEN input_value = 'Health, Safety and Security (Canadian Edition)' THEN 1097 WHEN input_value = 'Health, Safety and Security (Canadian French Edition)' THEN 1098 WHEN input_value = 'Health, Safety and Security (Castilian Spanish Edition)' THEN 1099 WHEN input_value = 'Health, Safety and Security (Dutch Edition)' THEN 1100 WHEN input_value = 'Health, Safety and Security (Korean Edition)' THEN 1101 WHEN input_value = 'Health, Safety and Security (Australian Edition)' THEN 1102 WHEN input_value = 'Health, Safety and Security (New Zealand Edition)' THEN 1103 WHEN input_value = 'Health, Safety and Security (Chinese Edition)' THEN 1104 WHEN input_value = 'Health, Safety and Security (German Edition)' THEN 1105 WHEN input_value = 'Health, Safety and Security (Latin American Spanish Edition)' THEN 1106 WHEN input_value = 'Health, Safety and Security (US Edition)' THEN 1107 WHEN input_value = 'Health, Safety and Security (UK Edition)' THEN 1108 WHEN input_value = 'Health, Safety and Security (Portuguese Brazilian Edition)' THEN 1109 WHEN input_value = 'Health, Safety and Security (French Edition)' THEN 1110 WHEN input_value = 'Health, Safety and Security (ltalian Edition)' THEN 1111 WHEN input_value = 'Legal Impacts (French Edition)' THEN 1112 WHEN input_value = 'Legal Impacts (Latin American Spanish Edition)' THEN 1113 WHEN input_value = 'Legal Impacts (UK English Edition)' THEN 1114 WHEN input_value = 'Meetings' THEN 1115 WHEN input_value = 'Navigating through Organizational Change' THEN 1116 WHEN input_value = 'Productivity Tools for Advanced Scrum Masters' THEN 1117 WHEN input_value = 'Productivity Tools for CloudOps Security Architect' THEN 1118 WHEN input_value = 'Business & Leadership for Journeyman Developers' THEN 1119 WHEN input_value = 'Productivity Tools for Journeyman Developers' THEN 1120 WHEN input_value = 'Business & Leadership for AI Architects' THEN 1121 WHEN input_value = 'Productivity Tools for AI Architects' THEN 1122 WHEN input_value = 'Business & Leadership for API Developers' THEN 1123 WHEN input_value = 'Productivity Tools for API Developers' THEN 1124 WHEN input_value = 'Business & Leadership for Software Architects' THEN 1125 WHEN input_value = 'Productivity Tools for Software Architects' THEN 1126 WHEN input_value = 'Business & Leadership for Site Reliability Engineers' THEN 1127 WHEN input_value = 'Productivity Tools for Site Reliability Engineers' THEN 1128 WHEN input_value = 'Business & Leadership for Python Master' THEN 1129 WHEN input_value = 'Productivity Tools for Python Master' THEN 1130 WHEN input_value = 'Productivity Tools for Decision-makers and Leaders' THEN 1131 WHEN input_value = 'Business & Leadership with Serverless Deployments for Developers' THEN 1132 WHEN input_value = 'Productivity Tools with Serverless Deployments for Developers' THEN 1133 WHEN input_value = 'Business & Leadership for Javanista' THEN 1134 WHEN input_value = 'Productivity Tools for Javanista' THEN 1135 WHEN input_value = 'Business & Leadership for Go Programming Essentials' THEN 1136 WHEN input_value = 'Business & Leadership for Engineering Lead' THEN 1137 WHEN input_value = 'Business & Leadership for AI and ML for Decision-makers' THEN 1138 WHEN input_value = 'Productivity Tools for Secure Agile Programmers' THEN 1139 WHEN input_value = 'Transportation (Latin American Spanish Edition)' THEN 1140 WHEN input_value = 'Transportation (US Edition)' THEN 1141 WHEN input_value = 'Transportation (Italian Edition)' THEN 1142 WHEN input_value = 'Transportation (Canadian Edition)' THEN 1143 WHEN input_value = 'Transportation (Canadian French Edition)' THEN 1144 WHEN input_value = 'Transportation (UK Edition)' THEN 1145 WHEN input_value = 'Transportation (Chinese Edition)' THEN 1146 WHEN input_value = 'Transportation (Portuguese Brazilian Edition)' THEN 1147 WHEN input_value = 'Transportation (German Edition)' THEN 1148 WHEN input_value = 'Transportation (Castilian Spanish Edition)' THEN 1149 WHEN input_value = 'Transportation (Korean Edition)' THEN 1150 WHEN input_value = 'Transportation (Dutch Edition)' THEN 1151 WHEN input_value = 'Transportation (French Edition)' THEN 1152 WHEN input_value = 'Workplace Compliance Essentials (Canadian French Edition)' THEN 1153 WHEN input_value = 'Workplace Compliance Essentials (Russian Edition)' THEN 1154 WHEN input_value = 'Workplace Compliance Essentials (US Edition)' THEN 1155 WHEN input_value = 'Workplace Compliance Essentials (Korean Edition)' THEN 1156 WHEN input_value = 'Workplace Compliance Essentials (Czech Edition)' THEN 1157 WHEN input_value = 'Workplace Compliance Essentials (Chinese Edition)' THEN 1158 WHEN input_value = 'Workplace Compliance Essentials (Hindi Edition)' THEN 1159 WHEN input_value = 'Workplace Compliance Essentials (Bahasa Indonesian Edition)' THEN 1160 WHEN input_value = 'Workplace Compliance Essentials (Hungarian Edition)' THEN 1161 WHEN input_value = 'Workplace Compliance Essentials (Romanian Edition)' THEN 1162 WHEN input_value = 'Workplace Compliance Essentials (Finnish Edition)' THEN 1163 WHEN input_value = 'Workplace Compliance Essentials (Danish Edition)' THEN 1164 WHEN input_value = 'Workplace Compliance Essentials (Chinese Traditional Edition)' THEN 1165 WHEN input_value = 'Workplace Compliance Essentials (Latin American Spanish Edition)' THEN 1166 WHEN input_value = 'Workplace Compliance Essentials (Polish Edition)' THEN 1167 WHEN input_value = 'Food Allergies And Intolerance' THEN 1168 WHEN input_value = 'Industry Specific' THEN 1169 WHEN input_value = 'Cal/OSHA Latin American Spanish' THEN 1170 WHEN input_value = 'Technology' THEN 1171 WHEN input_value = 'Disability Discrimination Awareness' THEN 1172 WHEN input_value = 'Cisco WebEx Teams' THEN 1173 WHEN input_value = 'Equality and Diversity Awareness' THEN 1174 WHEN input_value = 'Cisco WebEx for Web' THEN 1175 WHEN input_value = 'Portuguese' THEN 1176 WHEN input_value = 'French Canadian' THEN 1177 WHEN input_value = 'Japanese' THEN 1178 WHEN input_value = 'Cal/OSHA' THEN 1179 WHEN input_value = 'Coordinators' THEN 1180 WHEN input_value = 'Managers' THEN 1181 WHEN input_value = 'Skype for Business 2016 (No Assessments)' THEN 1182 WHEN input_value = 'First Aid Awareness' THEN 1183 WHEN input_value = 'Fire Safety Awareness' THEN 1184 WHEN input_value = 'Join.me for Windows (No Assessments)' THEN 1185 WHEN input_value = 'LogMeIn GoToMeeting (No Assessments)' THEN 1186 WHEN input_value = 'Presentation Skills' THEN 1187 WHEN input_value = 'Project Sheets' THEN 1188 WHEN input_value = '5S' THEN 1189 WHEN input_value = 'Label Templates' THEN 1190 WHEN input_value = 'Final Presentation' THEN 1191 WHEN input_value = 'Kaizen' THEN 1192 WHEN input_value = 'Engineering' THEN 1193 WHEN input_value = 'Lifelong Learn' THEN 1194 WHEN input_value = 'Cloud Services' THEN 1195 WHEN input_value = 'Business Operations' THEN 1196 WHEN input_value = 'Welcome to Percipio' THEN 1197 WHEN input_value = 'Aspire Journeys for Leadership' THEN 1198 WHEN input_value = 'Cybersecurity Career Journey' THEN 1199 WHEN input_value = 'Skillsoft Live Events' THEN 1200 WHEN input_value = 'Sample Content' THEN 1201 WHEN input_value = 'Customer Service' THEN 1202 WHEN input_value = 'Browse Partner Content' THEN 1203 WHEN input_value = 'Aspire Journeys' THEN 1204 WHEN input_value = 'Infrastructure & Operations' THEN 1205 WHEN input_value = 'Sales & Marketing' THEN 1206 WHEN input_value = 'Skillsoft Bootcamps' THEN 1207 WHEN input_value = 'Digital Transformation' THEN 1208 WHEN input_value = 'Professional Improvement' THEN 1209 WHEN input_value = 'Diversity, Equity, & Inclusion' THEN 1210 WHEN input_value = 'NICE Framework' THEN 1211 WHEN input_value = 'Certifications' THEN 1212 WHEN input_value = 'Skillsoft Leadercamps' THEN 1213 WHEN input_value = 'Software Craft' THEN 1214 WHEN input_value = 'Cloud Career Journey' THEN 1215 WHEN input_value = 'Codecademy' THEN 1216 WHEN input_value = 'Project Management' THEN 1217 WHEN input_value = 'Mainframe' THEN 1218 WHEN input_value = 'Perspectives' THEN 1219 WHEN input_value = 'Agile Career Journey' THEN 1220 WHEN input_value = 'Product Management' THEN 1221 WHEN input_value = 'Data' THEN 1222 WHEN input_value = 'Corporate Marketing' THEN 1223 WHEN input_value = 'Customer Success' THEN 1224 WHEN input_value = 'Product Marketing' THEN 1225 WHEN input_value = 'Corporate Communications' THEN 1226 WHEN input_value = 'Selling Skills' THEN 1227 WHEN input_value = 'Internet of Things' THEN 1228 WHEN input_value = 'Cloud Basics' THEN 1229 WHEN input_value = 'Cloud Development' THEN 1230 WHEN input_value = 'Cloud Platforms' THEN 1231 WHEN input_value = 'NEW - Azure' THEN 1232 WHEN input_value = 'Pursue an Agile Certification' THEN 1233 WHEN input_value = 'Pursue an Agile Job Role' THEN 1234 WHEN input_value = 'Pursue an Azure Cloud Job Role' THEN 1235 WHEN input_value = 'Pursue an AWS Cloud Job Role' THEN 1236 WHEN input_value = 'Pursue a GCP Cloud Job Role' THEN 1237 WHEN input_value = 'Pursue a Foundation in Cloud' THEN 1238 WHEN input_value = 'Pursue a Cloud Skill' THEN 1239 WHEN input_value = 'Pursue a Cybersecurity Skill' THEN 1240 WHEN input_value = 'Database Development' THEN 1241 WHEN input_value = 'Data Visualization & Reporting' THEN 1242 WHEN input_value = 'Big Data' THEN 1243 WHEN input_value = 'Data Architectures' THEN 1244 WHEN input_value = 'Data Core Concepts' THEN 1245 WHEN input_value = 'Data Analytics' THEN 1246 WHEN input_value = 'Data Science' THEN 1247 WHEN input_value = 'Data Platforms' THEN 1248 WHEN input_value = 'Business Intelligence' THEN 1249 WHEN input_value = 'Data Security' THEN 1250 WHEN input_value = 'Diversity, Equity & Inclusion' THEN 1251 WHEN input_value = 'DevOps IT' THEN 1252 WHEN input_value = 'Client & Server Administration' THEN 1253 WHEN input_value = 'IT Services' THEN 1254 WHEN input_value = 'Network Operations' THEN 1255 WHEN input_value = 'IT Trends' THEN 1256 WHEN input_value = '2020 Mainstage Keynotes' THEN 1257 WHEN input_value = '2020 Product Sessions' THEN 1258 WHEN input_value = '2020 Case Studies' THEN 1259 WHEN input_value = 'Leadership & Business' THEN 1260 WHEN input_value = 'NICE Work Roles' THEN 1261 WHEN input_value = 'Product Management Skills' THEN 1262 WHEN input_value = 'Software Developer Bootcamps' THEN 1263 WHEN input_value = 'Virtual Training' THEN 1264 WHEN input_value = 'Security Bootcamps' THEN 1265 WHEN input_value = 'Project Management Bootcamps' THEN 1266 WHEN input_value = 'Cloud Services Bootcamps' THEN 1267 WHEN input_value = 'Data Bootcamps' THEN 1268 WHEN input_value = 'In Pursuit of Re-engagement' THEN 1269 WHEN input_value = 'Leading HR' THEN 1270 WHEN input_value = 'Productivity & Wellness' THEN 1271 WHEN input_value = 'Art of Great Consulting' THEN 1272 WHEN input_value = 'Leading in the New Normal' THEN 1273 WHEN input_value = 'Artificial Intelligence' THEN 1274 WHEN input_value = 'Software' THEN 1275 WHEN input_value = 'Machine Learning' THEN 1276 WHEN input_value = 'Data Management' THEN 1277 WHEN input_value = 'Leadership Mindsets' THEN 1278 WHEN input_value = 'Leadership Transitions' THEN 1279 WHEN input_value = 'Espanol' THEN 1280 WHEN input_value = 'English' THEN 1281 WHEN input_value = 'Codecademy Languages' THEN 1282 WHEN input_value = 'Codecademy Subjects' THEN 1283 WHEN input_value = 'Finance' THEN 1284 WHEN input_value = 'Process Improvement' THEN 1285 WHEN input_value = 'Business Planning & Analysis' THEN 1286 WHEN input_value = 'Human Resources' THEN 1287 WHEN input_value = 'Banking' THEN 1288 WHEN input_value = 'Microsoft Office' THEN 1289 WHEN input_value = 'CompTIA' THEN 1290 WHEN input_value = 'Oracle' THEN 1291 WHEN input_value = 'VMware' THEN 1292 WHEN input_value = 'Isograd' THEN 1293 WHEN input_value = 'Cisco' THEN 1294 WHEN input_value = 'SAS' THEN 1295 WHEN input_value = 'Digital Marketing Institute' THEN 1296 WHEN input_value = 'Red Hat' THEN 1297 WHEN input_value = 'Kubernetes' THEN 1298 WHEN input_value = 'Microsoft' THEN 1299 WHEN input_value = 'Google' THEN 1300 WHEN input_value = '(ISC)2' THEN 1301 WHEN input_value = 'EC-Council' THEN 1302 WHEN input_value = 'AWS' THEN 1303 WHEN input_value = 'Virtual Work' THEN 1304 WHEN input_value = 'Digital Experiences' THEN 1305 WHEN input_value = 'Civil' THEN 1306 WHEN input_value = 'Energy' THEN 1307 WHEN input_value = 'Chemical' THEN 1308 WHEN input_value = 'Industrial' THEN 1309 WHEN input_value = 'Aerospace & Mechanical' THEN 1310 WHEN input_value = 'Electrical' THEN 1311 WHEN input_value = 'Test Channels' THEN 1312 WHEN input_value = 'Engineering Resources' THEN 1313 WHEN input_value = 'Personal Productivity' THEN 1314 WHEN input_value = 'Personal Accountability' THEN 1315 WHEN input_value = 'Well-Being' THEN 1316 WHEN input_value = 'Business Communication' THEN 1317 WHEN input_value = 'Self-Discovery' THEN 1318 WHEN input_value = 'Mainframe Security' THEN 1319 WHEN input_value = 'Mainframe Services' THEN 1320 WHEN input_value = 'Project Management Methods' THEN 1321 WHEN input_value = 'Live Events' THEN 1322 WHEN input_value = 'Emerging Tech' THEN 1323 WHEN input_value = 'Software Architectures' THEN 1324 WHEN input_value = 'Software Dev Practices' THEN 1325 WHEN input_value = 'Getting Started with Percipio' THEN 1326 WHEN input_value = 'Expert' THEN 1327 WHEN input_value = 'Associate (MTA)' THEN 1328 WHEN input_value = 'Microsoft 365 Certified Expert' THEN 1329 WHEN input_value = 'Microsoft Certified Associate' THEN 1330 WHEN input_value = 'Professional' THEN 1331 WHEN input_value = 'Entry' THEN 1332 WHEN input_value = 'Associate' THEN 1333 WHEN input_value = 'TOSA Desktop' THEN 1334 WHEN input_value = 'TOSA Digital' THEN 1335 WHEN input_value = 'Cloud Security' THEN 1336 WHEN input_value = 'Software Development' THEN 1337 WHEN input_value = 'Information Security' THEN 1338 WHEN input_value = 'Systems Security' THEN 1339 WHEN input_value = 'Cybersecurity' THEN 1340 WHEN input_value = 'Bloodborne Pathogens' THEN 1341 WHEN input_value = 'Excel' THEN 1342 WHEN input_value = 'Access' THEN 1343 WHEN input_value = 'TWI - Job Instruction' THEN 1344 WHEN input_value = 'Filehold' THEN 1345 WHEN input_value = 'Engineer Resources' THEN 1346 WHEN input_value = 'Security Skills' THEN 1347 WHEN input_value = 'Outlook' THEN 1348 WHEN input_value = 'Concur' THEN 1349 WHEN input_value = 'Teams' THEN 1350 WHEN input_value = 'TWI - Job Methods' THEN 1351 WHEN input_value = 'ADP' THEN 1352 WHEN input_value = 'Docusign' THEN 1353 WHEN input_value = 'TWI - Job Relations' THEN 1354 WHEN input_value = 'Word' THEN 1355 WHEN input_value = 'PowerPoint' THEN 1356 WHEN input_value = 'Infrastructure' THEN 1357 WHEN input_value = 'Data and Analytics' THEN 1358 WHEN input_value = 'Additional Professional' THEN 1359 WHEN input_value = 'Core' THEN 1360 WHEN input_value = 'VMware Certified Professional' THEN 1361 WHEN input_value = 'Data Analysis' THEN 1362 WHEN input_value = 'Digital Marketing Associate' THEN 1363 WHEN input_value = 'Google Workspace' THEN 1364 WHEN input_value = 'Specialty' THEN 1365 WHEN input_value = 'Architecting' THEN 1366 WHEN input_value = 'Operations' THEN 1367 WHEN input_value = 'Cloud Practitioner' THEN 1368 WHEN input_value = 'Developing' THEN 1369 WHEN input_value = 'Base Programmer' THEN 1370 WHEN input_value = 'Administrator' THEN 1371 WHEN input_value = 'Kubernetes Administrator' THEN 1372 WHEN input_value = 'Spreadsheet Software' THEN 1373 WHEN input_value = 'Microsoft Office/Office 365' THEN 1374 WHEN input_value = 'Email' THEN 1375 WHEN input_value = 'Presentation Software' THEN 1376 WHEN input_value = 'Microsoft Outlook' THEN 1377 WHEN input_value = 'Microsoft Excel' THEN 1378 WHEN input_value = 'Microsoft Powerpoint' THEN 1379 WHEN input_value = 'Google Hangouts Meet' THEN 1380 WHEN input_value = 'Google Hangouts Meet (No Assessments)' THEN 1381 WHEN input_value = 'Software Applications' THEN 532 WHEN input_value = 'Policy and Compliance' THEN 533 WHEN input_value = 'Cornerstone Product Training' THEN 534 WHEN input_value = 'Management Skills' THEN 535 WHEN input_value = 'Communication & Teamwork' THEN 536 WHEN input_value = 'Technical Skills' THEN 537 WHEN input_value = 'Business Skills' THEN 538 WHEN input_value = 'Compliance' THEN 539 WHEN input_value = 'IT Skills' THEN 540 WHEN input_value = 'Certification' THEN 541 WHEN input_value = 'Collections' THEN 542 WHEN input_value = 'Skillsoft Aspire' THEN 543 WHEN input_value = 'Productivity & Collaboration Tools' THEN 544 WHEN input_value = 'Business Continuity' THEN 545 WHEN input_value = 'Skillsoft Aspire L&B' THEN 546 WHEN input_value = 'Change' THEN 547 WHEN input_value = 'Communications Skills' THEN 548 WHEN input_value = 'Finance and Accounting' THEN 549 WHEN input_value = 'Human Resources' THEN 550 WHEN input_value = 'Industry Overviews' THEN 551 WHEN input_value = 'Leadership' THEN 552 WHEN input_value = 'Management' THEN 553 WHEN input_value = 'Operations Management' THEN 554 WHEN input_value = 'Professional Effectiveness' THEN 555 WHEN input_value = 'Project Management' THEN 556 WHEN input_value = 'Strategy and Innovation' THEN 557 WHEN input_value = 'Business Skills' THEN 558 WHEN input_value = 'Business Skills' THEN 559 WHEN input_value = 'Business Skills' THEN 560 WHEN input_value = 'Business Skills' THEN 561 WHEN input_value = 'Business Skills' THEN 562 WHEN input_value = 'Sumtotal344' THEN 563 WHEN input_value = 'ILT Events' THEN 565 WHEN input_value = 'SumTotal2' THEN 566 WHEN input_value = 'SumTotal' THEN 567 WHEN input_value = 'Materials' THEN 568 WHEN input_value = 'Videos' THEN 569 WHEN input_value = 'Curriculum' THEN 570 WHEN input_value = 'Curriculums' THEN 571 WHEN input_value = 'ILT Events' THEN 572 WHEN input_value = 'Scorm' THEN 573 WHEN input_value = 'Finance' THEN 574 WHEN input_value = 'SIAM TEAM' THEN 575 WHEN input_value = 'New Employee Training' THEN 576 WHEN input_value = 'Exercise' THEN 577 WHEN input_value = 'Leadership Development' THEN 578 WHEN input_value = 'Medicine' THEN 579 WHEN input_value = 'Teaching' THEN 580 WHEN input_value = 'Course Details' THEN 581 WHEN input_value = 'Pravir test' THEN 582 WHEN input_value = 'Tests' THEN 583 WHEN input_value = 'Online Courses' THEN 584 WHEN input_value = 'Topics' THEN 585 WHEN input_value = 'PESV2_topic' THEN 586 WHEN input_value = '1234' THEN 587 WHEN input_value = '208_Cloud Services' THEN 588 WHEN input_value = '210_Customer Service' THEN 589 WHEN input_value = '211_Developer' THEN 590 WHEN input_value = '212_Digital Transformation' THEN 591 WHEN input_value = '213_IT Operations' THEN 592 WHEN input_value = '215_Leadership Development Program' THEN 593 WHEN input_value = '216_Management' THEN 594 WHEN input_value = '58_Certifications' THEN 595 WHEN input_value = 'Aspire Journeys' THEN 596 WHEN input_value = 'Business Operations' THEN 597 WHEN input_value = '66_Cloud Services' THEN 598 WHEN input_value = '68_Customer Service' THEN 599 WHEN input_value = 'Data' THEN 600 WHEN input_value = '70_Developer' THEN 601 WHEN input_value = '71_Digital Transformation' THEN 602 WHEN input_value = '74_IT Operations' THEN 603 WHEN input_value = '82_Management' THEN 604 WHEN input_value = 'Productivity & Collaboration Tools' THEN 605 WHEN input_value = 'Professional Improvement' THEN 606 WHEN input_value = '89_Project Management' THEN 607 WHEN input_value = 'Sales & Marketing' THEN 608 WHEN input_value = '121_Customer Service: Core Concepts & Methods' THEN 609 WHEN input_value = 'Data Visualization & Reporting' THEN 610 WHEN input_value = 'Big Data' THEN 611 WHEN input_value = 'Data Security' THEN 612 WHEN input_value = 'Data Analytics' THEN 613 WHEN input_value = 'Data Core Concepts' THEN 614 WHEN input_value = 'Database Development' THEN 615 WHEN input_value = 'Data Platforms' THEN 616 WHEN input_value = 'Business Intelligence' THEN 617 WHEN input_value = '130_Data Science' THEN 618 WHEN input_value = '141_Data Science' THEN 619 WHEN input_value = '146_Digital Marketing & Communications' THEN 620 WHEN input_value = '151_Information Security' THEN 621 WHEN input_value = '152_IT Services' THEN 622 WHEN input_value = '153_DevOps' THEN 623 WHEN input_value = 'IT Trends' THEN 624 WHEN input_value = '155_Network Operations' THEN 625 WHEN input_value = '156_Client & Server Administration' THEN 626 WHEN input_value = 'Design' THEN 627 WHEN input_value = 'Productivity Tools' THEN 628 WHEN input_value = 'Collaboration' THEN 629 WHEN input_value = 'Browsers & Operating Systems' THEN 630 WHEN input_value = '186_Microsoft Office' THEN 631 WHEN input_value = 'Personal Productivity' THEN 632 WHEN input_value = 'Well-Being' THEN 633 WHEN input_value = 'Business Communication' THEN 634 WHEN input_value = 'Self-Discovery' THEN 635 WHEN input_value = 'Personal Accountability' THEN 636 WHEN input_value = 'Individual Professional Performance' THEN 637 WHEN input_value = 'Project Management Methods' THEN 638 WHEN input_value = 'Project Management Core Concepts' THEN 639 WHEN input_value = 'Product Marketing' THEN 640 WHEN input_value = 'Selling Skills' THEN 641 WHEN input_value = 'Salesforce & Channel Management' THEN 642 WHEN input_value = 'Corporate Communications' THEN 643 WHEN input_value = 'Corporate Marketing' THEN 644 WHEN input_value = '205_(ISC)2' THEN 645 WHEN input_value = '206_Amazon' THEN 646 WHEN input_value = '207_Cisco' THEN 647 WHEN input_value = '209_CompTIA' THEN 648 WHEN input_value = '214_Information Systems Audit and Control Association' THEN 649 WHEN input_value = '217_Microsoft' THEN 650 WHEN input_value = '228_Cloud Platforms' THEN 651 WHEN input_value = '229_Cloud Development' THEN 652 WHEN input_value = '245_Information Security' THEN 653 WHEN input_value = '246_IT Services' THEN 654 WHEN input_value = '247_Network Operations' THEN 655 WHEN input_value = '248_Client & Server Administration' THEN 656 WHEN input_value = '250_Leading the Business' THEN 657 WHEN input_value = '251_Leading Your Team' THEN 658 WHEN input_value = '252_Leading Yourself' THEN 659 WHEN input_value = '253_Management Essentials' THEN 660 WHEN input_value = '59_(ISC)2' THEN 661 WHEN input_value = '60_Amazon' THEN 662 WHEN input_value = 'American Society for Quality (ASQ)' THEN 663 WHEN input_value = 'BCS Professional Institute' THEN 664 WHEN input_value = '65_Cisco' THEN 665 WHEN input_value = '67_CompTIA' THEN 666 WHEN input_value = 'EC-Council' THEN 667 WHEN input_value = 'Google' THEN 668 WHEN input_value = 'ITIL\u00ae' THEN 669 WHEN input_value = '76_Information Systems Audit and Control Association' THEN 670 WHEN input_value = 'International Institute of Business Analysis (IIBA)' THEN 671 WHEN input_value = 'International Software Testing Qualification Board' THEN 672 WHEN input_value = 'Isograd' THEN 673 WHEN input_value = 'Juniper' THEN 674 WHEN input_value = 'Linux Professional Institute' THEN 675 WHEN input_value = '83_Microsoft' THEN 676 WHEN input_value = '84_Microsoft Office' THEN 677 WHEN input_value = 'Oracle' THEN 678 WHEN input_value = 'PRINCE2\u00ae' THEN 679 WHEN input_value = 'Project Management Institute (PMI)\u00ae' THEN 680 WHEN input_value = 'Red Hat' THEN 681 WHEN input_value = 'SAS' THEN 682 WHEN input_value = 'TOGAF\u00ae' THEN 683 WHEN input_value = '10_Developer' THEN 684 WHEN input_value = 'Data Analyst to Data Scientist' THEN 685 WHEN input_value = 'Business Planning & Analysis' THEN 686 WHEN input_value = 'Finance' THEN 687 WHEN input_value = 'Human Resources' THEN 688 WHEN input_value = 'Process Improvement' THEN 689 WHEN input_value = '11_Digital Transformation' THEN 690 WHEN input_value = '112_Cloud Platforms' THEN 691 WHEN input_value = 'Cloud Basics' THEN 692 WHEN input_value = 'Internet of Things' THEN 693 WHEN input_value = '115_Cloud Development' THEN 694 WHEN input_value = '116_Cloud Security' THEN 695 WHEN input_value = '12_IT Operations' THEN 696 WHEN input_value = 'Developer Trends' THEN 697 WHEN input_value = 'Web Development' THEN 698 WHEN input_value = 'Mobile Development' THEN 699 WHEN input_value = '134_DevOps' THEN 700 WHEN input_value = '135_Secure Programming' THEN 701 WHEN input_value = 'Data Modelling' THEN 702 WHEN input_value = '137_Developer Concepts & Methodologies' THEN 703 WHEN input_value = '138_Developer Tools' THEN 704 WHEN input_value = '139_Programming Languages' THEN 705 WHEN input_value = '14_Leadership Development Program' THEN 706 WHEN input_value = 'Microservices' THEN 707 WHEN input_value = '142_Essentials of Digital Transformation' THEN 708 WHEN input_value = '143_Virtual Work' THEN 709 WHEN input_value = '144_Digital Soft Skills Competencies' THEN 710 WHEN input_value = '145_Agility for Digital Transformation' THEN 711 WHEN input_value = '147_Digital Experiences' THEN 712 WHEN input_value = '15_Management' THEN 713 WHEN input_value = 'Leadership Essentials' THEN 714 WHEN input_value = '166_Management Essentials' THEN 715 WHEN input_value = 'Team Management' THEN 716 WHEN input_value = 'Business Execution' THEN 717 WHEN input_value = 'Business Strategy' THEN 718 WHEN input_value = '233_Customer Service: Core Concepts & Methods' THEN 719 WHEN input_value = '234_Secure Programming' THEN 720 WHEN input_value = '235_Developer Concepts & Methodologies' THEN 721 WHEN input_value = '236_Developer Tools' THEN 722 WHEN input_value = '237_Programming Languages' THEN 723 WHEN input_value = '238_Data Science' THEN 724 WHEN input_value = '239_Essentials of Digital Transformation' THEN 725 WHEN input_value = '240_Virtual Work' THEN 726 WHEN input_value = '241_Digital Soft Skills Competencies' THEN 727 WHEN input_value = '242_Agility for Digital Transformation' THEN 728 WHEN input_value = '243_Digital Marketing & Communications' THEN 729 WHEN input_value = '244_Digital Experiences' THEN 730 WHEN input_value = '3_Certifications' THEN 731 WHEN input_value = '7_Cloud Services' THEN 732 WHEN input_value = '9_Customer Service' THEN 733 WHEN input_value = 'ASQ (American Society for Quality)' THEN 734 WHEN input_value = '104_Foundation' THEN 735 WHEN input_value = '109_Professional' THEN 736 WHEN input_value = '110_Entry' THEN 737 WHEN input_value = '111_Associate' THEN 738 WHEN input_value = '13_Information Systems Audit and Control Association' THEN 739 WHEN input_value = '148_Core' THEN 740 WHEN input_value = '16_Microsoft' THEN 741 WHEN input_value = '161_Foundation' THEN 742 WHEN input_value = '164_Administrator' THEN 743 WHEN input_value = 'Microsoft Certified Associate' THEN 744 WHEN input_value = '171_Specialist' THEN 745 WHEN input_value = '172_Microsoft Certified Solutions Developer (MCSD)' THEN 746 WHEN input_value = '173_Microsoft Certified Solutions Associate (MCSA)' THEN 747 WHEN input_value = '174_Microsoft Certified Solutions Expert (MCSE)' THEN 748 WHEN input_value = '175_Associate (MTA)' THEN 749 WHEN input_value = 'Microsoft Certified Fundamentals' THEN 750 WHEN input_value = 'Microsoft Office Specialist (MOS)' THEN 751 WHEN input_value = '178_Professional' THEN 752 WHEN input_value = 'Expert' THEN 753 WHEN input_value = '180_Associate' THEN 754 WHEN input_value = '181_Foundation' THEN 755 WHEN input_value = '196_Administrator' THEN 756 WHEN input_value = 'Base Programmer' THEN 757 WHEN input_value = '218_Cloud Security' THEN 758 WHEN input_value = '219_Systems Security' THEN 759 WHEN input_value = '220_Software Development' THEN 760 WHEN input_value = '221_Information Security' THEN 761 WHEN input_value = '249_Auditor' THEN 762 WHEN input_value = '27_Cloud Platforms' THEN 763 WHEN input_value = '28_Cloud Development' THEN 764 WHEN input_value = '4_(ISC)2' THEN 765 WHEN input_value = '44_Information Security' THEN 766 WHEN input_value = '45_IT Services' THEN 767 WHEN input_value = '46_Network Operations' THEN 768 WHEN input_value = '47_Client & Server Administration' THEN 769 WHEN input_value = '49_Leading the Business' THEN 770 WHEN input_value = '5_Amazon' THEN 771 WHEN input_value = '50_Leading Your Team' THEN 772 WHEN input_value = '51_Leading Yourself' THEN 773 WHEN input_value = '52_Management Essentials' THEN 774 WHEN input_value = '6_Cisco' THEN 775 WHEN input_value = '8_CompTIA' THEN 776 WHEN input_value = '100_Architecting' THEN 777 WHEN input_value = '101_Operations' THEN 778 WHEN input_value = 'Additional Professional' THEN 779 WHEN input_value = '118_Cybersecurity' THEN 780 WHEN input_value = '119_Infrastructure' THEN 781 WHEN input_value = '120_Core' THEN 782 WHEN input_value = '149_Associate' THEN 783 WHEN input_value = '150_Professional' THEN 784 WHEN input_value = '157_Foundation' THEN 785 WHEN input_value = '158_Auditor' THEN 786 WHEN input_value = 'Security Manager' THEN 787 WHEN input_value = 'Level 3 - CBAP' THEN 788 WHEN input_value = 'TOSA Desktop' THEN 789 WHEN input_value = '163_Associate' THEN 790 WHEN input_value = '195_Project Management' THEN 791 WHEN input_value = 'TOGAF\u00ae 9' THEN 792 WHEN input_value = '222_Developing' THEN 793 WHEN input_value = '223_Architecting' THEN 794 WHEN input_value = '224_Operations' THEN 795 WHEN input_value = '225_Professional' THEN 796 WHEN input_value = '226_Entry' THEN 797 WHEN input_value = '227_Associate' THEN 798 WHEN input_value = '230_Cybersecurity' THEN 799 WHEN input_value = '231_Infrastructure' THEN 800 WHEN input_value = '232_Core' THEN 801 WHEN input_value = '254_Specialist' THEN 802 WHEN input_value = '255_Microsoft Certified Solutions Developer (MCSD)' THEN 803 WHEN input_value = '256_Microsoft Certified Solutions Associate (MCSA)' THEN 804 WHEN input_value = '257_Microsoft Certified Solutions Expert (MCSE)' THEN 805 WHEN input_value = '258_Associate (MTA)' THEN 806 WHEN input_value = '32_Customer Service: Core Concepts & Methods' THEN 807 WHEN input_value = '33_Secure Programming' THEN 808 WHEN input_value = '34_Developer Concepts & Methodologies' THEN 809 WHEN input_value = '35_Developer Tools' THEN 810 WHEN input_value = '36_Programming Languages' THEN 811 WHEN input_value = '37_Data Science' THEN 812 WHEN input_value = '38_Essentials of Digital Transformation' THEN 813 WHEN input_value = '39_Virtual Work' THEN 814 WHEN input_value = '40_Digital Soft Skills Competencies' THEN 815 WHEN input_value = '41_Agility for Digital Transformation' THEN 816 WHEN input_value = '42_Digital Marketing & Communications' THEN 817 WHEN input_value = '43_Digital Experiences' THEN 818 WHEN input_value = '95_Cloud Security' THEN 819 WHEN input_value = '96_Systems Security' THEN 820 WHEN input_value = '97_Software Development' THEN 821 WHEN input_value = '98_Information Security' THEN 822 WHEN input_value = '99_Developing' THEN 823 WHEN input_value = '17_Cloud Security' THEN 824 WHEN input_value = '18_Systems Security' THEN 825 WHEN input_value = '19_Software Development' THEN 826 WHEN input_value = '20_Information Security' THEN 827 WHEN input_value = '29_Cybersecurity' THEN 828 WHEN input_value = '30_Infrastructure' THEN 829 WHEN input_value = '31_Core' THEN 830 WHEN input_value = '48_Auditor' THEN 831 WHEN input_value = '21_Developing' THEN 832 WHEN input_value = '22_Architecting' THEN 833 WHEN input_value = '23_Operations' THEN 834 WHEN input_value = '24_Professional' THEN 835 WHEN input_value = '25_Entry' THEN 836 WHEN input_value = '26_Associate' THEN 837 WHEN input_value = '53_Specialist' THEN 838 WHEN input_value = '54_Microsoft Certified Solutions Developer (MCSD)' THEN 839 WHEN input_value = '55_Microsoft Certified Solutions Associate (MCSA)' THEN 840 WHEN input_value = '56_Microsoft Certified Solutions Expert (MCSE)' THEN 841 WHEN input_value = '57_Associate (MTA)' THEN 842 WHEN input_value = 'Java' THEN 843 WHEN input_value = 'oops' THEN 844 WHEN input_value = 'python' THEN 845 WHEN input_value = 'Auditor' THEN 846 WHEN input_value = 'Browsers & Operating Systems' THEN 847 WHEN input_value = 'Business Skills' THEN 848 WHEN input_value = 'Cloud' THEN 849 WHEN input_value = 'Cloud Computing' THEN 850 WHEN input_value = 'Collaboration' THEN 851 WHEN input_value = 'Data / ML / AI' THEN 852 WHEN input_value = 'Decision-makers and Leaders' THEN 853 WHEN input_value = 'Design' THEN 854 WHEN input_value = 'DevOps' THEN 855 WHEN input_value = 'Foundation' THEN 856 WHEN input_value = 'Get Started' THEN 857 WHEN input_value = 'IT Ops' THEN 858 WHEN input_value = 'Leading the Business' THEN 859 WHEN input_value = 'Leading Your Team' THEN 860 WHEN input_value = 'Leading Yourself' THEN 861 WHEN input_value = 'Level 3 - CBAP' THEN 862 WHEN input_value = 'PM' THEN 863 WHEN input_value = 'Productivity Tools' THEN 864 WHEN input_value = 'Programming' THEN 865 WHEN input_value = 'Adapting to Change' THEN 866 WHEN input_value = 'Business Execution' THEN 867 WHEN input_value = 'Business Strategy' THEN 868 WHEN input_value = 'Business Continuity Planning' THEN 869 WHEN input_value = 'Collaboration Tools' THEN 870 WHEN input_value = 'Communication Essentials' THEN 871 WHEN input_value = 'Crisis Management' THEN 872 WHEN input_value = 'Environmental, Health and Safety (EHS) Compliance' THEN 873 WHEN input_value = 'Food and Alcohol Safety' THEN 874 WHEN input_value = 'Leadership Essentials' THEN 875 WHEN input_value = 'Leading Teams' THEN 876 WHEN input_value = 'Legal Compliance' THEN 877 WHEN input_value = 'Professional Essentials' THEN 878 WHEN input_value = 'Software Tester to DevOps Automated Tester' THEN 879 WHEN input_value = 'Penetration Tester to SecOps Engineer' THEN 880 WHEN input_value = 'Web Programmer to Apprentice Programmer' THEN 881 WHEN input_value = 'Software Project Lead to Advanced Scrum Master' THEN 882 WHEN input_value = 'Network Security Specialist to CloudOps Security Architect' THEN 883 WHEN input_value = 'DevOps Engineer to Cloud Architect' THEN 884 WHEN input_value = 'Apprentice Developer to Journeyman Developer' THEN 885 WHEN input_value = 'AI Apprentice to AI Architect' THEN 886 WHEN input_value = 'Programmer to API Developer' THEN 887 WHEN input_value = 'Developer to Software Architect' THEN 888 WHEN input_value = 'Network Admin to Site Reliability Engineer' THEN 889 WHEN input_value = 'Infrastructure Support Engineer to CloudOps Engineer' THEN 890 WHEN input_value = 'Business Analyst to Data Analyst' THEN 891 WHEN input_value = 'Data Visualization' THEN 892 WHEN input_value = 'Pythonista to Python Master' THEN 893 WHEN input_value = 'Management Essentials' THEN 894 WHEN input_value = 'Microsoft Office 2016' THEN 895 WHEN input_value = 'Microsoft Office 365' THEN 896 WHEN input_value = 'Data Analysis with R' THEN 897 WHEN input_value = 'Security Essentials for Decision-makers and Leaders' THEN 898 WHEN input_value = 'Agile for Software Development' THEN 899 WHEN input_value = 'Serverless Deployments for Developers' THEN 900 WHEN input_value = 'Java Novice to Javanista' THEN 901 WHEN input_value = 'Web App Vulnerability Analyst' THEN 902 WHEN input_value = '5G Technologies and Practices' THEN 903 WHEN input_value = 'Go Programming Essentials' THEN 904 WHEN input_value = 'Enriched Web Development with Angular 11' THEN 905 WHEN input_value = 'Novice Developer to Pythonista' THEN 906 WHEN input_value = 'Javanista to Java Master' THEN 907 WHEN input_value = 'Developer Fundamentals' THEN 908 WHEN input_value = 'Programming Python in Action' THEN 909 WHEN input_value = 'Enterprise Development to DevOps Engineer' THEN 910 WHEN input_value = 'Web App Vulnerability Analyst - 2022 Update' THEN 911 WHEN input_value = 'Enterprise Development to Full Stack Developer' THEN 912 WHEN input_value = 'Software Product Management Proficiency' THEN 913 WHEN input_value = 'Engineering Lead' THEN 914 WHEN input_value = 'AI and ML for Decision-makers' THEN 915 WHEN input_value = 'Software Project Analyst to Senior Software Project Manager' THEN 916 WHEN input_value = 'Security Analyst to Security Architect' THEN 917 WHEN input_value = 'Programmer to Secure Agile Programmer' THEN 918 WHEN input_value = 'Virtual Work in the New Normal' THEN 919 WHEN input_value = 'Manage Myself' THEN 920 WHEN input_value = 'Manage Others' THEN 921 WHEN input_value = 'Security' THEN 922 WHEN input_value = 'Security Manager' THEN 923 WHEN input_value = 'Server Technology' THEN 924 WHEN input_value = 'Six Sigma Certification' THEN 925 WHEN input_value = 'Software Craftsmanship' THEN 926 WHEN input_value = 'Topics' THEN 927 WHEN input_value = 'Strategic Thinking' THEN 928 WHEN input_value = 'Team Management' THEN 929 WHEN input_value = 'Time Management and Productivity' THEN 930 WHEN input_value = 'Working on a Team' THEN 931 WHEN input_value = 'Working Remotely' THEN 932 WHEN input_value = 'Work-Life Balance' THEN 933 WHEN input_value = 'Accounting' THEN 934 WHEN input_value = 'AGG Leadership' THEN 935 WHEN input_value = 'Diversity on the Job' THEN 936 WHEN input_value = 'Time Management' THEN 937 WHEN input_value = 'Unconscious Bias' THEN 938 WHEN input_value = 'Diversity, Equity, and Inclusion' THEN 939 WHEN input_value = 'Building DEI Leadership Skills' THEN 940 WHEN input_value = 'Psychological Safety' THEN 941 WHEN input_value = 'Skills for Effective Collaboration' THEN 942 WHEN input_value = 'Managing a Crisis' THEN 943 WHEN input_value = 'Business' THEN 944 WHEN input_value = 'C#' THEN 945 WHEN input_value = 'Cisco Teams' THEN 946 WHEN input_value = 'Cisco WebEx' THEN 947 WHEN input_value = 'Computer Skills' THEN 948 WHEN input_value = 'Core Knowledge' THEN 949 WHEN input_value = 'Developer Tools' THEN 950 WHEN input_value = 'dot NET' THEN 951 WHEN input_value = 'Food and Alcohol Safety (Latin American Spanish Edition)' THEN 952 WHEN input_value = 'Food and Alcohol Safety (UK Edition)' THEN 953 WHEN input_value = 'Food and Alcohol Safety (US Edition)' THEN 954 WHEN input_value = 'Forms & Lists' THEN 955 WHEN input_value = 'Gemba' THEN 956 WHEN input_value = 'Hansei' THEN 957 WHEN input_value = 'Harassment (Canadian French Edition)' THEN 958 WHEN input_value = 'Harassment (Chinese Edition)' THEN 959 WHEN input_value = 'Harassment (Danish Edition)' THEN 960 WHEN input_value = 'Harassment (Dutch Edition)' THEN 961 WHEN input_value = 'Harassment (Finnish Edition)' THEN 962 WHEN input_value = 'Harassment (Hungarian Edition)' THEN 963 WHEN input_value = 'Harassment (Norwegian Edition)' THEN 964 WHEN input_value = 'Harassment (Romanian Edition)' THEN 965 WHEN input_value = 'Harassment (Russian Edition)' THEN 966 WHEN input_value = 'Harassment (Castilian Spanish Edition)' THEN 967 WHEN input_value = 'Harassment (Swedish Edition)' THEN 968 WHEN input_value = 'Harassment (Turkish Edition)' THEN 969 WHEN input_value = 'Harassment (UK English Edition)' THEN 970 WHEN input_value = 'Harassment (US Edition)' THEN 971 WHEN input_value = 'Health Insurance Portability and Accountability Act (HIPAA) (Latin American Spanish Edition)' THEN 972 WHEN input_value = 'Health Insurance Portability and Accountability Act (HIPAA) (US Edition)' THEN 973 WHEN input_value = 'Health and Wellness' THEN 974 WHEN input_value = 'Hoshin' THEN 975 WHEN input_value = 'Introductory Topics' THEN 976 WHEN input_value = 'JDE' THEN 977 WHEN input_value = 'Joinme' THEN 978 WHEN input_value = 'Just In Time' THEN 979 WHEN input_value = 'Kaizen Leadership' THEN 980 WHEN input_value = 'Kanban' THEN 981 WHEN input_value = 'Leadership & Teamwork' THEN 982 WHEN input_value = 'Additional Content' THEN 983 WHEN input_value = 'Legal Impacts (US Edition)' THEN 984 WHEN input_value = 'Legal Impacts (Brazilian Portuguese Edition)' THEN 985 WHEN input_value = 'Legal Impacts (Chinese Edition)' THEN 986 WHEN input_value = 'Legal Impacts (German Edition)' THEN 987 WHEN input_value = 'LMS Instructions' THEN 988 WHEN input_value = 'LogMeIn' THEN 989 WHEN input_value = 'Microservices' THEN 990 WHEN input_value = 'Mobile Development' THEN 991 WHEN input_value = 'Muda' THEN 992 WHEN input_value = 'Open Sesame' THEN 993 WHEN input_value = 'Improving Your Work/Life Balance' THEN 994 WHEN input_value = 'Improving Your Personal Productivity' THEN 995 WHEN input_value = 'Perseverance at Work' THEN 996 WHEN input_value = 'Percipio' THEN 997 WHEN input_value = 'Policies & Procedures' THEN 998 WHEN input_value = 'Problem Solving' THEN 999 ELSE END",
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Activity Description",
+      "metrics": {
+        "column_name": "Activity Description",
+        "total_rows": 1154,
+        "null_count": 33,
+        "blank_count": "33",
+        "distinct_count": 88,
+        "max_length": 997,
+        "avg_length": "400.7930",
+        "sample_values": [
+          "\u00a0Learn how to create a vision, mission, and then a hoshin plan of long-term, breakthrough, and annual objectives. Learn about catchball and the vital process of reflection to create organizational learning.",
+          "Overhead Crane Certification requires that you complete all 3 activities to attain certification. AGGU will mark the Skills Test activity complete in the LMS after the instructor submits the Operating Skills Test. This training complies with OSHA standards.",
+          "\u00a0Job Relations (JR) is a fundamental element of Lean and an important component of TWI. Its purpose is to develop the skill of leading. Used correctly JR will help supervisors, and any other leader of people, avoid problems though proven principles. And if problems do arise JR provides a 4-step process for handling the situation in a fact based, non-emotional, manner. The \"Learner\" version of this JR course can be used to facilitate your own 5-day, in person, JR course. A detailed facilitators guide is also available which includes a day-by-day agenda.",
+          "This curriculum contains 5 activities which must be fulfilled in order to receive full First Aid/CPR/AED certification; Note: First Aid/CPR/AED Class will be held at each AGG location - you will be notified of the scheduled training date, and AGGU will mark the training complete in the LMS after the instructor submits the attendance roster. This curriculum of activities complies with OSHA standards.",
+          "Hearing Conservation Program(referred to as 'Parent') requires that you complete 2 activities. This training complies with OSHA standard 1910.95."
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Description",
+          "mandatory": "Optional",
+          "field_type": "Char",
+          "char_length": "5000",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Owner",
+      "metrics": {
+        "column_name": "Owner",
+        "total_rows": 1154,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 7,
+        "max_length": 14,
+        "avg_length": "8.3925",
+        "sample_values": [
+          "87571",
+          "jadmin",
+          "angeladmin",
+          "AdamAdmin",
+          "RTN00143"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Owners*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "128",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": "Activity_Curriculum"
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    }
+  ],
+  "quality_signals": {
+    "error_logs": [],
+    "completeness_summary": {},
+    "error_summary": {}
+  },
+  "mapping_summary": {
+    "total_sumtotal_fields": 9,
+    "fields_with_data": 9,
+    "mandatory_fields": 5,
+    "fields_with_violations": 1
+  },
+  "metadata": {
+    "generated_at": "2025-08-14T09:46:37.337211",
+    "file_key_mapping": "Activity_Curriculum",
+    "table_resolution": "activity_curriculum",
+    "cache_key": "214cca202205db9d4142a20273375631"
+  }
+}

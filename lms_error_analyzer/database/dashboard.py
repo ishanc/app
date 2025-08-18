@@ -99,7 +99,7 @@ class Dashboard:
                 0 as lines_with_errors,
                 0 as nulls_found,
                 0 as unlinked_fk,
-                c.overall_completeness as percent_complete,
+                c.mandatory_completeness as percent_complete,
                 c.mandatory_completeness as mandatory_complete
             FROM file_completeness_summary c
             WHERE c.file_name IS NOT NULL
@@ -132,14 +132,12 @@ class Dashboard:
         CREATE TABLE IF NOT EXISTS file_completeness_summary (
             id INT AUTO_INCREMENT PRIMARY KEY,
             file_name VARCHAR(255) NOT NULL UNIQUE,
-            overall_completeness DECIMAL(5,2) NOT NULL,
             mandatory_completeness DECIMAL(5,2),
-            total_fields INT NOT NULL,
-            mandatory_fields INT NOT NULL,
-            incomplete_mandatory_fields INT NOT NULL,
+            total_records INT NOT NULL,
+            incomplete_records INT NOT NULL,
             last_processed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_file_name (file_name),
-            INDEX idx_completeness (overall_completeness)
+            INDEX idx_mandatory_completeness (mandatory_completeness)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         """
         try:
@@ -179,123 +177,69 @@ class Dashboard:
         return mandatory_fields
     
     def map_filename_to_database_key(self, filename):
-        """Map filename to the correct database key for mapping rules (same as file_server/app.py)"""
-        # Remove file extension
-        file_key = os.path.splitext(filename)[0]
-        
-        # Define the mapping from incoming filenames to database file names
-        filename_mappings = {
-            # Activity mappings
-            "Activity_Curriculum": "Activity_Curriculum",
-            "Activity_QuickAssessment": "Activity_Test",
-            "Activity_ILTSessions": "Activity_SessionParts",
-            "Activity_ILTClass": "Activity_Sessions", 
-            "Activity_ILTCourse": "Activity_Events",
-            "Activity_OnlineCourse": "Activity_OnlineCourse",
-            "Activity_Online Course": "Activity_OnlineCourse",  # Original with space
-            "Activity_Online_Course": "Activity_OnlineCourse",  # Flask converts space to underscore
-            "Activity_Document": "Activity_Material",
-            
-            # Transcript mappings
-            "Transcript_Curriculum": "Transcript_CurriculumTranscript",
-            "Transcript_Document": "Transcript_MaterialTranscript", 
-            "Transcript_ILT Class": "Transcript_SessionTranscript",
-            "Transcript_ILT_Class": "Transcript_SessionTranscript",
-            "Transcript_Online Course": "Transcript_OnlineCourse",
-            "Transcript_Online_Course": "Transcript_OnlineCourse",
-            "Transcript_QuickAssessment": "Transcript_TestTranscript",
-            
-            # Core mappings
-            "Core_Audience": "Core_GroupsOU",
-            "Core_Domain": "Core_DivisionOU",
-            "Core_Employee": "Core_Employee", 
-            "Core_Jobs": "Core_PositionOU",
-            "Core_Organization": "Core_CostCenterOU",
-            
-            # Prerequisites mappings
-            "Prerequisites_Facility": "Prerequisites_Facility",
-            "Prerequisites_Instructor": "Prerequisites_Instructor",
-            "Prerequisites_Provider": "Prerequisites_Provider",
-            "Prerequisites_Question": "Prerequisites_Questions",
-            "Prerequisites_QuestionBanks": "Prerequisites_QuestionsCategories",
-            "Prerequisites_Subject": "Prerequisites_Subject"
-        }
-        
-        # Return mapped key if exists, otherwise return original
-        mapped_key = filename_mappings.get(file_key, file_key)
-        
-        return mapped_key
+        """Map filename to the correct database key for mapping rules"""
+        from utils.filename_mapper import FilenameMapper
+        return FilenameMapper.to_db_key(filename)
     
     def calculate_file_completeness(self, file_name, input_df):
-        """Calculate completeness metrics for a file using error log data"""
+        """Calculate mandatory completeness as percent of records with all mandatory fields populated.
+
+        Business definitions:
+        - Records = rows (header excluded)
+        - Fields = columns (header excluded) 
+        - mandatory_completeness = % of records where all mandatory fields are non-empty. 
+        - total_records = total number of data rows
+        - incomplete_records = number of records missing mandatory fields
+        """
         # Get mandatory fields from Neo4j
         mandatory_fields = self.get_mandatory_fields_from_neo4j(file_name)
-        
+
+        total_records = len(input_df) if input_df is not None else 0
         print(f"DEBUG: Found {len(mandatory_fields)} mandatory fields: {mandatory_fields}")
-        print(f"DEBUG: DataFrame has {len(input_df)} rows and {len(input_df.columns)} columns")
-        
-        # Get error data for this file from database
-        cursor = self.connection.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT 
-                MAX(line_number) as total_records,
-                SUM(CASE WHEN validation_type = 'MANDATORY_EMPTY' THEN 1 ELSE 0 END) as mandatory_empty_count
-            FROM error_logs 
-            WHERE file_name = %s
-        """, (file_name,))
-        
-        error_data = cursor.fetchone()
-        cursor.close()
-        
-        if not error_data or error_data['total_records'] is None:
-            print(f"WARNING: No error data found for {file_name}")
+        print(f"DEBUG: DataFrame has {total_records} rows and {len(input_df.columns) if input_df is not None else 0} columns")
+
+        if total_records == 0:
             return {
-                'overall_completeness': 0.0,
                 'mandatory_completeness': 0.0,
-                'total_fields': len(input_df.columns) * len(input_df),
-                'mandatory_fields': len(mandatory_fields),
-                'incomplete_mandatory_fields': 0
+                'total_records': 0,
+                'incomplete_records': 0
             }
-        
-        total_records = error_data['total_records']
-        mandatory_empty_count = error_data['mandatory_empty_count'] or 0
-        
-        print(f"DEBUG: Error log data - Total records: {total_records}, Mandatory empty: {mandatory_empty_count}")
-        
-        # Calculate overall completeness (all fields)
-        total_fields = len(input_df.columns) * len(input_df)
-        non_empty_fields = 0
-        
-        for column in input_df.columns:
-            # Count non-empty values (including wrong types - they still have data)
-            # Only count as empty if truly None, empty string, or whitespace-only
-            non_empty_count = input_df[column].apply(
-                lambda x: x is not None and str(x).strip() != ""
-            ).sum()
-            non_empty_fields += non_empty_count
-        
-        overall_completeness = (non_empty_fields / total_fields * 100) if total_fields > 0 else 0
-        
-        # Calculate mandatory completeness using error log data
-        if mandatory_fields and total_records > 0:
-            total_mandatory_positions = len(mandatory_fields) * total_records
-            filled_mandatory_positions = total_mandatory_positions - mandatory_empty_count
-            mandatory_completeness = (filled_mandatory_positions / total_mandatory_positions * 100) if total_mandatory_positions > 0 else 0
-            
-            print(f"DEBUG: Mandatory completeness calculation:")
-            print(f"  • Total mandatory positions: {total_mandatory_positions}")
-            print(f"  • Filled mandatory positions: {filled_mandatory_positions}")
-            print(f"  • Mandatory completeness: {mandatory_completeness}%")
+
+        # Normalize values: treat None/NaN/whitespace-only as empty
+        def is_non_empty(value):
+            try:
+                return value is not None and str(value).strip() != ""
+            except Exception:
+                return False
+
+        # Build a boolean mask per mandatory field: True where value is non-empty.
+        per_field_masks = []
+        for field in mandatory_fields:
+            if field in input_df.columns:
+                mask = input_df[field].apply(is_non_empty)
+            else:
+                # If field not present, treat as all False (every row fails)
+                mask = input_df.index.to_series().apply(lambda _: False)
+            per_field_masks.append(mask)
+
+        if per_field_masks:
+            # Row is complete if all mandatory field masks are True
+            from functools import reduce
+            import operator
+            all_complete_mask = reduce(operator.and_, per_field_masks)
+            num_complete_records = int(all_complete_mask.sum())
         else:
-            mandatory_completeness = 0
-            print(f"DEBUG: No mandatory fields or no records found")
-        
+            # No mandatory fields configured; treat as zero completeness per current policy
+            num_complete_records = 0
+
+        num_incomplete_records = total_records - num_complete_records
+        mandatory_completeness = (num_complete_records / total_records * 100.0) if total_records > 0 else 0.0
+
+        # Return mandatory completeness metrics
         return {
-            'overall_completeness': round(overall_completeness, 2),
             'mandatory_completeness': round(mandatory_completeness, 2),
-            'total_fields': total_fields,
-            'mandatory_fields': len(mandatory_fields),
-            'incomplete_mandatory_fields': mandatory_empty_count
+            'total_records': int(total_records),
+            'incomplete_records': int(num_incomplete_records)
         }
     
     def store_completeness_metrics(self, file_name, metrics):
@@ -305,26 +249,21 @@ class Dashboard:
         
         insert_query = """
         INSERT INTO file_completeness_summary 
-        (file_name, overall_completeness, mandatory_completeness, total_fields, 
-        mandatory_fields, incomplete_mandatory_fields)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        (file_name, mandatory_completeness, total_records, incomplete_records)
+        VALUES (%s, %s, %s, %s)
         ON DUPLICATE KEY UPDATE
-        overall_completeness = VALUES(overall_completeness),
         mandatory_completeness = VALUES(mandatory_completeness),
-        total_fields = VALUES(total_fields),
-        mandatory_fields = VALUES(mandatory_fields),
-        incomplete_mandatory_fields = VALUES(incomplete_mandatory_fields),
+        total_records = VALUES(total_records),
+        incomplete_records = VALUES(incomplete_records),
         last_processed = CURRENT_TIMESTAMP
         """
         
         try:
             cursor.execute(insert_query, (
                 file_name,
-                float(metrics['overall_completeness']),
                 float(metrics['mandatory_completeness']),
-                int(metrics['total_fields']),
-                int(metrics['mandatory_fields']),
-                int(metrics['incomplete_mandatory_fields'])
+                int(metrics['total_records']),
+                int(metrics['incomplete_records'])
             ))
             connection.commit()
             print(f"Stored completeness metrics for {file_name}")

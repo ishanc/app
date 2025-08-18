@@ -1,0 +1,22 @@
+Organization Code,Organization Name,Parent OrganizationCode,Owner EmployeeId,Organization Description(Note)
+AGG Waterville,AGG Waterville,,DefaultAdmin,This Domain is for AGG Waterville Users only
+AGGASK,AGG ASK,,DefaultAdmin,This Domain is for AGGASK Users only
+AGGFS,AGG FS,,DefaultAdmin,This Domain is for AGGFS Users only
+AGGGDBR,AGG GDBR,,DefaultAdmin,This Domain is for AGGGDBR Users only
+AGGIMX,AGG IMX,,DefaultAdmin,TG IMX Custom Domain
+AGGKY,AGG KY,,DefaultAdmin,This Domain is for AGGKY Users only
+AGGMINTO,AGG MINTO,,DefaultAdmin,This Domain is for AGGMINTO Users only
+AGGMO,AGG MO,,DefaultAdmin,This Domain is for AGGMO Users only
+AGGNA,AGG NA,,DefaultAdmin,This Domain is for AGGNA Users only
+AGGPECVAL,AGG PECVAL,,DefaultAdmin,This Domain is for AGGPECVAL Users only
+AGGRMX,AGG RMX,,DefaultAdmin,This Domain is for AGGRMX Users only
+AGGSIN,AGG South India,,DefaultAdmin,This Domain is for AGGSIN Users only
+AGGTAPEX,AGG TAPEX,,DefaultAdmin,This Domain is for AGGTAPEX Users only
+AGGTAPEXWEST,AGG TAPEX WEST,,DefaultAdmin,This Domain is for AGGTAPEXWEST Users only
+AGGTX,AGG TX,,DefaultAdmin,This Domain is for AGGTX Users only
+Ghost,Ghost,,DefaultAdmin,This Domain is for Ghost Users only
+Global,Global,,Administrator,This is a system generated domain.
+OpenSesame,OpenSesame,,DefaultAdmin,This Domain is for OpenSesame Users only
+Percipio,Skillsoft - Percipio,,DefaultAdmin,This Domain is for Percipio Users only
+PESCOM,Skillsoft - Percipio Compliance,,DefaultAdmin,This Domain is for PESCOM Users only
+SkillsoftOLSA,Skillsoft - OLSA,,DefaultAdmin,This Domain is for SkillsoftOLSA Users only

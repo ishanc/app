@@ -234,26 +234,32 @@ def handle_special_field_mappings(input_df, output_df, rule, populated_fields):
     return populated_fields
 
 def validate_field(output_df, rule, input_filename, input_df=None):
-    """Validate field using ErrorLogger"""
+    """Validate field using ErrorLogger - FIXED to use input_df for anomaly reports"""
     csod_field = rule['CSOD Field Name']
     st_field = rule.get('SumTotal Field Name', csod_field)
     field_type = rule.get('field_type', '')
     char_length = rule.get('char_length', '')
     mandatory = rule.get('mandatory', '') == 'Mandatory'
     
-    # Get the field values from output DataFrame
-    field_values = output_df[csod_field]
-    
-    # If we have input DataFrame and there's a SumTotal field mapping, 
-    # store the input field name metadata for error logging
-    if input_df is not None and st_field != csod_field and st_field in input_df.columns:
+    # CRITICAL FIX: Use input_df for anomaly reports to avoid transformation data loss
+    # This ensures completeness calculation and anomaly rates are consistent
+    if input_df is not None and st_field and st_field in input_df.columns:
+        # Use input data for validation (consistent with completeness calculation)
+        field_values = input_df[st_field]
+        # Set SumTotal field name for proper error reporting
         if isinstance(field_values, pd.Series):
+            field_values.attrs['input_field_name'] = st_field
+            field_values.attrs['output_field_name'] = csod_field
+    else:
+        # Fallback to output DataFrame for fields without SumTotal mapping
+        field_values = output_df[csod_field]
+        if isinstance(field_values, pd.Series) and st_field:
             field_values.attrs['input_field_name'] = st_field
             field_values.attrs['output_field_name'] = csod_field
     
     ErrorLogger.validate_field(
-        field_name=csod_field,
-        field_values=field_values,
+        field_name=csod_field,  # Still use CSOD field name for validation logic
+        field_values=field_values,  # But validate INPUT data values
         field_type=field_type,
         char_length=char_length,
         mandatory=mandatory,

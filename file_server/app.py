@@ -45,52 +45,10 @@ def index():
 
 def map_filename_to_database_key(filename):
     """Map filename to the correct database key for mapping rules"""
-    # Remove file extension
-    file_key = os.path.splitext(filename)[0]
-    
-    # Define the mapping from incoming filenames to database file names
-    # Simple one-to-one mappings for now
-    filename_mappings = {
-        # Activity mappings
-        "Activity_Curriculum": "Activity_Curriculum",
-        "Activity_QuickAssessment": "Activity_Test",
-        "Activity_ILTSessions": "Activity_SessionParts",
-        "Activity_ILTClass": "Activity_Sessions", 
-        "Activity_ILTCourse": "Activity_Events",
-        "Activity_OnlineCourse": "Activity_OnlineCourse",
-        "Activity_Online Course": "Activity_OnlineCourse",  # Original with space
-        "Activity_Online_Course": "Activity_OnlineCourse",  # Flask converts space to underscore
-        "Activity_Document": "Activity_Material",
-        
-        # Transcript mappings
-        "Transcript_Curriculum": "Transcript_CurriculumTranscript",
-        "Transcript_Document": "Transcript_MaterialTranscript", 
-        "Transcript_ILT Class": "Transcript_SessionTranscript",
-        "Transcript_ILT_Class": "Transcript_SessionTranscript",
-        "Transcript_Online Course": "Transcript_OnlineCourse",
-        "Transcript_Online_Course": "Transcript_OnlineCourse",
-        "Transcript_QuickAssessment": "Transcript_TestTranscript",
-        
-        # Core mappings
-        "Core_Audience": "Core_GroupsOU",
-        "Core_Domain": "Core_DivisionOU",
-        "Core_Employee": "Core_Employee", 
-        "Core_Jobs": "Core_PositionOU",
-        "Core_Organization": "Core_CostCenterOU",
-        
-        # Prerequisites mappings
-        "Prerequisites_Facility": "Prerequisites_Facility",
-        "Prerequisites_Instructor": "Prerequisites_Instructor",
-        "Prerequisites_Provider": "Prerequisites_Provider",
-        "Prerequisites_Question": "Prerequisites_Questions",
-        "Prerequisites_QuestionBanks": "Prerequisites_QuestionsCategories",
-        "Prerequisites_Subject": "Prerequisites_Subject"
-    }
-    
-    # Return mapped key if exists, otherwise return original
-    mapped_key = filename_mappings.get(file_key, file_key)
-    
-    return mapped_key
+    # Import here to avoid circular imports
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+    from utils.filename_mapper import FilenameMapper
+    return FilenameMapper.to_db_key(filename)
 
 def validate_transformed_data(df, mapping_rules):
     """Validate the transformed data against mapping rules"""
@@ -170,10 +128,17 @@ def process_file(filepath):
         try:
             sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
             from dashboard import Dashboard
+            from report_generator import generate_anomaly_report_csv
             dashboard = Dashboard()
             completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
             dashboard.store_completeness_metrics(filename, completeness_metrics)
             dashboard.close_connections()
+            # Generate MVP anomaly CSV report alongside processed files
+            try:
+                report_filename = generate_anomaly_report_csv(filename, app.config['PROCESSED_FOLDER'])
+                logger.info(f"Saved anomaly report (not added to processed list): {report_filename}")
+            except Exception as re:
+                logger.error(f"Error generating anomaly report for {filename}: {re}")
         except Exception as e:
             logger.error(f"Error calculating completeness for {filename}: {e}")
         
@@ -329,11 +294,11 @@ def delete_file(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
+"""
 debugpy.listen(("localhost", 5679))  # Listen on all interfaces
 print("⏳ Waiting for debugger to attach...")
 debugpy.wait_for_client()  # This pauses execution until debugger connects
-print("✅ Debugger attached!")
+print("✅ Debugger attached!")"""
 
 if __name__ == '__main__':
     app.run(debug=False, port=5001)

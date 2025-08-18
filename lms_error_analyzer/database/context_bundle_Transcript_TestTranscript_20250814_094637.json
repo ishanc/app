@@ -1,0 +1,397 @@
+{
+  "file_name": "Transcript_QuickAssessment.csv",
+  "file_key": "Transcript_TestTranscript",
+  "table_name": "transcript_quick_assessment",
+  "overview": {
+    "exists": true,
+    "row_count": 2471,
+    "column_count": 11,
+    "columns": [
+      "id",
+      "EmployeeID",
+      "ActivityCode",
+      "Training Status",
+      "RegistrationDate",
+      "CompletionDate",
+      "DueDate",
+      "Score",
+      "Notes",
+      "created_at",
+      "updated_at"
+    ],
+    "column_details": [
+      {
+        "COLUMN_NAME": "id",
+        "DATA_TYPE": "int",
+        "IS_NULLABLE": "NO",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      },
+      {
+        "COLUMN_NAME": "EmployeeID",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "ActivityCode",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 255
+      },
+      {
+        "COLUMN_NAME": "Training Status",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "RegistrationDate",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "CompletionDate",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 255
+      },
+      {
+        "COLUMN_NAME": "DueDate",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Score",
+        "DATA_TYPE": "varchar",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 500
+      },
+      {
+        "COLUMN_NAME": "Notes",
+        "DATA_TYPE": "text",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": 65535
+      },
+      {
+        "COLUMN_NAME": "created_at",
+        "DATA_TYPE": "timestamp",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      },
+      {
+        "COLUMN_NAME": "updated_at",
+        "DATA_TYPE": "timestamp",
+        "IS_NULLABLE": "YES",
+        "CHARACTER_MAXIMUM_LENGTH": null
+      }
+    ]
+  },
+  "field_profiles": [
+    {
+      "sumtotal_field_name": "TrainingStatus",
+      "metrics": null,
+      "csod_constraints": [
+        {
+          "csod_field_name": "Transcript Status*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "",
+          "accepted_values": "Registered, Completed, Exempt, Failed",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [
+        "No data metrics available"
+      ],
+      "severity": "High",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "RegistrationDate",
+      "metrics": {
+        "column_name": "RegistrationDate",
+        "total_rows": 2471,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 826,
+        "max_length": 23,
+        "avg_length": "21.2792",
+        "sample_values": [
+          "04/01/2022 14:39:32",
+          "08/11/2021 01:26:24",
+          "10/01/2023 18:01:05",
+          "11/17/2021 17:34:07.000",
+          "04/16/2019 19:55:52.000"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Request Date/Time*",
+          "mandatory": "Mandatory",
+          "field_type": "DateTime",
+          "char_length": "",
+          "accepted_values": "HHHHHH:MM:SS",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        },
+        {
+          "csod_field_name": "Registration Date/Time*",
+          "mandatory": "Mandatory",
+          "field_type": "DateTime",
+          "char_length": "",
+          "accepted_values": "HHHHHH:MM:SS",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [
+        "Values outside accepted set: ['04/01/2022 14:39:32', '08/11/2021 01:26:24', '10/01/2023 18:01:05']",
+        "Values outside accepted set: ['04/01/2022 14:39:32', '08/11/2021 01:26:24', '10/01/2023 18:01:05']"
+      ],
+      "severity": "Medium",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "CompletionDate",
+      "metrics": {
+        "column_name": "CompletionDate",
+        "total_rows": 2471,
+        "null_count": 561,
+        "blank_count": "561",
+        "distinct_count": 1739,
+        "max_length": 23,
+        "avg_length": "21.3686",
+        "sample_values": [
+          "06/10/2022 16:10:05",
+          "04/04/2022 13:40:24",
+          "03/31/2021 19:01:57.000",
+          "11/18/2021 17:31:11.000",
+          "11/02/2020 15:18:17"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Completion Date/Time",
+          "mandatory": "Optional",
+          "field_type": "DateTime",
+          "char_length": "",
+          "accepted_values": "HHHHHH:MM:SS",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [
+        "Values outside accepted set: ['06/10/2022 16:10:05', '04/04/2022 13:40:24', '03/31/2021 19:01:57.000']"
+      ],
+      "severity": "Medium",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Score",
+      "metrics": {
+        "column_name": "Score",
+        "total_rows": 2471,
+        "null_count": 789,
+        "blank_count": "789",
+        "distinct_count": 95,
+        "max_length": 7,
+        "avg_length": "3.3216",
+        "sample_values": [
+          "84.28",
+          "82.1429",
+          "95",
+          "90.48",
+          "93.3333"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Score",
+          "mandatory": "Optional",
+          "field_type": "Integer",
+          "char_length": null,
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [
+        "Non-integer values found: ['84.28', '82.1429', '90.48']"
+      ],
+      "severity": "Medium",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "EmployeeID",
+      "metrics": {
+        "column_name": "EmployeeID",
+        "total_rows": 2471,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 433,
+        "max_length": 14,
+        "avg_length": "7.1319",
+        "sample_values": [
+          "FS002256",
+          "900115",
+          "NA900721",
+          "KLA1060",
+          "KLA100022"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "User ID*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "128",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "ActivityCode",
+      "metrics": {
+        "column_name": "ActivityCode",
+        "total_rows": 2471,
+        "null_count": 0,
+        "blank_count": 0,
+        "distinct_count": 73,
+        "max_length": 84,
+        "avg_length": "46.7531",
+        "sample_values": [
+          "Problem Solving - 7 Tools_QC Tool 5: The Scatter Diagram_Library",
+          "Kaizen_Kaizen Event_Library",
+          "Kaizen_Preparing Kaizen Event_Library",
+          "TWI Job Instruction_TWI - Job Instruction Overview_Library",
+          "Practical Problem Solving_5 Why Explained_Library"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Test ID*",
+          "mandatory": "Mandatory",
+          "field_type": "Char",
+          "char_length": "100",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "DueDate",
+      "metrics": {
+        "column_name": "DueDate",
+        "total_rows": 2471,
+        "null_count": 2471,
+        "blank_count": "2471",
+        "distinct_count": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "sample_values": [],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Due Date/Time\u2021",
+          "mandatory": "Optional",
+          "field_type": "DateTime",
+          "char_length": "",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    },
+    {
+      "sumtotal_field_name": "Notes",
+      "metrics": {
+        "column_name": "Notes",
+        "total_rows": 2471,
+        "null_count": 2290,
+        "blank_count": "2290",
+        "distinct_count": 1,
+        "max_length": 62,
+        "avg_length": "62.0000",
+        "sample_values": [
+          "This is done by admin due to some Technical Issues or Glitches"
+        ],
+        "type_violations": 0,
+        "length_violations": 0,
+        "domain_violations": 0
+      },
+      "csod_constraints": [
+        {
+          "csod_field_name": "Comments",
+          "mandatory": "Optional",
+          "field_type": "Char",
+          "char_length": "245",
+          "accepted_values": "",
+          "default_value": "",
+          "transformation": null,
+          "output_document": null
+        }
+      ],
+      "violations": [],
+      "severity": "Low",
+      "error_count": 0
+    }
+  ],
+  "quality_signals": {
+    "error_logs": [],
+    "completeness_summary": {},
+    "error_summary": {}
+  },
+  "mapping_summary": {
+    "total_sumtotal_fields": 8,
+    "fields_with_data": 7,
+    "mandatory_fields": 4,
+    "fields_with_violations": 4
+  },
+  "metadata": {
+    "generated_at": "2025-08-14T09:46:37.040450",
+    "file_key_mapping": "Transcript_TestTranscript",
+    "table_resolution": "transcript_quick_assessment",
+    "cache_key": "a68e65096afad1308d013138b6203259"
+  }
+}

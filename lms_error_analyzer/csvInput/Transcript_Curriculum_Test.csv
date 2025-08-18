@@ -1,0 +1,13 @@
+EmployeeID,ActivityCode,Training Status,RegistrationDate,CompletionDate,DueDate,Score,Notes
+000578,Computer_IT Literacy - Entry Level,Attended,,02/06/2020 05:00:00.000,,,
+001002,Compliance_Forklift Certification,Attended,,02/29/2016 00:00:00.000,04/27/2018 23:59:59.000,,
+001002,Compliance_Intro to AGG - Orientation,Attended,,08/22/2016 00:00:00.000,,,
+001002,Requirement_Emotional Intelligence for Managers,Attended,,02/08/2021 20:10:31.000,04/12/2023 23:59:59.000,100,
+001002,Requirement_Regional Basic Training,Attended,,12/09/2020 16:58:53.000,09/11/2021 23:59:59.000,100,
+001010,Compliance_Intro to AGG - Orientation,Attended,,08/22/2016 00:00:00.000,,,
+001010,Requirement_Emotional Intelligence for Managers,Attended,,02/18/2021 21:52:22.000,,94,
+001010,Requirement_Regional Basic Training,Attended,,11/12/2020 15:21:51.000,09/11/2021 23:59:59.000,100,
+001010,Requirement_Seven Quality Control Tools for Managers,Attended,,11/10/2021 19:02:46.000,12/30/2021 23:59:59.000,95.4167,
+001010,Succession Planning_ Chris Barrows FY21,Attended,,03/15/2022 14:03:25.000,03/31/2022 23:59:59.000,90.2308,
+001088,Compliance_Chrome Dept. 6218 Requirements,Expired,,05/08/2018 19:17:17.000,,100,
+001088,Compliance_Intro to AGG - Orientation,Attended,,08/22/2016 00:00:00.000,,,

@@ -317,12 +317,11 @@ class ErrorLogger:
         if error_type not in cls.VALIDATION_ERROR_TYPES:
             raise ValueError(f"Invalid error type '{error_type}'. Must be one of: {list(cls.VALIDATION_ERROR_TYPES.keys())}")
         
-        # Check if this field has a source mapping (input field name exists)
-        # If no input field name exists, skip logging the error
+        # Use SumTotal field name if available, otherwise use the provided field name
+        display_field_name = field_name
         if field_values is not None and hasattr(field_values, 'attrs'):
-            if 'input_field_name' not in field_values.attrs:
-                # No source field mapping exists - skip this error
-                return
+            if 'input_field_name' in field_values.attrs and field_values.attrs['input_field_name']:
+                display_field_name = field_values.attrs['input_field_name']
         
         #Increment error count
         cls._error_type_counts[error_type] = cls._error_type_counts.get(error_type, 0) + 1
@@ -330,7 +329,7 @@ class ErrorLogger:
         error_details = { 
             'category': 'VALIDATION',
             'error_type': error_type,
-            'field_name': field_name,
+            'field_name': display_field_name,
             'row_number': row_number,
             'value': str(value)[:500] if value else '',  # Limit value length
             'max_length': max_length,
@@ -352,7 +351,7 @@ class ErrorLogger:
     def _format_validation_message(cls, error_details: dict) -> str:
         """Format validation error message for logging"""
         error_type = error_details['error_type']
-        field_name = error_details['field_name']
+        field_name = error_details['field_name']  # This is now the display_field_name (SumTotal name)
         row_number = error_details['row_number']
         value = error_details['value']
         

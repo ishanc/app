@@ -1,0 +1,1252 @@
+Organization Code,Organization Name,Parent OrganizationCode,Owner EmployeeId,Organization Description(Note)
+1154_del,1154_GD ----_del,GD_Division,DefaultAdmin,This Organization is for 1154_del Users only
+238_S8030M_del,238_S8030M - Corporate Administration - 8030M_del,Department,87571,This Organization is for 238_S8030M_del Users only
+258_I8030M_del,258_EMI 8030 Corporate Admin_del,Department,87571,This Organization is for 258_I8030M_del Users only
+31200,T8Y-031200,Department,DefaultAdmin,
+344_INYECCIÓN - 264445_del,344_Inyección - 264445_del,AGGIMX Departments,DefaultAdmin,This Organization is for 344_INYECCIÓN - 264445_del Users only
+4,Senior Manager,Job Manager Level,DefaultAdmin,This Organization is for 4 Users only
+4501,Airbag Assembly - 4501,Department,DefaultAdmin,This Organization is for 4501 Users only
+4501X,Airbag Assembly Mgmt - 4501X,Department,DefaultAdmin,This Organization is for 4501X Users only
+4503,Polyurethane - 4503,Department,DefaultAdmin,This Organization is for 4503 Users only
+4503X,Polyurethane Mgmt - 4503X,Department,DefaultAdmin,This Organization is for 4503X Users only
+4506,Diecast - 4506,Department,DefaultAdmin,This Organization is for 4506 Users only
+4506X,Diecast Mgmt - 4506X,Department,DefaultAdmin,This Organization is for 4506X Users only
+4507,Stamping - 4507,Department,DefaultAdmin,This Organization is for 4507 Users only
+4507X,STAMPING MGMT - 4507XGMT,Department,DefaultAdmin,This Organization is for 4507X Users only
+4508,SW Injection - 4508,Department,DefaultAdmin,This Organization is for 4508 Users only
+4509,Inflator Assy Bldg #10 - 4509,Department,87571,This Organization is for 4509 Users only
+4509X,Inflator Assy Mgmt Bldg #10 - 4509,Department,87571,This Organization is for 4509X Users only
+4510,Mold Setters - 4510,Department,87571,This Organization is for 4510 Users only
+4513,SW ASSY - 4513,Department,DefaultAdmin,This Organization is for 4513 Users only
+4513X,SW Assy Bldg 10 Mgmt,Department,DefaultAdmin,This Organization is for 4513X Users only
+4514,Inflator Assembly SS - 4514,Department,DefaultAdmin,This Organization is for 4514 Users only
+4514X,Inflator Assembly Mgmt - 4514X,Department,DefaultAdmin,This Organization is for 4514X Users only
+4518,Service - 4518,Department,DefaultAdmin,This Organization is for 4518 Users only
+4519,A/B Assy - Bldg 10 (Air Bags)- 4519,Department,DefaultAdmin,This Organization is for 4519 Users only
+4519X,A/B Assy - Bldg 10 Mgmt - 4519X,Department,DefaultAdmin,This Organization is for 4519X Users only
+4521X,Interior Paint - 4521X,Department,DefaultAdmin,This Organization is for 4521X Users only
+4523,SW ASSY - 4523,Department,87571,This Organization is for 4523 Users only
+4523X,SW Assy Mgmt - 4523X,Department,87571,This Organization is for 4523X Users only
+4599,EF 4599 SS AGGU,Department,DefaultAdmin,This Organization is for 4599 Users only
+4602,Exterior Paint - 4602,Department,DefaultAdmin,This Organization is for 4602 Users only
+4612,Injection - 4612,Department,DefaultAdmin,This Organization is for 4612 Users only
+4612X,Injection Mgmt - 4612X,Department,DefaultAdmin,This Organization is for 4612X Users only
+4615,Injection - 4615,Department,DefaultAdmin,This Organization is for 4615 Users only
+4615M,Injection MS - 4615M,Department,DefaultAdmin,This Organization is for 4615M Users only
+4615X,Injection Mgmt - 4615X,Department,DefaultAdmin,This Organization is for 4615X Users only
+4616,Paint Prod - 4616,Department,DefaultAdmin,This Organization is for 4616 Users only
+4616M,Paint MS - 4616M,Department,DefaultAdmin,This Organization is for 4616M Users only
+4617,Assembly - 4617,Department,DefaultAdmin,This Organization is for 4617 Users only
+4619,MS - 4619,Department,DefaultAdmin,This Organization is for 4619 Users only
+4623,Mold Setters - 4623,Department,DefaultAdmin,This Organization is for 4623 Users only
+4623X,Mold Setters Mgmt - 4623X,Department,DefaultAdmin,This Organization is for 4623X Users only
+4624,Injection K Section - 4624,Department,DefaultAdmin,This Organization is for 4624 Users only
+4624X,K Section Mgmt- 4624X,Department,DefaultAdmin,This Organization is for 4624X Users only
+4625,Chrome Assembly - 4625,Department,DefaultAdmin,This Organization is for 4625 Users only
+4627,Chrome - 4627,Department,DefaultAdmin,This Organization is for 4627 Users only
+4627X,Chrome Mgmt - 4627X,Department,DefaultAdmin,This Organization is for 4627X Users only
+4628,Trial/Service Bldg - 4628,Department,DefaultAdmin,This Organization is for 4628 Users only
+4629,Injection I Section - 4629,Department,DefaultAdmin,This Organization is for 4629 Users only
+4629X,Injection I Section Mgmt - 4629X,Department,DefaultAdmin,This Organization is for 4629X Users only
+4630,Injection D Section - 4630,Department,DefaultAdmin,This Organization is for 4630 Users only
+4630X,Injection D Section Mgmt - 4630X,Department,DefaultAdmin,This Organization is for 4630X Users only
+4631,Injection F Section - 4631,Department,DefaultAdmin,This Organization is for 4631 Users only
+4631X,Injection F Section Mgmt - 4631X,Department,DefaultAdmin,This Organization is for 4631X Users only
+4632,Injection A Section - 4632,Department,DefaultAdmin,This Organization is for 4632 Users only
+4632X,Injection A Section Mgmt - 4632X,Department,DefaultAdmin,This Organization is for 4632X Users only
+4633,Regrind - 4633,Department,DefaultAdmin,This Organization is for 4633 Users only
+4633X,Regrind Mgmt - 4633X,Department,DefaultAdmin,This Organization is for 4633X Users only
+4634,Paint and Assembly - 4634,Department,DefaultAdmin,This Organization is for 4634 Users only
+4634SU,4634SETUP - Paint Set Up,Department,DefaultAdmin,This Organization is for 4634SU Users only
+4634X,Paint and Assembly Mgmt - 4634X,Department,DefaultAdmin,This Organization is for 4634X Users only
+4635,Injection B Section - 4635,Department,DefaultAdmin,This Organization is for 4635 Users only
+4635X,Injection B Section Mgmt - 4635X,Department,DefaultAdmin,This Organization is for 4635X Users only
+4636,Injection J Section - 4636,Department,DefaultAdmin,This Organization is for 4636 Users only
+4636X,Injection J Section Mgmt - 4636X,Department,DefaultAdmin,This Organization is for 4636X Users only
+4637,Injection E Section - 4637,Department,DefaultAdmin,This Organization is for 4637 Users only
+4637X,Injection E Section Mgmt - 4637X,Department,DefaultAdmin,This Organization is for 4637X Users only
+4638,Injection G Section - 4638,Department,DefaultAdmin,This Organization is for 4638 Users only
+4638X,Injection G Section Mgmt - 4638X,Department,DefaultAdmin,This Organization is for 4638X Users only
+4639,Injection H Section - 4639,Department,DefaultAdmin,This Organization is for 4639 Users only
+4639X,Injection H Section Mgmt - 4639X,Department,DefaultAdmin,This Organization is for 4639X Users only
+4640,Injection L Section - 4640,Department,DefaultAdmin,This Organization is for 4640 Users only
+4640X,L Section Mgmt - 4640X,Department,DefaultAdmin,This Organization is for 4640X Users only
+4643,Injection Bldg 10 - 4643,Department,DefaultAdmin,This Organization is for 4643 Users only
+4660,Injection - 4660,Department,DefaultAdmin,This Organization is for 4660 Users only
+4660X,Injection Mgmt - 4660X,Department,DefaultAdmin,This Organization is for 4660X Users only
+4661,Injection - IN Plant Bldg 2,Department,DefaultAdmin,
+4661X,Injection Bldg 2 - Mgmt - 4661X,Department,DefaultAdmin,This Organization is for 4661X Users only
+4661X_old,Injection Bldg 2 - Mgmt - 4661X_old,,DefaultAdmin,
+4665,Paint Production - 4665,Department,DefaultAdmin,This Organization is for 4665 Users only
+4665X,Paint Production Mgmt - 4665X,Department,DefaultAdmin,This Organization is for 4665X Users only
+4670,Assembly - 4670,Department,DefaultAdmin,This Organization is for 4670 Users only
+4670X,Assembly Mgmt - 4670X,Department,DefaultAdmin,This Organization is for 4670X Users only
+4671,Assembly - IN Plant Bldg 2,Department,DefaultAdmin,
+4671X,Assembly Mgmt - IN Paint Bldg 2,Department,DefaultAdmin,This Organization is for 4671X Users only
+4671X_old,Assembly Mgmt - IN Paint Bldg 2_old,,DefaultAdmin,
+4679,MX4679,Department,DefaultAdmin,This Organization is for 4679 Users only
+4699,IE Div Pool - 4699,Department,DefaultAdmin,This Organization is for 4699 Users only
+5,Mid-Level Manager,Job Manager Level,DefaultAdmin,This Organization is for 5 Users only
+5018,SHIPPING - 5018,Department,DefaultAdmin,
+5019,SHIPPING - 5019,Department,DefaultAdmin,
+5019M,SHIPPING - 5019M,Department,DefaultAdmin,This Organization is for 5019M Users only
+5020,MX5020I,Department,DefaultAdmin,
+5020I,INDIANA PA - 5020I,Department,DefaultAdmin,This Organization is for 5020I Users only
+5021,Planning and Receiving - 5021,Department,DefaultAdmin,This Organization is for 5021 Users only
+5022,Production Admin Service Pts - 5022,Department,DefaultAdmin,This Organization is for 5022 Users only
+5023,Planning and Receiving - 5023,Department,DefaultAdmin,This Organization is for 5023 Users only
+5024,Planning - 5024,Department,DefaultAdmin,This Organization is for 5024 Users only
+5040,Specialized Maintenance - 5040,Department,DefaultAdmin,This Organization is for 5040 Users only
+5040I,Maintenance - 5040I,Department,DefaultAdmin,This Organization is for 5040I Users only
+5040M,Specialized Maintenance - 5040M,Department,DefaultAdmin,This Organization is for 5040M Users only
+5041,Specialized Maintenance - 5041,Department,DefaultAdmin,This Organization is for 5041 Users only
+5042,Mold Maintenance - 5042,Department,DefaultAdmin,This Organization is for 5042 Users only
+5043,Mold Maintenance - 5043,Department,DefaultAdmin,This Organization is for 5043 Users only
+5043I,Mold Maintenance - 5043I,Department,DefaultAdmin,This Organization is for 5043I Users only
+5043M,MOLD MAINTENANCE - 5043M,Department,DefaultAdmin,This Organization is for 5043M Users only
+5045,Ranken - 5045,Department,DefaultAdmin,This Organization is for 5045 Users only
+5060,Quality Assurance - 5060,Department,DefaultAdmin,This Organization is for 5060 Users only
+5062,Warranty - 5062,Department,DefaultAdmin,This Organization is for 5062 Users only
+5070,PPCC - 5070,Department,DefaultAdmin,This Organization is for 5070 Users only
+5071,PPCC - 5071,Department,DefaultAdmin,This Organization is for 5071 Users only
+5080,Prototype and Mold in MI - 5080,Department,DefaultAdmin,This Organization is for 5080 Users only
+5081,PPI - 5081,Department,DefaultAdmin,This Organization is for 5081 Users only
+5083,Machine Engineering-Mass Prod-5083,Department,DefaultAdmin,This Organization is for 5083 Users only
+5089,Fabrication - 5089,Department,DefaultAdmin,This Organization is for 5089 Users only
+5090,TPS - 5090,Department,DefaultAdmin,This Organization is for 5090 Users only
+5090I,X5020I,Department,DefaultAdmin,This Organization is for 5090I Users only
+5091,TPS - 5091,Department,DefaultAdmin,This Organization is for 5091 Users only
+5092,Eng. Process Stabilization - 5092,Department,DefaultAdmin,This Organization is for 5092 Users only
+6,First-Line Manager,Job Manager Level,DefaultAdmin,This Organization is for 6 Users only
+6110,Manufacturing Engineering - 6110,Department,DefaultAdmin,This Organization is for 6110 Users only
+6113,Manufacturing Eng. Cushions - 6113,Department,DefaultAdmin,This Organization is for 6113 Users only
+6114,Manufacturing Eng. Inflators - 6114,Department,DefaultAdmin,This Organization is for 6114 Users only
+6115,Manufacturing Eng. Diecast - 6115,Department,DefaultAdmin,This Organization is for 6115 Users only
+6120,Machine Engineering - 6120,Department,DefaultAdmin,This Organization is for 6120 Users only
+6160,Quality Control - 6160,Department,DefaultAdmin,This Organization is for 6160 Users only
+6161,PPQC - 6161,Department,DefaultAdmin,This Organization is for 6161 Users only
+6161M,PPQC - 6161M - MS,Department,DefaultAdmin,This Organization is for 6161M Users only
+6161M_old,PPQC - 6161M - MS_old,,DefaultAdmin,
+6184,Inflator Assembly - 6184,Department,DefaultAdmin,This Organization is for 6184 Users only
+6189,Airbag Assembly Prod WH - 6189,Department,DefaultAdmin,This Organization is for 6189 Users only
+6190,Gm Of Production - 6190,Department,DefaultAdmin,This Organization is for 6190 Users only
+6191,Airbag Assembly Production - 6191,Department,DefaultAdmin,This Organization is for 6191 Users only
+6193,Polyurethane Production - 6193,Department,DefaultAdmin,This Organization is for 6193 Users only
+6196,Amature Production - 6196,Department,DefaultAdmin,This Organization is for 6196 Users only
+6198,Stamping Mgmt - 6198,Department,DefaultAdmin,This Organization is for 6198 Users only
+6218,Manufacturing Eng. Chrome - 6218,Department,DefaultAdmin,This Organization is for 6218 Users only
+6219,Manufacturing Engineering - 6219,Department,DefaultAdmin,This Organization is for 6219 Users only
+6219I,MANUFACTURING ENGINEERING - 6219I,Department,DefaultAdmin,This Organization is for 6219I Users only
+6219M,Engineering - 6219M,Department,DefaultAdmin,This Organization is for 6219M Users only
+6220,Machine Engineering - 6220,Department,DefaultAdmin,This Organization is for 6220 Users only
+6220I,MACHINE ENG - 6220I,Department,DefaultAdmin,
+6225,Manufacturing Eng. Paint - 6225,Department,DefaultAdmin,This Organization is for 6225 Users only
+6225I,Paint Engineers,Department,87571,This Organization is for 6225I Users only
+6225M,Manufacturing Eng. Paint - 6225,Department,AdamAdmin,
+6260,Quality Control - 6260,Department,DefaultAdmin,This Organization is for 6260 Users only
+62601,X62601I,Department,DefaultAdmin,
+6260I,Quality Control - 6260I,Department,DefaultAdmin,This Organization is for 6260I Users only
+6260M,Quality Control - 6260M,Department,DefaultAdmin,This Organization is for 6260M Users only
+6282,I/E Production Mgmt,,DefaultAdmin,
+6390,Mgmt/ Admin of Int Ext Prod - 6390,Department,DefaultAdmin,This Organization is for 6390 Users only
+6390I,Mgmt/ Admin of Int Ext Prod - 6390I,Department,DefaultAdmin,This Organization is for 6390I Users only
+6390M,Mgmt/ Admin of Int Ext Prod - 6390M,Department,DefaultAdmin,This Organization is for 6390M Users only
+645_del,645_AGG Minto - do not use_del,Work Location,DefaultAdmin,
+6705,Indirect - Production,Department,87571,This Organization is for 6705 Users only
+6710,Indirect - Receiving,Department,87571,This Organization is for 6710 Users only
+6715,Indirect - Planning,Department,87571,This Organization is for 6715 Users only
+6975,Technical - 6975,,DefaultAdmin,This Organization is for 6975 Users only
+6985,Technical - 6985,Department,DefaultAdmin,This Organization is for 6985 Users only
+6995,Technical - 6995,Department,DefaultAdmin,This Organization is for 6995 Users only
+7,Supervisor,Job Manager Level,DefaultAdmin,This Organization is for 7 Users only
+708_del,708_GDBR Qualidade_del,GD_Division,AdamAdmin,
+714_del,714_GDBR Rubber_del,GD_Division,AdamAdmin,
+715_del,715_GDBR Logistica_del,GD_Division,AdamAdmin,
+716_del,716_GDBR SS_del,GD_Division,AdamAdmin,This Organization is for 716_del Users only
+717_del,717_GDBR IE_del,GD_Division,AdamAdmin,
+718_del,718_GDBR Admin_del,GD_Division,AdamAdmin,This Organization is for 718_del Users only
+719_del,719_GDBR Tecnico_del,GD_Division,AdamAdmin,
+720_del,720_GDBR Controle de Produção_del,GD_Division,AdamAdmin,This Organization is for 720_del Users only
+723_del,723_PPCC_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 723_del Users only
+724_del,724_WS Clip._del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 724_del Users only
+725_del,725_Qualidade_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 725_del Users only
+726_del,726_IE Montagem_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 726_del Users only
+727_del,727_Vendas_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 727_del Users only
+728_del,728_Custos_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 728_del Users only
+729_del,729_Ger. Produção_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 729_del Users only
+730_del,730_Manutenção_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 730_del Users only
+731_del,731_Segurança/Meio Ambiente_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 731_del Users only
+732_del,732_Engenharia_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 732_del Users only
+733_del,733_RH_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 733_del Users only
+734_del,734_PCP_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 734_del Users only
+735_del,735_Logística_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 735_del Users only
+736_del,736_Contabilidade_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 736_del Users only
+737_del,737_IE Pintura_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 737_del Users only
+738_del,738_WS Montagem_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 738_del Users only
+739_del,739_TI_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 739_del Users only
+740_del,740_Compras_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 740_del Users only
+741_del,741_IE Injetora_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 741_del Users only
+742_del,742_WS Extrusora_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 742_del Users only
+743_del,743_SS_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 743_del Users only
+744_del,744_Presidência_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 744_del Users only
+745_del,745_Engenharia_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 745_del Users only
+746_del,746_Presidência_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 746_del Users only
+747_del,747_Presidência_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 747_del Users only
+748_del,748_Presidência_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 748_del Users only
+796_del,796_OLD_MO_Annual_del,MO_Division,DefaultAdmin,
+797_del,797_old_MO_Common_del,MO_Division,DefaultAdmin,
+798_del,798_MO_Interior Exterior_del,MO_Division,DefaultAdmin,
+799_del,799_old_MO_Safety Systems_del,MO_Division,DefaultAdmin,
+800_del,800_old_MO_SGA_del,MO_Division,DefaultAdmin,
+801_del,801_old_MO_SS_del,MO_Division,DefaultAdmin,
+802_del,802_MS_Interior Exterior_del,MO_Division,DefaultAdmin,This Organization is for 802_del Users only
+803_del,803_MS_Safety Systems_del,MO_Division,DefaultAdmin,This Organization is for 803_del Users only
+8030,Corporate Administration - 8030,Department,DefaultAdmin,This Organization is for 8030 Users only
+8030M,Corporate Administration - 8030M,Department,DefaultAdmin,This Organization is for 8030M Users only
+8031,Human Resources - 8031,Department,DefaultAdmin,This Organization is for 8031 Users only
+8031I,Human Resources - 8031I,Department,DefaultAdmin,This Organization is for 8031I Users only
+8031M,Human Resources - 8031M,Department,DefaultAdmin,This Organization is for 8031M Users only
+8032,Safety - 8032,Department,DefaultAdmin,This Organization is for 8032 Users only
+8032I,Safety - 8032I,,82678,This Organization is for 8032I Users only
+8032I,Safety - 8032I,,87571,This Organization is for 8032I Users only
+8032-I,Safety,Department,87571,This Organization is for 8032-I Users only
+8034,Occupational Health - 8034,Department,DefaultAdmin,This Organization is for 8034 Users only
+8035,Corporate Communications,Department,DefaultAdmin,This Organization is for 8035 Users only
+804_del,804_MS_SGA_del,MO_Division,DefaultAdmin,This Organization is for 804_del Users only
+8042,AGG University - 8042,Department,DefaultAdmin,This Organization is for 8042 Users only
+8044,Admin - 8044,Department,DefaultAdmin,This Organization is for 8044 Users only
+8045,SHIPPING - 8045,Department,DefaultAdmin,
+805_del,805_NAI_Annual_del,MO_Division,DefaultAdmin,This Organization is for 805_del Users only
+8051,Helpdesk - 8051,Department,DefaultAdmin,This Organization is for 8051 Users only
+8052,Payroll - 8052,Department,DefaultAdmin,This Organization is for 8052 Users only
+806_del,806_NAI_Interior Exterior_del,MO_Division,DefaultAdmin,This Organization is for 806_del Users only
+8060,Accounting & Finance - 8060,Department,DefaultAdmin,This Organization is for 8060 Users only
+8061,AGGMO-Accounting,Department,DefaultAdmin,This Organization is for 8061 Users only
+807_del,807_NAI_SGA_del,MO_Division,DefaultAdmin,This Organization is for 807_del Users only
+8100,Corporate Officers and Staff - 8100,Department,DefaultAdmin,This Organization is for 8100 Users only
+8101,SS Corporate Officers & Staff -8101,Department,DefaultAdmin,This Organization is for 8101 Users only
+8101_old,SS Corporate Officers & Staff -8101_old,,DefaultAdmin,
+8102,IE Corporate Officers & Staff -8102,Department,DefaultAdmin,This Organization is for 8102 Users only
+8300,NSS Warehouse,Department,DefaultAdmin,This Organization is for 8300 Users only
+8400,AGGNA Billing 100%,Department,DefaultAdmin,
+876_del,876_SS ASSEMBLY_del,AGGGDBR_Departments,DefaultAdmin,This Organization is for 876_del Users only
+9,Non-Manager,Job Manager Level,DefaultAdmin,This Organization is for 9 Users only
+9999,Temp Agency HR Administrators,Department,DefaultAdmin,
+AAT1,Airbag Assembly (Test),AGGSIN,DefaultAdmin,This Organization is for AAT1 Users only
+ADMINISTRACIÓN DE LA PRODUCCIÓN -,Administración de la producción -,AGGIMX Departments,DefaultAdmin,This Organization is for ADMINISTRACIÓN DE LA PRODUCCIÓN - Users only
+ADMINISTRACIÓN DE LA PRODUCCIÓN - 263480,ADMINISTRACIÓN DE LA PRODUCCIÓN - 263480,AGGIMX Departments,DefaultAdmin,This Organization is for ADMINISTRACIÓN DE LA PRODUCCIÓN - 263480 Users only
+ADMINISTRACIÓN DE LA PRODUCCIÓN - 268340,Administración de la producción - 268340,AGGIMX Departments,DefaultAdmin,This Organization is for ADMINISTRACIÓN DE LA PRODUCCIÓN - 268340 Users only
+AGG Brazil,AGG Brazil,AGGGDBR Work Location,AGGAdmin,
+"AGG Brownsville Texas, LLC","AGG Brownsville Texas, LLC",AGGMO Work Location,DefaultAdmin,
+"AGG Brownsville Texas, LLC2","AGG Brownsville Texas, LLC",,100035_PS,"This Organization is for AGG Brownsville Texas, LLC2 Users only"
+AGG Fluid Systems,AGG Fluid Systems,AGGFS Work Location,DefaultAdmin,
+"AGG Hopkinsville, KY","AGG Hopkinsville, KY",AGGASK Work Location,DefaultAdmin,
+AGG Indiana,AGG Indiana,AGGMO Work Location,DefaultAdmin,
+AGG Indiana2,AGG Indiana,,100035_PS,This Organization is for AGG Indiana2 Users only
+"AGG IRAPUATO, MX","AGG IRAPUATO, MX",AGGIMX Work Location,DefaultAdmin,
+AGG Itapetininga,AGG Itapetininga,Work Location,AdamAdmin,
+AGG Kentucky,AGG Kentucky,AGGKY Work Location,DefaultAdmin,
+AGG MINTO,AGGMINTO,AGGMINTO Work Location,DefaultAdmin,
+AGG Minto - Palmerston,AGG Minto - Palmerston,AGGMINTO Work Location,DefaultAdmin,This Organization is for AGG Minto - Palmerston Users only
+AGG Minto - Stratford,AGG Minto - Stratford,AGGMINTO Work Location,DefaultAdmin,This Organization is for AGG Minto - Stratford Users only
+AGG Mississippi,AGG Mississippi,AGGMO Work Location,DefaultAdmin,
+AGG Mississippi2,AGG Mississippi,,100035_PS,This Organization is for AGG Mississippi2 Users only
+AGG Missouri,AGG Missouri,AGGMO Work Location,DefaultAdmin,
+AGG Missouri2,AGG Missouri,,100035_PS,This Organization is for AGG Missouri2 Users only
+AGG North America,AGG North America,AGGNA Work Location,DefaultAdmin,
+AGG PECVAL,AGG PECVAL,AGGPECVAL Work location,DefaultAdmin,This Organization is for AGG PECVAL Users only
+AGG PS Group,AGG PS Group,AGGNA Work Location,DefaultAdmin,
+"AGG Rubber, MX","AGG Rubber, MX",AGGRMX Work Location,DefaultAdmin,
+"AGG San Antonio, TX","AGG San Antonio, TX",AGGTX Work Location,DefaultAdmin,
+AGGASK Departments,AGGASK Departments - AGGASK Departments,AGGASK,DefaultAdmin,This Organization is for AGGASK Departments Users only
+AGGASK JOB MANAGER LEVEL,AGGASK JOB MANAGER LEVEL,AGGASK,DefaultAdmin,This Organization is for AGGASK JOB MANAGER LEVEL Users only
+AGGASK MANAGER LEVEL,AGGASK MANAGER LEVEL CODE,AGGASK,DefaultAdmin,
+AGGASK Work Location,AGGASK Work Location,AGGASK,DefaultAdmin,
+AGGFS Departments,AGGFS Departments,AGGFS,DefaultAdmin,This Organization is for AGGFS Departments Users only
+AGGFS JOB MANAGER LEVEL,AGGFS JOB MANAGER LEVEL,AGGFS,DefaultAdmin,This Organization is for AGGFS JOB MANAGER LEVEL Users only
+AGGFS MANAGER LEVEL,AGGFS MANAGER LEVEL CODE,AGGFS,DefaultAdmin,
+AGGFS Work Location,AGGFS Work Location,AGGFS,AGGAdmin,
+AGGGDBR Work Location,AGGGDBR Work Location,AGGGDBR,147480,This Organization is for AGGGDBR Work Location Users only
+AGGGDBR_Departments,GDBR Departments,AGGGDBR,AdamAdmin,
+AGGIMX Departments,AGGIMX Departments,AGGIMX,DefaultAdmin,
+AGGIMX Work Location,AGGIMX Work Location,AGGIMX,DefaultAdmin,
+AGGKY Departments,AGGKY Departments,AGGKY,DefaultAdmin,This Organization is for AGGKY Departments Users only
+AGGKY JOB MANAGER LEVEL,AGGKY JOB MANAGER LEVEL,AGGKY,DefaultAdmin,This Organization is for AGGKY JOB MANAGER LEVEL Users only
+AGGKY MANAGER LEVEL,AGGKY MANAGER LEVEL CODE,AGGKY,DefaultAdmin,
+AGGKY Work Location,AGGKY Work Location,AGGKY,AGGAdmin,This Organization is for AGGKY Work Location Users only
+AGGMINTO Departments,AGGMINTO Departments - AGGMINTO Departments,AGGMINTO,DefaultAdmin,This Organization is for AGGMINTO Departments Users only
+AGGMINTO Work Location,AGG MINTO Work Location,AGGMINTO,147480,This Organization is for AGGMINTO Work Location Users only
+AGGMINTO_DIVISION,AGGMINTO Division,AGGMINTO,DefaultAdmin,
+AGGMO JOB MANAGER LEVEL,AGGMO JOB MANAGER LEVEL,AGGMO,DefaultAdmin,This Organization is for AGGMO JOB MANAGER LEVEL Users only
+AGGMO MANAGER LEVEL,AGGMO MANAGER LEVEL,AGGMO,DefaultAdmin,
+AGGMO Work Location,AGGMO Work Location,AGGMO,AGGAdmin,
+AGGNA Departments,AGGNA Departments,AGGNA,DefaultAdmin,This Organization is for AGGNA Departments Users only
+AGGNA JOB MANAGER LEVEL,AGGNA JOB MANAGER LEVEL,AGGNA,DefaultAdmin,This Organization is for AGGNA JOB MANAGER LEVEL Users only
+AGGNA MANAGER LEVEL,AGGNA MANAGER LEVEL CODE,AGGNA,DefaultAdmin,
+AGGNA Work Location,AGGNA Work Location,AGGNA,DefaultAdmin,
+AGGPECVAL Work location,AGGPECVAL Work location,AGGPECVAL,147480,This Organization is for AGGPECVAL Work location Users only
+AGGPECVAL_Departments,AGG PECVAL Departments,AGGPECVAL,147480,
+AGGR Technical Center,AGGR Technical Center,AGGNA Work Location,DefaultAdmin,
+AGGRMX Work Location,AGGRMX Work Location,AGGRMX,AGGAdmin,This Organization is for AGGRMX Work Location Users only
+AGGRMX_Departments,AGGRMX Departments,AGGRMX,DefaultAdmin,
+AGGTAPEX Work Location,AGGTAPEX Work Location,AGGTAPEX,147480,This Organization is for AGGTAPEX Work Location Users only
+AGGTAPEX_Departments,AGG TAPEX Departments,AGGTAPEX,147480,This Organization is for AGGTAPEX_Departments Users only
+AGGTAPEXWEST WORK LOCATION,AGG TAPEX WEST WORK LOCATION,AGGTAPEXWEST,147480,
+AGGTAPEXWEST_Departments,AGG TAPEX WEST Departments,AGGTAPEXWEST,147480,This Organization is for AGGTAPEXWEST_Departments Users only
+AGGTX Departments,AGGTX Departments,AGGTX,DefaultAdmin,This Organization is for AGGTX Departments Users only
+AGGTX JOB MANAGER LEVEL,AGGTX JOB MANAGER LEVEL,AGGTX,DefaultAdmin,This Organization is for AGGTX JOB MANAGER LEVEL Users only
+AGGTX MANAGER LEVEL,AGGTX MANAGER LEVEL CODE,AGGTX,DefaultAdmin,
+AGGTX Work Location,AGGTX Work Location,AGGTX,AGGAdmin,This Organization is for AGGTX Work Location Users only
+ASK_ADP Division,ASK ADP Division,AGGASK,DefaultAdmin,This Organization is for ASK_ADP Division Users only
+ASK_AS,ASK AS,ASK_Division,DefaultAdmin,This Organization is for ASK_AS Users only
+ASK_Automotive Sealing,ASK Automotive Sealing,ASK_Division,DefaultAdmin,This Organization is for ASK_Automotive Sealing Users only
+ASK_COM,ASK COM,ASK_Division,DefaultAdmin,This Organization is for ASK_COM Users only
+ASK_Direct,ASK Direct,ASK_Labor Type,DefaultAdmin,
+ASK_Direct_LaborType,Direct,ASK_Labor Type,DefaultAdmin,This Organization is for ASK_Direct_LaborType Users only
+ASK_Division,AGGASK Division,AGGASK,DefaultAdmin,
+ASK_First-Line Manager,ASK First-Line Manager,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_First-Line Manager Users only
+ASK_Indirect,ASK Indirect,ASK_Labor Type,DefaultAdmin,This Organization is for ASK_Indirect Users only
+ASK_Indirect_LaborType,Indirect,ASK_Labor Type,DefaultAdmin,This Organization is for ASK_Indirect_LaborType Users only
+ASK_Labor Type,ASK Labor Type Description,AGGASK,DefaultAdmin,This Organization is for ASK_Labor Type Users only
+ASK_MGR LEVEL 0,ASK LEVEL 0 - CHIEF OPERATING OFFICER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 0 Users only
+ASK_MGR LEVEL 1,ASK LEVEL 1 - DIRECTOR,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 1 Users only
+ASK_MGR LEVEL 2,ASK LEVEL 2 - SENIOR OFFICER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 2 Users only
+ASK_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 3 Users only
+ASK_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 4 Users only
+ASK_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 5 Users only
+ASK_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 6 Users only
+ASK_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGASK MANAGER LEVEL,DefaultAdmin,
+ASK_MGR LEVEL 8,ASK LEVEL 8 - NOT DEFINED,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 8 Users only
+ASK_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGASK MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_MGR LEVEL 9 Users only
+ASK_Mid-Level Manager,ASK Mid-Level Manager,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_Mid-Level Manager Users only
+ASK_Non-Manager,ASK Non-Manager,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_Non-Manager Users only
+ASK_Quality Control,ASK Quality Control,ASK_Division,DefaultAdmin,This Organization is for ASK_Quality Control Users only
+ASK_Safety Systems,ASK Safety Systems,ASK_Division,DefaultAdmin,This Organization is for ASK_Safety Systems Users only
+ASK_Senior Manager,ASK Senior Manager,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_Senior Manager Users only
+ASK_SGA,ASK SGA,ASK_Division,DefaultAdmin,This Organization is for ASK_SGA Users only
+ASK_SGA_Division,ASK SGA Division,ASK_ADP Division,DefaultAdmin,This Organization is for ASK_SGA_Division Users only
+ASK_SGA_LaborType,SGA,ASK_Labor Type,DefaultAdmin,This Organization is for ASK_SGA_LaborType Users only
+ASK_SS,ASK SS,ASK_Division,DefaultAdmin,This Organization is for ASK_SS Users only
+ASK_Supervisor,ASK Supervisor,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_Supervisor Users only
+ASK_Vice President,ASK Vice President,AGGASK JOB MANAGER LEVEL,DefaultAdmin,This Organization is for ASK_Vice President Users only
+ASK003350,IND - ENGINEERING - ASK003350,AGGASK Departments,DefaultAdmin,
+ASK003355,IND - MAINTENANCE - ASK003355,AGGASK Departments,DefaultAdmin,
+ASK003360,IND - PRODUCTION CONTROL - ASK003360,AGGASK Departments,DefaultAdmin,This Organization is for ASK003360 Users only
+ASK003365,IND - QUALITY - ASK003365,AGGASK Departments,DefaultAdmin,This Organization is for ASK003365 Users only
+ASK003371,Direct - ASSEMBLY - ASK003371,AGGASK Departments,DefaultAdmin,This Organization is for ASK003371 Users only
+ASK003373,Direct Steering Wheel Assembly - ASK003373,AGGASK Departments,DefaultAdmin,This Organization is for ASK003373 Users only
+ASK003450,ENGINEERING-PLATFORM - ASK003450,AGGASK Departments,DefaultAdmin,
+ASK003455,Maintenance - ASK003455,AGGASK Departments,DefaultAdmin,This Organization is for ASK003455 Users only
+ASK003460,Production Control - ASK003460,AGGASK Departments,DefaultAdmin,
+ASK003464,DIRECT INJECTION PROCESS - ASK003464,AGGASK Departments,DefaultAdmin,
+ASK003465,Quality Control - ASK003465,AGGASK Departments,DefaultAdmin,
+ASK003467,Prod Mgmt - Direct - ASK003467,AGGASK Departments,DefaultAdmin,
+ASK003469,Dandori - Direct - ASK003469,AGGASK Departments,DefaultAdmin,
+ASK003470,Production Department,AGGASK Departments,DefaultAdmin,
+ASK003471,DIRECT PRODUCTION - ASK003471,AGGASK Departments,DefaultAdmin,
+ASK003473,Extrusion Direct - ASK003473,AGGASK Departments,DefaultAdmin,
+ASK003474,Direct - 150A,AGGASK Departments,DefaultAdmin,
+ASK003475,Direct - BF4,AGGASK Departments,DefaultAdmin,
+ASK003476,Direct - AGG7 - ASK003476,AGGASK Departments,DefaultAdmin,
+ASK003478,Direct - Aisin - ASK003478,AGGASK Departments,DefaultAdmin,
+ASK003479,"LOWERS, HOOD TO FRONT FENDER O/T - ASK003479",AGGASK Departments,DefaultAdmin,
+ASK003485,TACOMA DIRECT - ASK003485,AGGASK Departments,DefaultAdmin,
+ASK003486,DIRECT- RELIEF - ASK003486,AGGASK Departments,DefaultAdmin,
+ASK003487,Direct - Inspection - ASK003487,AGGASK Departments,DefaultAdmin,
+ASK003489,170A - ASK003489,AGGASK Departments,DefaultAdmin,This Organization is for ASK003489 Users only
+ASK003491,Direct - T6Z,AGGASK Departments,DefaultAdmin,
+ASK003494,Ford Fusion - ASK003494,AGGASK Departments,DefaultAdmin,
+ASK003495,Lexus - Direct,AGGASK Departments,DefaultAdmin,
+ASK003496,200L Sequoia - ASK003496,AGGASK Departments,DefaultAdmin,
+ASK003499,Direct - 397L - 440A - ASK003499,AGGASK Departments,DefaultAdmin,
+ASK008190,SHIPPING - 8190 - ASK008190,AGGASK Departments,DefaultAdmin,
+ASK008310,Executive - ASK008310,AGGASK Departments,DefaultAdmin,
+ASK008360,Finance,AGGASK Departments,DefaultAdmin,
+ASK008370,General Affairs - ASK008370,AGGASK Departments,DefaultAdmin,
+ASK008380,Human Resources - ASK008380,AGGASK Departments,DefaultAdmin,
+ASK008385,Safety - ASK008385,AGGASK Departments,DefaultAdmin,This Organization is for ASK008385 Users only
+ASK008390,SHIPPING - 8390 - ASK008390,AGGASK Departments,DefaultAdmin,
+ASK008430,AGGNA Billing 100% - ASK008430,AGGASK Departments,DefaultAdmin,This Organization is for ASK008430 Users only
+ASK03371X,PROD MGMT SS - ASK03371X,AGGASK Departments,DefaultAdmin,
+ASK03373X,Prod MGMT Steering Wheel Assembly - ASK03373X,AGGASK Departments,DefaultAdmin,This Organization is for ASK03373X Users only
+ASKMP3365,IND - QUALITY,AGGASK Departments,DefaultAdmin,
+ASKMP3371,Direct - AIRBAG ASSEMBLY - ASKMP3371,AGGASK Departments,DefaultAdmin,
+ASKMP3373,Direct -STEERING WHEEL ASSEMBLY - ASKMP3373,AGGASK Departments,DefaultAdmin,
+ASKMP3455,Maintenance,AGGASK Departments,DefaultAdmin,
+ASKMP3464,Direct - EXTRUSION - ASKMP3464,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3464 Users only
+ASKMP3469,Direct - DANDORI,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3469 Users only
+ASKMP3471,Direct - AUX - ASKMP3471,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3471 Users only
+ASKMP3473,Direct - EXTRUSION - ASKMP3473,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3473 Users only
+ASKMP3474,Direct - 150A - ASKMP3474,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3474 Users only
+ASKMP3476,Direct - AGG7 - ASKMP3476,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3476 Users only
+ASKMP3478,Direct - AISIN - ASKMP3478,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3478 Users only
+ASKMP3479,Direct - 180L - ASKMP3479,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3479 Users only
+ASKMP3485,Direct - TACOMA - ASKMP3485,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3485 Users only
+ASKMP3487,Direct - INSPECTION - ASKMP3487,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3487 Users only
+ASKMP3489,Direct - 170A - ASKMP3489,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3489 Users only
+ASKMP3494,Direct - FORD - ASKMP3494,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3494 Users only
+ASKMP3496,Direct - 200L,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3496 Users only
+ASKMP3499,Direct - 440A - ASKMP3499,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP3499 Users only
+ASKMP8190,Shipping - MP8190 - ASKMP8190,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP8190 Users only
+ASKMP8380,SG&A - Human Resource - ASKMP8380,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP8380 Users only
+ASKMP8390,SHIPPING - MP8390 - ASKMP8390,AGGASK Departments,DefaultAdmin,This Organization is for ASKMP8390 Users only
+ASKTA9999,Temp Agency HR Administrators - ASKTA9999,AGGASK Departments,DefaultAdmin,This Organization is for ASKTA9999 Users only
+BTX_Common,BTX_Common,MO_Division,DefaultAdmin,This Organization is for BTX_Common Users only
+BTX_Common_Old,BTX_Common_Old,,DefaultAdmin,
+BTX_SGA,BTX_SGA,MO_Division,DefaultAdmin,This Organization is for BTX_SGA Users only
+BTX_SGA_old,BTX_SGA_old,,DefaultAdmin,
+CALIDAD - 263465,CALIDAD - 263465,AGGIMX Departments,DefaultAdmin,This Organization is for CALIDAD - 263465 Users only
+COM,COM,MO_Division,DefaultAdmin,This Organization is for COM Users only
+CONTABILIDAD -,Contabilidad -,AGGIMX Departments,DefaultAdmin,This Organization is for CONTABILIDAD - Users only
+CONTABILIDAD - 268360,CONTABILIDAD - 268360,AGGIMX Departments,DefaultAdmin,This Organization is for CONTABILIDAD - 268360 Users only
+CORTE - 264451,CORTE - 264451,AGGIMX Departments,DefaultAdmin,This Organization is for CORTE - 264451 Users only
+COSTURA - 263470,Costura - 263470,AGGIMX Departments,DefaultAdmin,This Organization is for COSTURA - 263470 Users only
+COSTURA - 264451,COSTURA - 264451,AGGIMX Departments,DefaultAdmin,This Organization is for COSTURA - 264451 Users only
+Department,AGGMO Department,AGGMO,DefaultAdmin,
+ENGRAPADO - 264452,ENGRAPADO - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for ENGRAPADO - 264452 Users only
+ENGRAPADO - 264453,Engrapado - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for ENGRAPADO - 264453 Users only
+ENSAMBLE - 264453,ENSAMBLE - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for ENSAMBLE - 264453 Users only
+EQUIPAMIENTO - 263455,EQUIPAMIENTO - 263455,AGGIMX Departments,DefaultAdmin,This Organization is for EQUIPAMIENTO - 263455 Users only
+EQUIPAMIENTO - 263475,Equipamiento - 263475,AGGIMX Departments,DefaultAdmin,This Organization is for EQUIPAMIENTO - 263475 Users only
+EQUIPAMIENTO - 264445,Equipamiento - 264445,AGGIMX Departments,DefaultAdmin,This Organization is for EQUIPAMIENTO - 264445 Users only
+EX008370,General Affairs - EX008370,AGGASK Departments,DefaultAdmin,This Organization is for EX008370 Users only
+EX4250,AGGTX Maintenance,AGGTX Departments,DefaultAdmin,This Organization is for EX4250 Users only
+EX4400,AGGTX Production - Direct,AGGTX Departments,DefaultAdmin,This Organization is for EX4400 Users only
+EX850,Administration,AGGTX Departments,DefaultAdmin,This Organization is for EX850 Users only
+EX8520,AGGTX Executive,AGGTX Departments,DefaultAdmin,This Organization is for EX8520 Users only
+EX855,Indirect,AGGTX Departments,DefaultAdmin,This Organization is for EX855 Users only
+F4501,EF 4501 Airbag Assembly,Department,DefaultAdmin,This Organization is for F4501 Users only
+F4503,EF 4503 Poly,Department,DefaultAdmin,This Organization is for F4503 Users only
+F4506,EF4506 Diecast,Department,DefaultAdmin,This Organization is for F4506 Users only
+F4507,EF 4507 Stamping,Department,DefaultAdmin,This Organization is for F4507 Users only
+F4509,EF 4509 Inflator Assembly Bldg #10,Department,87571,This Organization is for F4509 Users only
+F4513,EF4513,Department,DefaultAdmin,This Organization is for F4513 Users only
+F4514,EF4514 Inflator,Department,DefaultAdmin,This Organization is for F4514 Users only
+F4519,EF 4519 Airbag Assembly,Department,DefaultAdmin,This Organization is for F4519 Users only
+F4599,EF 4599 SS AGGU,Department,DefaultAdmin,This Organization is for F4599 Users only
+F4602,EF4602,Department,DefaultAdmin,This Organization is for F4602 Users only
+F4623,EF4623,Department,DefaultAdmin,This Organization is for F4623 Users only
+F4624,EF 4624 Bldg 3 K-Section,Department,DefaultAdmin,This Organization is for F4624 Users only
+F4627,EF 4627 Bldg 3 Chrome,Department,DefaultAdmin,This Organization is for F4627 Users only
+F4628,EF 4628 Service Bldg,Department,DefaultAdmin,This Organization is for F4628 Users only
+F4629,EF 4629 Bldg 3 I-Section,Department,DefaultAdmin,This Organization is for F4629 Users only
+F4630,EF 4630 Bldg 3 D-Section,Department,DefaultAdmin,This Organization is for F4630 Users only
+F4632,EF 4632 Bldg 3 A-Section,Department,DefaultAdmin,This Organization is for F4632 Users only
+F4633,EF4633,Department,DefaultAdmin,This Organization is for F4633 Users only
+F4634,EF 4634 Bldg 3 Paint,Department,DefaultAdmin,This Organization is for F4634 Users only
+F4635,EF 4635 Bldg 3 B-Section,Department,DefaultAdmin,This Organization is for F4635 Users only
+F4636,EF 4636 Bldg 3 C-Section,Department,DefaultAdmin,This Organization is for F4636 Users only
+F4637,EF 4637 Bldg 3 E-Section,Department,DefaultAdmin,This Organization is for F4637 Users only
+F4638,EF 4638 Bldg 3 G-Section,Department,DefaultAdmin,This Organization is for F4638 Users only
+F4639,EF 4639 Bldg 3 H-Section,Department,DefaultAdmin,This Organization is for F4639 Users only
+F4640,EF 4640 Bldg 3 L-Section,Department,DefaultAdmin,This Organization is for F4640 Users only
+F5018,EF 5018 SS Shipping,Department,DefaultAdmin,This Organization is for F5018 Users only
+F5019,EF 5019 IE Shipping,Department,DefaultAdmin,This Organization is for F5019 Users only
+F5021,EF5021,Department,DefaultAdmin,This Organization is for F5021 Users only
+F5022,EF 5022 Service Parts,Department,DefaultAdmin,This Organization is for F5022 Users only
+F5023,EF5023,Department,DefaultAdmin,This Organization is for F5023 Users only
+F5060,EF5060 QA,Department,DefaultAdmin,This Organization is for F5060 Users only
+F5090,EF5090,Department,DefaultAdmin,This Organization is for F5090 Users only
+F6160,EF6160 QC,Department,DefaultAdmin,This Organization is for F6160 Users only
+F6260,EF 6260 QC,Department,DefaultAdmin,This Organization is for F6260 Users only
+F8030,EF8030,Department,DefaultAdmin,This Organization is for F8030 Users only
+FILLER PIPE - 264449,FILLER PIPE - 264449,AGGIMX Departments,DefaultAdmin,This Organization is for FILLER PIPE - 264449 Users only
+FS_ADP Division,FS ADP Division,AGGFS,DefaultAdmin,This Organization is for FS_ADP Division Users only
+FS_Chief Operating Officer,FS Chief Operating Officer,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_Chief Operating Officer Users only
+FS_COM,FS COM,FS_DIVISION,DefaultAdmin,
+FS_Direct,FS Direct,FS_Labor Type,DefaultAdmin,This Organization is for FS_Direct Users only
+FS_Direct_LaborType,Direct,FS_Labor Type,DefaultAdmin,This Organization is for FS_Direct_LaborType Users only
+FS_DIVISION,AGGFS DIVISION,AGGFS,DefaultAdmin,This Organization is for FS_DIVISION Users only
+FS_First-Line Manager,FS First-Line Manager,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_First-Line Manager Users only
+FS_Functional,FS Functional,FS_DIVISION,DefaultAdmin,This Organization is for FS_Functional Users only
+FS_IE,FS IE,FS_DIVISION,DefaultAdmin,This Organization is for FS_IE Users only
+FS_Indirect,FS Indirect,FS_Labor Type,DefaultAdmin,This Organization is for FS_Indirect Users only
+FS_Indirect_LaborType,Indirect,FS_Labor Type,DefaultAdmin,This Organization is for FS_Indirect_LaborType Users only
+FS_Labor Type,FS Labor Type Description,AGGFS,DefaultAdmin,This Organization is for FS_Labor Type Users only
+FS_MAINTENANCE,FS MAINTENANCE,FS_DIVISION,DefaultAdmin,This Organization is for FS_MAINTENANCE Users only
+FS_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 0 Users only
+FS_MGR LEVEL 1,FS LEVEL 1 - DIRECTOR,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 1 Users only
+FS_MGR LEVEL 2,FS LEVEL 2 - SENIOR OFFICER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 2 Users only
+FS_MGR LEVEL 3,FS LEVEL 3 - VICE PRESIDENT,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 3 Users only
+FS_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 4 Users only
+FS_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 5 Users only
+FS_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 6 Users only
+FS_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGFS MANAGER LEVEL,DefaultAdmin,
+FS_MGR LEVEL 8,FS LEVEL 8 - NOT DEFINED,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 8 Users only
+FS_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGFS MANAGER LEVEL,DefaultAdmin,This Organization is for FS_MGR LEVEL 9 Users only
+FS_Mid-Level Manager,FS Mid-Level Manager,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_Mid-Level Manager Users only
+FS_Non-Manager,FS Non-Manager,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_Non-Manager Users only
+FS_PRODUCTION,FS PRODUCTION,FS_DIVISION,DefaultAdmin,This Organization is for FS_PRODUCTION Users only
+FS_QUALITY,FS QUALITY,FS_DIVISION,DefaultAdmin,This Organization is for FS_QUALITY Users only
+FS_Senior Manager,FS Senior Manager,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_Senior Manager Users only
+FS_SGA,FS SGA,FS_DIVISION,DefaultAdmin,This Organization is for FS_SGA Users only
+FS_SGA_Division,FS SGA Division,FS_ADP Division,DefaultAdmin,This Organization is for FS_SGA_Division Users only
+FS_SGA_LaborType,SGA,FS_Labor Type,DefaultAdmin,This Organization is for FS_SGA_LaborType Users only
+FS_SS,FS SS,FS_DIVISION,DefaultAdmin,This Organization is for FS_SS Users only
+FS_Supervisor,FS Supervisor,AGGFS JOB MANAGER LEVEL,DefaultAdmin,This Organization is for FS_Supervisor Users only
+FS100,Extrusion Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS100 Users only
+FS300,Production Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS300 Users only
+FS301,TEMP DIRECT LABOR,AGGFS Departments,DefaultAdmin,This Organization is for FS301 Users only
+FS305,Team Leader,AGGFS Departments,DefaultAdmin,This Organization is for FS305 Users only
+FS310,Production Indirect Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS310 Users only
+FS311,Production Indirect Extrusion,AGGFS Departments,DefaultAdmin,This Organization is for FS311 Users only
+FS325,Logistics Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS325 Users only
+FS330,TPS Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS330 Users only
+FS331,TPS Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS331 Users only
+FS336,Logistics,AGGFS Departments,DefaultAdmin,This Organization is for FS336 Users only
+FS400,Quality Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS400 Users only
+FS401,Quality Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS401 Users only
+FS500,Maintenance Dept,AGGFS Departments,DefaultAdmin,This Organization is for FS500 Users only
+FS501,Maintenance Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS501 Users only
+FS510,Manufacturing System Improvement,AGGFS Departments,DefaultAdmin,This Organization is for FS510 Users only
+FS511,Manufacturing Systems Improvement,AGGFS Departments,DefaultAdmin,This Organization is for FS511 Users only
+FS601,Admin Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS601 Users only
+FS616,EHS & SGA SALARY,AGGFS Departments,DefaultAdmin,This Organization is for FS616 Users only
+FS617,Human Resources,AGGFS Departments,DefaultAdmin,This Organization is for FS617 Users only
+FS618,Information Technology,AGGFS Departments,DefaultAdmin,This Organization is for FS618 Users only
+FS700,PRE-PRODUCTION PLANNING HOURLY,AGGFS Departments,DefaultAdmin,This Organization is for FS700 Users only
+FS701,PRE PRODUCTION PLANNING PPP,AGGFS Departments,DefaultAdmin,This Organization is for FS701 Users only
+FS800,Engineering Hourly,AGGFS Departments,DefaultAdmin,This Organization is for FS800 Users only
+FS801,Engineering Salary,AGGFS Departments,DefaultAdmin,This Organization is for FS801 Users only
+GARNIZH CONSOLE - 0,Garnizh Console - 0,AGGIMX Departments,DefaultAdmin,This Organization is for GARNIZH CONSOLE - 0 Users only
+GARNIZH CONSOLE - 264452,GARNIZH CONSOLE - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for GARNIZH CONSOLE - 264452 Users only
+GD MANAGER LEVEL,GDBR MANAGER LEVEL,AGGGDBR,DefaultAdmin,
+GD_----,GD ----,GD_Division,DefaultAdmin,This Organization is for GD_---- Users only
+GD_1- Admin,GD 1- Admin,GD_Division,DefaultAdmin,
+GD_2- Tecnico,GD 2- Tecnico,GD_Division,DefaultAdmin,
+GD_3- Control Prod,GD 3- Control Prod,GD_Division,DefaultAdmin,
+GD_4- Qualidade,GD 4- Qualidade,GD_Division,DefaultAdmin,This Organization is for GD_4- Qualidade Users only
+GD_5- Logistica,GD 5- Logistica,GD_Division,DefaultAdmin,
+GD_6- IE,GD 6- IE,GD_Division,DefaultAdmin,
+GD_7- Rubber,GD 7- Rubber,GD_Division,DefaultAdmin,
+GD_8- SS,GD 8- SS,GD_Division,DefaultAdmin,
+GD_Division,GDBR Divisions,AGGGDBR,AdamAdmin,
+GD_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 1,LEVEL 1 DIRECTOR,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 2,LEVEL 2 - SENIOR OFFICER,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 6,LEVEL 6 - FIRST-LINE MANAGER,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 7,LEVEL 7 SUPERVISOR,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 8,LEVEL 8 - NOT DEFINED,GD MANAGER LEVEL,DefaultAdmin,
+GD_MGR LEVEL 9,LEVEL 9 NON-MANAGER,GD MANAGER LEVEL,DefaultAdmin,
+GD10110,PRESIDENCY,AGGGDBR_Departments,DefaultAdmin,
+GD11100,SALES GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD11200,SALES MANAGEMENT,AGGGDBR_Departments,DefaultAdmin,
+GD12100,GENERAL ADM MANAGEMENT,AGGGDBR_Departments,DefaultAdmin,
+GD12200,HUMAN RESOURCES,AGGGDBR_Departments,DefaultAdmin,
+GD12300,ACCOUNTING,AGGGDBR_Departments,DefaultAdmin,
+GD12400,INFORMATION TECHNOLOGY,AGGGDBR_Departments,DefaultAdmin,
+GD12700,ENVIRONMENT,AGGGDBR_Departments,DefaultAdmin,
+GD12800,SAFETY & ENVIRONMENT,AGGGDBR_Departments,DefaultAdmin,
+GD12900,COST PLANNING,AGGGDBR_Departments,DefaultAdmin,
+GD18100,TPS,AGGGDBR_Departments,DefaultAdmin,
+GD19100,LOGISTIC GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD21100,ENGINEERING GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD22100,QUALITY GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD23100,MAINTENANCE GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD25200,PRODUCTION MANAGEMENT,AGGGDBR_Departments,DefaultAdmin,
+GD25300,PURCHASING,AGGGDBR_Departments,DefaultAdmin,
+GD25400,PRODUCTION PLANNING AND CONTROL,AGGGDBR_Departments,DefaultAdmin,
+GD25500,PRODUCTION PLANNING AND CONTROL,AGGGDBR_Departments,DefaultAdmin,
+GD31200,EXTRUSION - SPONGE,AGGGDBR_Departments,DefaultAdmin,
+GD31300,EXTRUSION - TPV,AGGGDBR_Departments,DefaultAdmin,
+GD31400,CLIP,AGGGDBR_Departments,DefaultAdmin,
+GD31500,DW,AGGGDBR_Departments,DefaultAdmin,
+GD31600,GR,AGGGDBR_Departments,DefaultAdmin,
+GD31700,OT BD,AGGGDBR_Departments,DefaultAdmin,
+GD41200,INJECTION,AGGGDBR_Departments,DefaultAdmin,
+GD41300,PAINTING,AGGGDBR_Departments,DefaultAdmin,
+GD41303,PINTURA,AGGGDBR_Departments,DefaultAdmin,
+GD51100,SS DIRECT GENERAL,AGGGDBR_Departments,DefaultAdmin,
+GD51200,SS ASSEMBLY,AGGGDBR_Departments,DefaultAdmin,This Organization is for GD51200 Users only
+HRT1,Human Resources (Test),AGGSIN,DefaultAdmin,This Organization is for HRT1 Users only
+I5019M,EMI 5019 Production Admin Shipping,Department,87571,This Organization is for I5019M Users only
+I6260M,EMI 6260 Quality Control,Department,87571,This Organization is for I6260M Users only
+IE,IE,MO_Division,DefaultAdmin,This Organization is for IE Users only
+II_old,II_old,,DefaultAdmin,
+IMS - 0,IMS - 0,AGGIMX Departments,DefaultAdmin,This Organization is for IMS - 0 Users only
+IMS - 263465,IMS - 263465,AGGIMX Departments,DefaultAdmin,This Organization is for IMS - 263465 Users only
+IMS - 263498,IMS - 263498,AGGIMX Departments,DefaultAdmin,This Organization is for IMS - 263498 Users only
+IMX_ADMINISTRACION DE LA PRODUCCION,ADMINISTRACION DE LA PRODUCCION,IMX_Division,DefaultAdmin,This Organization is for IMX_ADMINISTRACION DE LA PRODUCCION Users only
+IMX_ADMINISTRACIÓN DE LA PRODUCCIÓN,IMX ADMINISTRACIÓN DE LA PRODUCCIÓN,IMX_Division,DefaultAdmin,This Organization is for IMX_ADMINISTRACIÓN DE LA PRODUCCIÓN Users only
+IMX_CALIDAD,IMX CALIDAD,IMX_Division,DefaultAdmin,This Organization is for IMX_CALIDAD Users only
+IMX_CENTRO DE CONTROL DE PRE PRODUCCION,CENTRO DE CONTROL DE PRE PRODUCCION,IMX_Division,DefaultAdmin,This Organization is for IMX_CENTRO DE CONTROL DE PRE PRODUCCION Users only
+IMX_CONTABILIDAD,IMX CONTABILIDAD,IMX_Division,DefaultAdmin,This Organization is for IMX_CONTABILIDAD Users only
+IMX_CORTE,IMX CORTE,IMX_Division,DefaultAdmin,This Organization is for IMX_CORTE Users only
+IMX_COSTURA,IMX COSTURA,IMX_Division,DefaultAdmin,This Organization is for IMX_COSTURA Users only
+IMX_Division,AGGIMX Division,AGGIMX,DefaultAdmin,
+IMX_ENGRAPADO,IMX ENGRAPADO,IMX_Division,DefaultAdmin,This Organization is for IMX_ENGRAPADO Users only
+IMX_ENSAMBLE,IMX ENSAMBLE,IMX_Division,DefaultAdmin,This Organization is for IMX_ENSAMBLE Users only
+IMX_EQUIPAMIENTO,IMX EQUIPAMIENTO,IMX_Division,DefaultAdmin,This Organization is for IMX_EQUIPAMIENTO Users only
+IMX_FILLER PIPE,IMX FILLER PIPE,IMX_Division,DefaultAdmin,This Organization is for IMX_FILLER PIPE Users only
+IMX_GARNIZH CONSOLE,IMX GARNIZH CONSOLE,IMX_Division,DefaultAdmin,This Organization is for IMX_GARNIZH CONSOLE Users only
+IMX_GERENCIAS,GERENCIAS,IMX_Division,DefaultAdmin,This Organization is for IMX_GERENCIAS Users only
+IMX_HERRAMIENTAS,HERRAMIENTAS,IMX_Division,DefaultAdmin,This Organization is for IMX_HERRAMIENTAS Users only
+IMX_IMS,IMX IMS,IMX_Division,DefaultAdmin,This Organization is for IMX_IMS Users only
+IMX_INGENIERIA DE EQUIPAMIENTO,INGENIERIA DE EQUIPAMIENTO,IMX_Division,DefaultAdmin,This Organization is for IMX_INGENIERIA DE EQUIPAMIENTO Users only
+IMX_INGENIERIA DE PROCESOS,INGENIERIA DE PROCESOS,IMX_Division,DefaultAdmin,This Organization is for IMX_INGENIERIA DE PROCESOS Users only
+IMX_INGENIERÍA DE PROCESOS,IMX INGENIERÍA DE PROCESOS,IMX_Division,DefaultAdmin,This Organization is for IMX_INGENIERÍA DE PROCESOS Users only
+IMX_INYECCIÓN,IMX INYECCIÓN,IMX_Division,DefaultAdmin,This Organization is for IMX_INYECCIÓN Users only
+IMX_KAIZEN,IMX KAIZEN,IMX_Division,DefaultAdmin,This Organization is for IMX_KAIZEN Users only
+IMX_MANAGEMENT,IMX Management,AGGIMX Departments,DefaultAdmin,
+IMX_MANTENIMIENTO,MANTENIMIENTO,IMX_Division,DefaultAdmin,This Organization is for IMX_MANTENIMIENTO Users only
+IMX_MAQUINAS Y HERRAMIENTAS,IMX MAQUINAS Y HERRAMIENTAS,IMX_Division,DefaultAdmin,This Organization is for IMX_MAQUINAS Y HERRAMIENTAS Users only
+IMX_PINTURA,IMX PINTURA,IMX_Division,DefaultAdmin,This Organization is for IMX_PINTURA Users only
+IMX_PIPE (REWORK),IMX PIPE (REWORK),IMX_Division,DefaultAdmin,This Organization is for IMX_PIPE (REWORK) Users only
+IMX_PLATINADO,IMX PLATINADO,IMX_Division,DefaultAdmin,This Organization is for IMX_PLATINADO Users only
+IMX_PRODUCCION,PRODUCCION,IMX_Division,DefaultAdmin,This Organization is for IMX_PRODUCCION Users only
+IMX_PRODUCCIÓN,IMX PRODUCCIÓN,IMX_Division,DefaultAdmin,This Organization is for IMX_PRODUCCIÓN Users only
+IMX_PROYECTOS,IMX PROYECTOS,IMX_Division,DefaultAdmin,This Organization is for IMX_PROYECTOS Users only
+IMX_RECURSOS HUMANOS,IMX RECURSOS HUMANOS,IMX_Division,DefaultAdmin,This Organization is for IMX_RECURSOS HUMANOS Users only
+IMX_REGISTRO,IMX REGISTRO,IMX_Division,DefaultAdmin,This Organization is for IMX_REGISTRO Users only
+IMX_TACOMA INTERIOR,IMX TACOMA INTERIOR,IMX_Division,DefaultAdmin,This Organization is for IMX_TACOMA INTERIOR Users only
+IMX_TEAM MEMBERS BANK,IMX TEAM MEMBERS BANK,IMX_Division,DefaultAdmin,This Organization is for IMX_TEAM MEMBERS BANK Users only
+IMX_TECNOLOGIAS DE LA INFORMACION,TECNOLOGIAS DE LA INFORMACION,IMX_Division,DefaultAdmin,This Organization is for IMX_TECNOLOGIAS DE LA INFORMACION Users only
+IMX_TECNOLOGÍAS DE LA INFORMACIÓN,IMX TECNOLOGÍAS DE LA INFORMACIÓN,IMX_Division,DefaultAdmin,This Organization is for IMX_TECNOLOGÍAS DE LA INFORMACIÓN Users only
+IMX_TPS,IMX TPS,IMX_Division,DefaultAdmin,This Organization is for IMX_TPS Users only
+IMX_VACUUM FORMING,IMX VACUUM FORMING,IMX_Division,DefaultAdmin,This Organization is for IMX_VACUUM FORMING Users only
+IMX_VENTAS,IMX VENTAS,IMX_Division,DefaultAdmin,This Organization is for IMX_VENTAS Users only
+INGENIERÍA DE PROCESOS - 263475,INGENIERÍA DE PROCESOS - 263475,AGGIMX Departments,DefaultAdmin,This Organization is for INGENIERÍA DE PROCESOS - 263475 Users only
+INYECCIÓN - 264445,INYECCIÓN - 264445,AGGIMX Departments,DefaultAdmin,This Organization is for INYECCIÓN - 264445 Users only
+INYECCIÓN - 264453,Inyección - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for INYECCIÓN - 264453 Users only
+J59W - 264447,J59W - 264447,AGGIMX Departments,DefaultAdmin,This Organization is for J59W - 264447 Users only
+Job Manager Level,Job Manager Level,,DefaultAdmin,This Organization is for Job Manager Level Users only
+KAIZEN - 0,KAIZEN - 0,AGGIMX Departments,DefaultAdmin,This Organization is for KAIZEN - 0 Users only
+KAIZEN - 263455,Kaizen - 263455,AGGIMX Departments,DefaultAdmin,This Organization is for KAIZEN - 263455 Users only
+KS4523,SW Assy - KS4523,Department,87571,This Organization is for KS4523 Users only
+KY_ADP Division,KY ADP Division,AGGKY,DefaultAdmin,This Organization is for KY_ADP Division Users only
+KY_Annual,KY Annual,KY_DIVISION,DefaultAdmin,This Organization is for KY_Annual Users only
+KY_Chief Operating Officer,KY Chief Operating Officer,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Chief Operating Officer Users only
+KY_COM,KY COM,KY_DIVISION,DefaultAdmin,This Organization is for KY_COM Users only
+KY_Common,KY Common,KY_DIVISION,DefaultAdmin,This Organization is for KY_Common Users only
+KY_Direct,KY Direct,KY_Labor Type,DefaultAdmin,This Organization is for KY_Direct Users only
+KY_Direct_LaborType,Direct,KY_Labor Type,DefaultAdmin,This Organization is for KY_Direct_LaborType Users only
+KY_DIVISION,AGGKY Division,AGGKY,DefaultAdmin,
+KY_First-Line Manager,KY First-Line Manager,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_First-Line Manager Users only
+KY_Functional,KY Functional,KY_DIVISION,DefaultAdmin,This Organization is for KY_Functional Users only
+KY_Indirect,KY Indirect,KY_Labor Type,DefaultAdmin,This Organization is for KY_Indirect Users only
+KY_Indirect_LaborType,Indirect,KY_Labor Type,DefaultAdmin,This Organization is for KY_Indirect_LaborType Users only
+KY_Interior Exterior,KY Interior Exterior,KY_DIVISION,DefaultAdmin,This Organization is for KY_Interior Exterior Users only
+KY_Labor Type,KY Labor Type Description,AGGKY,DefaultAdmin,This Organization is for KY_Labor Type Users only
+KY_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 0 Users only
+KY_MGR LEVEL 1,KY LEVEL 1 - DIRECTOR,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 1 Users only
+KY_MGR LEVEL 2,KY LEVEL 2 - SENIOR OFFICER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 2 Users only
+KY_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 3 Users only
+KY_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 4 Users only
+KY_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 5 Users only
+KY_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 6 Users only
+KY_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 7 Users only
+KY_MGR LEVEL 8,KY LEVEL 8 - NOT DEFINED,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 8 Users only
+KY_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGKY MANAGER LEVEL,DefaultAdmin,This Organization is for KY_MGR LEVEL 9 Users only
+KY_Mid-Level Manager,KY Mid-Level Manager,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Mid-Level Manager Users only
+KY_Non-Manager,KY Non-Manager,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Non-Manager Users only
+KY_PRODUCTION,KY PRODUCTION,KY_DIVISION,DefaultAdmin,This Organization is for KY_PRODUCTION Users only
+KY_QUALITY,KY QUALITY,KY_DIVISION,DefaultAdmin,This Organization is for KY_QUALITY Users only
+KY_Senior Manager,KY Senior Manager,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Senior Manager Users only
+KY_SGA,KY SGA,KY_DIVISION,DefaultAdmin,This Organization is for KY_SGA Users only
+KY_SGA_Division,KY SGA Division,KY_ADP Division,DefaultAdmin,This Organization is for KY_SGA_Division Users only
+KY_SGA_LaborType,SGA,KY_Labor Type,DefaultAdmin,This Organization is for KY_SGA_LaborType Users only
+KY_Supervisor,KY Supervisor,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Supervisor Users only
+KY_Vice President,KY Vice President,AGGKY JOB MANAGER LEVEL,DefaultAdmin,This Organization is for KY_Vice President Users only
+KY3000,GENERAL MAINTENANCE,AGGKY Departments,DefaultAdmin,
+KY3005,MAINTENANCE/MOLD,AGGKY Departments,DefaultAdmin,
+KY3010,FUNC RUBBER PRODUCTS ENG,AGGKY Departments,DefaultAdmin,
+KY3011,FUNC PLASTIC PRODUCTS ENG,AGGKY Departments,DefaultAdmin,This Organization is for KY3011 Users only
+KY3012,I/E PRODUCTS ENG,AGGKY Departments,DefaultAdmin,This Organization is for KY3012 Users only
+KY3015,FUNC EXTRUSION PROD,AGGKY Departments,DefaultAdmin,This Organization is for KY3015 Users only
+KY3016,FUNC EXTRUSION PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3016 Users only
+KY3020,FUNC BRAKE HOSE PROD,AGGKY Departments,DefaultAdmin,
+KY3022,FUNC BRAKE HOSE PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3022 Users only
+KY3030,MAINTENANCE,AGGKY Departments,DefaultAdmin,
+KY3500,FUNC RUBBER PRODUCTION,AGGKY Departments,DefaultAdmin,This Organization is for KY3500 Users only
+KY3501,PLASTIC FUNC MAINTENANCE,AGGKY Departments,DefaultAdmin,
+KY3525,PASS THRU,AGGKY Departments,DefaultAdmin,This Organization is for KY3525 Users only
+KY3530,FUNC INJECTION PROD,AGGKY Departments,DefaultAdmin,This Organization is for KY3530 Users only
+KY3532,FUNC INJECTION PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3532 Users only
+KY3535,RUBBER MIXING,AGGKY Departments,DefaultAdmin,This Organization is for KY3535 Users only
+KY3537,RUBBER MIXING - DIRECT SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3537 Users only
+KY3540,FUNC INJ PLASTIC,AGGKY Departments,DefaultAdmin,This Organization is for KY3540 Users only
+KY3542,FUNC INJ PLASTIC-SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3542 Users only
+KY3550,MFG I/E PRODUCTS,AGGKY Departments,DefaultAdmin,This Organization is for KY3550 Users only
+KY3600,I/E PAINT 1,AGGKY Departments,DefaultAdmin,This Organization is for KY3600 Users only
+KY3602,I/E PAINT 1 - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3602 Users only
+KY3800,I/E SMALL INJECTION,AGGKY Departments,DefaultAdmin,This Organization is for KY3800 Users only
+KY3802,I/E SMALL INJECTION - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3802 Users only
+KY3850,I/E LARGE INJECTION,AGGKY Departments,DefaultAdmin,This Organization is for KY3850 Users only
+KY3852,I/E LARGE INJECTION - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3852 Users only
+KY3860,MOLD SET,AGGKY Departments,DefaultAdmin,This Organization is for KY3860 Users only
+KY3900,FUNC FUEL CAP PROD,AGGKY Departments,DefaultAdmin,This Organization is for KY3900 Users only
+KY3902,FUNC FUEL CAP PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3902 Users only
+KY3920,FUNC VALVE PROD,AGGKY Departments,DefaultAdmin,This Organization is for KY3920 Users only
+KY3922,FUNC VALVE PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3922 Users only
+KY3930,FUNC FILLER CAP PROD,AGGKY Departments,DefaultAdmin,This Organization is for KY3930 Users only
+KY3932,FUNC FILLER PIPE PROD - SALARY,AGGKY Departments,DefaultAdmin,This Organization is for KY3932 Users only
+KY3940,FUNCTIONAL PLASTIC PRODUCTION,AGGKY Departments,DefaultAdmin,This Organization is for KY3940 Users only
+KY4000,QA FUNCTIONAL PRODUCTS,AGGKY Departments,DefaultAdmin,
+KY4005,QA/QC,AGGKY Departments,DefaultAdmin,This Organization is for KY4005 Users only
+KY4050,QA/QC INT EXT PRODUCTS,AGGKY Departments,DefaultAdmin,
+KY5000,RODUCTION CONTROL,AGGKY Departments,DefaultAdmin,
+KY5010,SHIPPING,AGGKY Departments,DefaultAdmin,This Organization is for KY5010 Users only
+KY5011,RECEIVING,AGGKY Departments,DefaultAdmin,This Organization is for KY5011 Users only
+KY5012,SERVICE,AGGKY Departments,DefaultAdmin,This Organization is for KY5012 Users only
+KY5500,PPCC,AGGKY Departments,DefaultAdmin,This Organization is for KY5500 Users only
+KY5800,PRODUCTION ADMINISTRATION 1,AGGKY Departments,DefaultAdmin,This Organization is for KY5800 Users only
+KY6000,EXECUTIVE OFFICERS,AGGKY Departments,DefaultAdmin,This Organization is for KY6000 Users only
+KY7101,HUMAN RESOURCES,AGGKY Departments,DefaultAdmin,This Organization is for KY7101 Users only
+KY7200,FACILITY MANAGEMENT,AGGKY Departments,DefaultAdmin,
+KY7300,MANAGEMENT SYSTEMS,AGGKY Departments,DefaultAdmin,This Organization is for KY7300 Users only
+KY7400,SUPPLIER MANAGEMENT/SQA,AGGKY Departments,DefaultAdmin,This Organization is for KY7400 Users only
+KY7450,PRODUCTION ADMINISTRATION 2,AGGKY Departments,DefaultAdmin,This Organization is for KY7450 Users only
+KY8000,ACCOUNTING,AGGKY Departments,DefaultAdmin,This Organization is for KY8000 Users only
+KY8010,COST MANAGEMENT,AGGKY Departments,DefaultAdmin,This Organization is for KY8010 Users only
+KY8020,FINANCE/ACCOUNTING,AGGKY Departments,DefaultAdmin,This Organization is for KY8020 Users only
+MAQUINAS Y HERRAMIENTAS - 263495,MAQUINAS Y HERRAMIENTAS - 263495,AGGIMX Departments,DefaultAdmin,This Organization is for MAQUINAS Y HERRAMIENTAS - 263495 Users only
+Matamoros,Matamoros,AGGTAPEX Work Location,DefaultAdmin,This Organization is for Matamoros Users only
+MI4523,EMI 4523 SW ASSY,Department,87571,This Organization is for MI4523 Users only
+MI4615,EMI 4615 Injection,Department,87571,This Organization is for MI4615 Users only
+MI4616,EMI 4616 Paint Prod,Department,87571,This Organization is for MI4616 Users only
+MI4617,EMI 4617 Assembly,Department,87571,This Organization is for MI4617 Users only
+MO_ADP Division,MO ADP Division,AGGMO,DefaultAdmin,This Organization is for MO_ADP Division Users only
+MO_Annual,MO Annual,MO_Division,DefaultAdmin,This Organization is for MO_Annual Users only
+MO_Annual_old,MO_Annual_old,,DefaultAdmin,
+MO_Chief Operating Officer,MO Chief Operating Officer,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Chief Operating Officer Users only
+MO_Common,MO Common,MO_Division,DefaultAdmin,This Organization is for MO_Common Users only
+MO_Common_old,MO_Common_old,,DefaultAdmin,
+MO_Direct,MO Direct,MO_Labor Type,DefaultAdmin,This Organization is for MO_Direct Users only
+MO_Direct_LaborType,Direct,MO_Labor Type,DefaultAdmin,This Organization is for MO_Direct_LaborType Users only
+MO_Division,AGG MO Division,AGGMO,DefaultAdmin,
+MO_First-Line Manager,MO First-Line Manager,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_First-Line Manager Users only
+MO_Indirect,MO Indirect,MO_Labor Type,DefaultAdmin,This Organization is for MO_Indirect Users only
+MO_Indirect_LaborType,Indirect,MO_Labor Type,DefaultAdmin,This Organization is for MO_Indirect_LaborType Users only
+MO_Interior Exterior,MO Interior Exterior,MO_Division,DefaultAdmin,This Organization is for MO_Interior Exterior Users only
+MO_Interior Exterior_old,MO_Interior Exterior_old,,DefaultAdmin,
+MO_Labor Type,MO Labor Type Description,AGGMO,DefaultAdmin,This Organization is for MO_Labor Type Users only
+MO_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 0 Users only
+MO_MGR LEVEL 1,MO LEVEL 1 - DIRECTOR,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 1 Users only
+MO_MGR LEVEL 2,MO LEVEL 2 - SENIOR OFFICER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 2 Users only
+MO_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 3 Users only
+MO_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 4 Users only
+MO_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 5 Users only
+MO_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 6 Users only
+MO_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 7 Users only
+MO_MGR LEVEL 8,MO LEVEL 8 - NOT DEFINED,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 8 Users only
+MO_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGMO MANAGER LEVEL,DefaultAdmin,This Organization is for MO_MGR LEVEL 9 Users only
+MO_Mid-Level Manager,MO Mid-Level Manager,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Mid-Level Manager Users only
+MO_Non-Manager,MO Non-Manager,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Non-Manager Users only
+MO_Safety Systems,MO Safety Systems,MO_Division,DefaultAdmin,This Organization is for MO_Safety Systems Users only
+MO_Safety Systems_old,MO_Safety Systems_old,,DefaultAdmin,
+MO_Senior Manager,MO Senior Manager,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Senior Manager Users only
+MO_SGA,MO SGA,MO_Division,DefaultAdmin,This Organization is for MO_SGA Users only
+MO_SGA_Division,MO SGA Division,MO_ADP Division,DefaultAdmin,This Organization is for MO_SGA_Division Users only
+MO_SGA_LaborType,SGA,MO_Labor Type,DefaultAdmin,This Organization is for MO_SGA_LaborType Users only
+MO_SGA_old,MO_SGA_old,,DefaultAdmin,
+MO_SS_old,MO_SS_old,,DefaultAdmin,
+MO_Supervisor,MO Supervisor,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Supervisor Users only
+MO_Vice President,MO Vice President,AGGMO JOB MANAGER LEVEL,DefaultAdmin,This Organization is for MO_Vice President Users only
+Monterrey,Monterrey,AGGTAPEXWEST WORK LOCATION,DefaultAdmin,This Organization is for Monterrey Users only
+MS_Interior Exterior_old,MS_Interior Exterior_old,,DefaultAdmin,
+MS_Safety Systems_old,MS_Safety Systems_old,,DefaultAdmin,
+MS_SGA_old,MS_SGA_old,,DefaultAdmin,
+MT_Palmerston - Accounting,MT Palmerston - Accounting,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Accounting Users only
+MT_Palmerston - Corporate Admininstration,MT Palmerston - Corporate Admininstration,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Corporate Admininstration Users only
+MT_Palmerston - Corporate Officers and Staff,MT Palmerston - Corporate Officers and Staff,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Corporate Officers and Staff Users only
+MT_Palmerston - Corporate Officers Planning Staff,MT Palmerston - Corporate Officers Planning Staff,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Corporate Officers Planning Staff Users only
+MT_Palmerston - Engineering,MT Palmerston - Engineering,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Engineering Users only
+MT_Palmerston - Health and Safety,MT Palmerston - Health and Safety,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Health and Safety Users only
+MT_Palmerston - IE Management,MT Palmerston - IE Management,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - IE Management Users only
+MT_Palmerston - Injection - Direct,MT Palmerston - Injection - Direct,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Injection - Direct Users only
+MT_Palmerston - Injection - Indirect,MT Palmerston - Injection - Indirect,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Injection - Indirect Users only
+MT_Palmerston - Machine Group,MT Palmerston - Machine Group,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Machine Group Users only
+MT_Palmerston - Maintenance,MT Palmerston - Maintenance,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Maintenance Users only
+MT_Palmerston - MIS,MT Palmerston - MIS,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - MIS Users only
+MT_Palmerston - Mold Group,MT Palmerston - Mold Group,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Mold Group Users only
+MT_Palmerston - Paint - Direct,MT Palmerston - Paint - Direct,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Paint - Direct Users only
+MT_Palmerston - Paint - Indirect,MT Palmerston - Paint - Indirect,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Paint - Indirect Users only
+MT_Palmerston - PPCC,MT Palmerston - PPCC,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - PPCC Users only
+MT_Palmerston - Production Control,MT Palmerston - Production Control,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Production Control Users only
+MT_Palmerston - Quality,MT Palmerston - Quality,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Quality Users only
+MT_Palmerston - Shipping,MT Palmerston - Shipping,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Shipping Users only
+MT_Palmerston - Tech Exec,MT Palmerston - Tech Exec,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - Tech Exec Users only
+MT_Palmerston - TPS,MT Palmerston - TPS,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Palmerston - TPS Users only
+MT_Stratford - Corporate Admininstration,MT Stratford - Corporate Admininstration,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Engineering,MT Stratford - Engineering,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Health and Safety,MT Stratford - Health and Safety,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - IE Management,MT Stratford - IE Management,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Injection - Direct,MT Stratford - Injection - Direct,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Maintenance,MT Stratford - Maintenance,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Mold Group,MT Stratford - Mold Group,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Production Control,MT Stratford - Production Control,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Quality,MT Stratford - Quality,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - TPS,MT Stratford - TPS,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - Corporate Admininstration,MT Stratford - Corporate Admininstration,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Corporate Admininstration Users only
+MT_Stratford - Engineering,MT Stratford - Engineering,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Engineering Users only
+MT_Stratford - IE Management,MT Stratford - IE Management,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - IE Management Users only
+MT_Stratford - Injection - Direct,MT Stratford - Injection - Direct,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Injection - Direct Users only
+MT_Stratford - Maintenance,MT Stratford - Maintenance,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Maintenance Users only
+MT_Stratford - Mold Group,MT Stratford - Mold Group,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Mold Group Users only
+MT_Stratford - Production Control,MT Stratford - Production Control,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Production Control Users only
+MT_Stratford - Quality,MT Stratford - Quality,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - Quality Users only
+MT_Stratford - Shipping,MT Stratford - Shipping,AGGMINTO_DIVISION,DefaultAdmin,
+MT_Stratford - TPS,MT Stratford - TPS,AGGMINTO_DIVISION,DefaultAdmin,This Organization is for MT_Stratford - TPS Users only
+MT4101,Injection - Direct MT4101,AGGMINTO Departments,DefaultAdmin,This Organization is for MT4101 Users only
+MT4101S,Injection - Direct MT4101S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT4101S Users only
+MT4102,Paint - Direct MT4102,AGGMINTO Departments,DefaultAdmin,This Organization is for MT4102 Users only
+MT5210,Tech Exec MT5210,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5210 Users only
+MT5220,Production Control MT5220,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5220 Users only
+MT5220S,Production Control MT5220S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5220S Users only
+MT5230,Machine Group MT5230,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5230 Users only
+MT5240,Maintenance MT5240,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5240 Users only
+MT5240S,Maintenance MT5240S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5240S Users only
+MT5250,Mold Group MT5250,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5250 Users only
+MT5250S,Mold Group MT5250S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5250S Users only
+MT5270,PPCC MT5270,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5270 Users only
+MT5290,TPS MT5290,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5290 Users only
+MT5290S,TPS MT5290S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT5290S Users only
+MT6500,IE Management MT6500,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6500 Users only
+MT6500S,IE Management MT6500S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6500S Users only
+MT6501,Injection - Indirect MT6501,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6501 Users only
+MT6502,Paint - Indirect - MT6502,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6502 Users only
+MT6530,Engineering MT6530,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6530 Users only
+MT6530S,Engineering MT6530S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6530S Users only
+MT6560,Quality MT6560,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6560 Users only
+MT6560S,Quality MT6560S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT6560S Users only
+MT8210,Corporate Officers Planning and Staff MT8210,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8210 Users only
+MT8220,Corporate Admininstration MT8220,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8220 Users only
+MT8220S,Corporate Admininstration MT8220S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8220S Users only
+MT8221,Health and Safety MT8221,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8221 Users only
+MT8221S,Health and Safety - MT8221S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8221S Users only
+MT8250,MIS MT8250,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8250 Users only
+MT8260,Accounting MT8260,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8260 Users only
+MT8270,Shipping MT8270,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8270 Users only
+MT8270S,Shipping MT8270S,AGGMINTO Departments,DefaultAdmin,This Organization is for MT8270S Users only
+NA_ADP Division,NA ADP Division,AGGNA,DefaultAdmin,This Organization is for NA_ADP Division Users only
+NA_Automotive Sealing,NA Automotive Sealing,NA_DIVISION,DefaultAdmin,This Organization is for NA_Automotive Sealing Users only
+NA_Chief Operating Officer,NA Chief Operating Officer,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Chief Operating Officer Users only
+NA_COM,NA COM,NA_DIVISION,DefaultAdmin,This Organization is for NA_COM Users only
+NA_Common,NA Common,NA_DIVISION,DefaultAdmin,This Organization is for NA_Common Users only
+NA_Director,NA Director,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Director Users only
+NA_DIVISION,AGGNA Division,AGGNA,DefaultAdmin,This Organization is for NA_DIVISION Users only
+NA_First-Line Manager,NA First-Line Manager,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_First-Line Manager Users only
+NA_Functional,NA Functional,NA_DIVISION,DefaultAdmin,This Organization is for NA_Functional Users only
+NA_IE,NA IE,NA_DIVISION,DefaultAdmin,This Organization is for NA_IE Users only
+NA_Indirect,NA Indirect,NA_Labor Type,DefaultAdmin,This Organization is for NA_Indirect Users only
+NA_Indirect_LaborType,Indirect,NA_Labor Type,DefaultAdmin,This Organization is for NA_Indirect_LaborType Users only
+NA_Interior Exterior,NA Interior Exterior,NA_DIVISION,DefaultAdmin,This Organization is for NA_Interior Exterior Users only
+NA_Labor Type,NA Labor Type Description,AGGNA,DefaultAdmin,This Organization is for NA_Labor Type Users only
+NA_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 0 Users only
+NA_MGR LEVEL 1,LEVEL 1 DIRECTOR,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 1 Users only
+NA_MGR LEVEL 2,LEVEL 2 SENIOR OFFICER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 2 Users only
+NA_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 3 Users only
+NA_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 4 Users only
+NA_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 5 Users only
+NA_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 6 Users only
+NA_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 7 Users only
+NA_MGR LEVEL 8,NA LEVEL 8 - NOT DEFINED,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 8 Users only
+NA_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGNA MANAGER LEVEL,DefaultAdmin,This Organization is for NA_MGR LEVEL 9 Users only
+NA_Mid-Level Manager,NA Mid-Level Manager,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Mid-Level Manager Users only
+NA_Non-Manager,NA Non-Manager,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Non-Manager Users only
+NA_Safety Systems,NA Safety Systems,NA_DIVISION,DefaultAdmin,This Organization is for NA_Safety Systems Users only
+NA_Senior Manager,NA Senior Manager,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Senior Manager Users only
+NA_Senior Officer,NA Senior Officer,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Senior Officer Users only
+NA_SGA,NA SGA,NA_DIVISION,DefaultAdmin,This Organization is for NA_SGA Users only
+NA_SGA_Division,NA SGA Division,NA_ADP Division,DefaultAdmin,This Organization is for NA_SGA_Division Users only
+NA_SGA_LaborType,SGA,NA_Labor Type,DefaultAdmin,This Organization is for NA_SGA_LaborType Users only
+NA_SS,NA SS,NA_DIVISION,DefaultAdmin,This Organization is for NA_SS Users only
+NA_Supervisor,NA Supervisor,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Supervisor Users only
+NA_Vice President,NA Vice President,AGGNA JOB MANAGER LEVEL,DefaultAdmin,This Organization is for NA_Vice President Users only
+NA31100,Corp - Executive,AGGNA Departments,DefaultAdmin,This Organization is for NA31100 Users only
+NA31200,Corp - Finance,AGGNA Departments,DefaultAdmin,This Organization is for NA31200 Users only
+NA31220,COST PLANNING,AGGNA Departments,DefaultAdmin,This Organization is for NA31220 Users only
+NA31313,Corp - Human Resources,AGGNA Departments,DefaultAdmin,This Organization is for NA31313 Users only
+NA31320,Corporate Planning,AGGNA Departments,DefaultAdmin,This Organization is for NA31320 Users only
+NA31325,Internal Audit,AGGNA Departments,DefaultAdmin,This Organization is for NA31325 Users only
+NA31330,CORP - GENERAL AFFAIRS/CUSTOMS,AGGNA Departments,DefaultAdmin,This Organization is for NA31330 Users only
+NA31340,Corp - Legal,AGGNA Departments,DefaultAdmin,This Organization is for NA31340 Users only
+NA31370,Employee Relations,AGGNA Departments,DefaultAdmin,This Organization is for NA31370 Users only
+NA31410,Corp - Purchasing 1,AGGNA Departments,DefaultAdmin,This Organization is for NA31410 Users only
+NA31510,Corporate CIS,AGGNA Departments,DefaultAdmin,This Organization is for NA31510 Users only
+NA32110,Sales - Group 1 Domestic InEx,AGGNA Departments,DefaultAdmin,This Organization is for NA32110 Users only
+NA32120,Sales - Group 1 Body Sealing,AGGNA Departments,DefaultAdmin,This Organization is for NA32120 Users only
+NA32130,Sales - Group 1 Safety Systems,AGGNA Departments,DefaultAdmin,This Organization is for NA32130 Users only
+NA32140,Sales - Group 1 Functional,AGGNA Departments,DefaultAdmin,This Organization is for NA32140 Users only
+NA32200,Sales - Group 2 JOEM,AGGNA Departments,DefaultAdmin,This Organization is for NA32200 Users only
+NA32311,Sales - Interior/Exterior,AGGNA Departments,DefaultAdmin,This Organization is for NA32311 Users only
+NA32320,Sales - Group 3 Body Sealing,AGGNA Departments,DefaultAdmin,This Organization is for NA32320 Users only
+NA32330,Sales - Group 3 Safety Systems,AGGNA Departments,DefaultAdmin,This Organization is for NA32330 Users only
+NA32340,SALES - GROUP 3 FUNCTIONAL,AGGNA Departments,DefaultAdmin,This Organization is for NA32340 Users only
+NA32500,Sales - LED Non-Auto,AGGNA Departments,DefaultAdmin,This Organization is for NA32500 Users only
+NA32610,Sales Planning,AGGNA Departments,DefaultAdmin,This Organization is for NA32610 Users only
+NA32620,Production Control,AGGNA Departments,DefaultAdmin,This Organization is for NA32620 Users only
+NA32630,TPS,AGGNA Departments,DefaultAdmin,This Organization is for NA32630 Users only
+NA32635,AIM - ADV INNOVAT MONOZUKURI,AGGNA Departments,DefaultAdmin,This Organization is for NA32635 Users only
+NA33200,Tech - Technical Planning,AGGNA Departments,DefaultAdmin,This Organization is for NA33200 Users only
+NA33250,MED,AGGNA Departments,DefaultAdmin,This Organization is for NA33250 Users only
+NA33300,Tech - Quality,AGGNA Departments,DefaultAdmin,This Organization is for NA33300 Users only
+NA33400,Tech - IT,AGGNA Departments,DefaultAdmin,This Organization is for NA33400 Users only
+NA33450,CAE,AGGNA Departments,DefaultAdmin,This Organization is for NA33450 Users only
+NA33500,Tech - Body Sealing,AGGNA Departments,DefaultAdmin,This Organization is for NA33500 Users only
+NA33600,Tech - Safety Systems,AGGNA Departments,DefaultAdmin,This Organization is for NA33600 Users only
+NA33700,Tech - Interior/Exterior,AGGNA Departments,DefaultAdmin,This Organization is for NA33700 Users only
+NA33800,Tech - Functional,AGGNA Departments,DefaultAdmin,This Organization is for NA33800 Users only
+NA33900,Mold Technical,AGGNA Departments,DefaultAdmin,This Organization is for NA33900 Users only
+NAI_Annual_old,NAI_Annual_old,,DefaultAdmin,
+NAI_Interior Exterior_old,NAI_Interior Exterior_old,,DefaultAdmin,
+NAI_SGA_old,NAI_SGA_old,,DefaultAdmin,
+NSS,NSS Warehouse,Department,DefaultAdmin,This Organization is for NSS Users only
+NSS Warehouse,NSS Warehouse,Department,DefaultAdmin,This Organization is for NSS Warehouse Users only
+OrgCode-11,Worldwide Products,Department,DefaultAdmin,
+OrgCode-12,South America,,DefaultAdmin,This Organization is for OrgCode-12 Users only
+OrgCode-13,North America,,DefaultAdmin,This Organization is for OrgCode-13 Users only
+OrgCode-14,Europe,,DefaultAdmin,This Organization is for OrgCode-14 Users only
+OrgCode-15,Australia,,DefaultAdmin,This Organization is for OrgCode-15 Users only
+OrgCode-16,Asia Pacific,,DefaultAdmin,This Organization is for OrgCode-16 Users only
+OrgCode-17,Africa,,DefaultAdmin,This Organization is for OrgCode-17 Users only
+OrgCode-18,Sales,,DefaultAdmin,This Organization is for OrgCode-18 Users only
+OrgCode-19,Quality Assurance,,DefaultAdmin,This Organization is for OrgCode-19 Users only
+OrgCode-20,Implementation Services,,DefaultAdmin,This Organization is for OrgCode-20 Users only
+OrgCode-21,Marketing,,DefaultAdmin,This Organization is for OrgCode-21 Users only
+OrgCode-22,IS/IT,,DefaultAdmin,This Organization is for OrgCode-22 Users only
+OrgCode-23,Human Resources,,DefaultAdmin,This Organization is for OrgCode-23 Users only
+OrgCode-24,Finance,,DefaultAdmin,This Organization is for OrgCode-24 Users only
+OrgCode-25,Executive,,DefaultAdmin,This Organization is for OrgCode-25 Users only
+OrgCode-26,Support,,DefaultAdmin,This Organization is for OrgCode-26 Users only
+OrgCode-27,Engineering,,DefaultAdmin,This Organization is for OrgCode-27 Users only
+PET1,Production Engineering (Test),AGGSIN,DefaultAdmin,This Organization is for PET1 Users only
+PINTURA - 263475,Pintura - 263475,AGGIMX Departments,DefaultAdmin,This Organization is for PINTURA - 263475 Users only
+PINTURA - 264446,PINTURA - 264446,AGGIMX Departments,DefaultAdmin,This Organization is for PINTURA - 264446 Users only
+PIPE (REWORK) - 263455,Pipe (Rework) - 263455,AGGIMX Departments,DefaultAdmin,This Organization is for PIPE (REWORK) - 263455 Users only
+PIPE (REWORK) - 264449,PIPE (REWORK) - 264449,AGGIMX Departments,DefaultAdmin,This Organization is for PIPE (REWORK) - 264449 Users only
+PIPE (REWORK) - 264452,Pipe (Rework) - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for PIPE (REWORK) - 264452 Users only
+PIPE (REWORK) - 264453,Pipe (Rework) - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for PIPE (REWORK) - 264453 Users only
+PLATINADO - 264447,PLATINADO - 264447,AGGIMX Departments,DefaultAdmin,This Organization is for PLATINADO - 264447 Users only
+PLATINADO - 264453,Platinado - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for PLATINADO - 264453 Users only
+PRODUCCIÓN - 0,Producción - 0,AGGIMX Departments,DefaultAdmin,This Organization is for PRODUCCIÓN - 0 Users only
+PRODUCCIÓN - 263465,Producción - 263465,AGGIMX Departments,DefaultAdmin,This Organization is for PRODUCCIÓN - 263465 Users only
+PRODUCCIÓN - 263470,PRODUCCIÓN - 263470,AGGIMX Departments,DefaultAdmin,This Organization is for PRODUCCIÓN - 263470 Users only
+PROYECTOS - 0,Proyectos - 0,AGGIMX Departments,DefaultAdmin,This Organization is for PROYECTOS - 0 Users only
+PROYECTOS - 263460,PROYECTOS - 263460,AGGIMX Departments,DefaultAdmin,This Organization is for PROYECTOS - 263460 Users only
+PS_COM,PS COM,NA_DIVISION,DefaultAdmin,This Organization is for PS_COM Users only
+PS_IE,PS IE,NA_DIVISION,DefaultAdmin,This Organization is for PS_IE Users only
+PS_SS,PS SS,NA_DIVISION,DefaultAdmin,This Organization is for PS_SS Users only
+PS110,AGG Executive,AGGNA Departments,DefaultAdmin,This Organization is for PS110 Users only
+PS210,TX Executive,AGGNA Departments,DefaultAdmin,This Organization is for PS210 Users only
+PS31220,COST PLANNING,AGGNA Departments,DefaultAdmin,This Organization is for PS31220 Users only
+PS31410,CORP - PURCHASING 1,AGGNA Departments,DefaultAdmin,This Organization is for PS31410 Users only
+PS32200,SALES - GROUP 2 JOEM,AGGNA Departments,DefaultAdmin,This Organization is for PS32200 Users only
+PS3262,NA SALES 2,AGGNA Departments,DefaultAdmin,This Organization is for PS3262 Users only
+PS32620,NA - SALES,AGGNA Departments,DefaultAdmin,This Organization is for PS32620 Users only
+PS32635,AIM - ADV INNOVAT MONOZUKURI,AGGNA Departments,DefaultAdmin,This Organization is for PS32635 Users only
+PS33200,TECH - TECHNICAL PLANNING,AGGNA Departments,DefaultAdmin,This Organization is for PS33200 Users only
+PS33500,TECH - BODY SEALING,AGGNA Departments,DefaultAdmin,This Organization is for PS33500 Users only
+PS33700,Tech - Interior/Exterior,AGGNA Departments,DefaultAdmin,This Organization is for PS33700 Users only
+PS415,AGGPS KY,AGGNA Departments,DefaultAdmin,This Organization is for PS415 Users only
+PS6160,AGGPS MO,AGGNA Departments,DefaultAdmin,This Organization is for PS6160 Users only
+PS6705,INDIRECT - PRODUCTION,AGGNA Departments,DefaultAdmin,This Organization is for PS6705 Users only
+PS6715,INDIRECT - PLANNING,AGGNA Departments,DefaultAdmin,This Organization is for PS6715 Users only
+PV MANAGER LEVEL,AGGPECVAL MANAGER LEVEL,AGGPECVAL,DefaultAdmin,
+PV_ADMINISTRATION,PV ADMINISTRATION,PV_DIVISION,DefaultAdmin,This Organization is for PV_ADMINISTRATION Users only
+PV_DIVISION,AGG Pecval Divisions,AGGPECVAL,147480,
+PV_INTERIOR EXTERIOR,PV INTERIOR EXTERIOR,PV_DIVISION,DefaultAdmin,This Organization is for PV_INTERIOR EXTERIOR Users only
+PV_LOGISTICS,PV LOGISTICS,PV_DIVISION,DefaultAdmin,This Organization is for PV_LOGISTICS Users only
+PV_MAINTENANCE,PV MAINTENANCE,PV_DIVISION,DefaultAdmin,This Organization is for PV_MAINTENANCE Users only
+PV_MGR LEVEL 0,LEVEL 0 - CHIEF OPERATING OFFICER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 0 Users only
+PV_MGR LEVEL 1,LEVEL 1 - DIRECTOR,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 1 Users only
+PV_MGR LEVEL 2,LEVEL 2 - SENIOR OFFICER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 2 Users only
+PV_MGR LEVEL 3,LEVEL 3 VICE PRESIDENT,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 3 Users only
+PV_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 4 Users only
+PV_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 5 Users only
+PV_MGR LEVEL 6,LEVEL 6 - FIRST-LINE MANAGER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 6 Users only
+PV_MGR LEVEL 7,LEVEL 7 SUPERVISOR,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 7 Users only
+PV_MGR LEVEL 8,LEVEL 8 - NOT DEFINED,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 8 Users only
+PV_MGR LEVEL 9,LEVEL 9 NON-MANAGER,PV MANAGER LEVEL,DefaultAdmin,This Organization is for PV_MGR LEVEL 9 Users only
+PV_QUALITY CONTROL,PV QUALITY CONTROL,PV_DIVISION,DefaultAdmin,This Organization is for PV_QUALITY CONTROL Users only
+PV21100,DIRECTORS,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21100 Users only
+PV21111,"HUMAN RESOURCES/ HEALTH, SAFETY AND ENVIRONMENT",AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21111 Users only
+PV21116,INFORMATION TECHNOLOGY,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21116 Users only
+PV21120,CONTROLLERSHIP,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21120 Users only
+PV21130,SALES,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21130 Users only
+PV21140,LOGISTICS,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV21140 Users only
+PV23100,PLASTIC INJECTION,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23100 Users only
+PV23110,MOUNTING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23110 Users only
+PV23115,PAINTING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23115 Users only
+PV23120,HAND PAINTING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23120 Users only
+PV23200,PRODUCT AND PROCESS PLANNING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23200 Users only
+PV23210,QUALITY CONTROL,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23210 Users only
+PV23215,COMPONENT PLANNING AND LOGISTICS,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23215 Users only
+PV23220,MAINTENANCE,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23220 Users only
+PV23225,TOOLING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23225 Users only
+PV23230,ENGINEERING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23230 Users only
+PV23235,KAIZEN,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23235 Users only
+PV23236,PPCC,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23236 Users only
+PV23245,PURCHASING,AGGPECVAL_Departments,DefaultAdmin,This Organization is for PV23245 Users only
+RECURSOS HUMANOS - 0,Recursos Humanos - 0,AGGIMX Departments,DefaultAdmin,This Organization is for RECURSOS HUMANOS - 0 Users only
+RECURSOS HUMANOS - 268380,RECURSOS HUMANOS - 268380,AGGIMX Departments,DefaultAdmin,This Organization is for RECURSOS HUMANOS - 268380 Users only
+REGISTRO - 0,Registro - 0,AGGIMX Departments,DefaultAdmin,This Organization is for REGISTRO - 0 Users only
+REGISTRO - 264453,REGISTRO - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for REGISTRO - 264453 Users only
+RMX MANAGER LEVEL,AGGRMX MANAGER LEVEL,AGGRMX,DefaultAdmin,
+RMX_ADMINISTRACION,RMX ADMINISTRACION,RMX_Division,DefaultAdmin,This Organization is for RMX_ADMINISTRACION Users only
+RMX_CALIDAD INSPECCION,RMX CALIDAD INSPECCION,RMX_Division,DefaultAdmin,This Organization is for RMX_CALIDAD INSPECCION Users only
+RMX_CALIDAD LABORATORIO,RMX CALIDAD LABORATORIO,RMX_Division,DefaultAdmin,This Organization is for RMX_CALIDAD LABORATORIO Users only
+RMX_CONTROL DE PRODUCCION,RMX CONTROL DE PRODUCCION,RMX_Division,DefaultAdmin,This Organization is for RMX_CONTROL DE PRODUCCION Users only
+RMX_Division,AGGRMX Division,AGGRMX,DefaultAdmin,
+RMX_ENSAMBLE,RMX ENSAMBLE,RMX_Division,DefaultAdmin,This Organization is for RMX_ENSAMBLE Users only
+RMX_ENTRENAMIENTO,RMX ENTRENAMIENTO,RMX_Division,DefaultAdmin,This Organization is for RMX_ENTRENAMIENTO Users only
+RMX_EXTRUSION,RMX EXTRUSION,RMX_Division,DefaultAdmin,This Organization is for RMX_EXTRUSION Users only
+RMX_HORNO,RMX HORNO,RMX_Division,DefaultAdmin,This Organization is for RMX_HORNO Users only
+RMX_INGENIERIA,RMX INGENIERIA,RMX_Division,DefaultAdmin,This Organization is for RMX_INGENIERIA Users only
+RMX_MANTENIMIENTO,RMX MANTENIMIENTO,RMX_Division,DefaultAdmin,This Organization is for RMX_MANTENIMIENTO Users only
+RMX_MEZCLADO,RMX MEZCLADO,RMX_Division,DefaultAdmin,This Organization is for RMX_MEZCLADO Users only
+RMX_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 0 Users only
+RMX_MGR LEVEL 1,LEVEL 1 - DIRECTOR,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 1 Users only
+RMX_MGR LEVEL 2,LEVEL 2 - SENIOR OFFICER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 2 Users only
+RMX_MGR LEVEL 3,LEVEL 3 - VICE PRESIDENT,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 3 Users only
+RMX_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 4 Users only
+RMX_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 5 Users only
+RMX_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 6 Users only
+RMX_MGR LEVEL 7,LEVEL 7 SUPERVISOR,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 7 Users only
+RMX_MGR LEVEL 8,LEVEL 8 - NOT DEFINED,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 8 Users only
+RMX_MGR LEVEL 9,LEVEL 9 NON-MANAGER,RMX MANAGER LEVEL,DefaultAdmin,This Organization is for RMX_MGR LEVEL 9 Users only
+RMX_OPERACIONES,RMX OPERACIONES,RMX_Division,DefaultAdmin,This Organization is for RMX_OPERACIONES Users only
+RMX_REC / ENV,RMX REC / ENV,RMX_Division,DefaultAdmin,This Organization is for RMX_REC / ENV Users only
+RMX_SEGURIDAD E HIGIENE,RMX SEGURIDAD E HIGIENE,RMX_Division,DefaultAdmin,This Organization is for RMX_SEGURIDAD E HIGIENE Users only
+RMX_STAFF ADMINISTRACION,RMX STAFF ADMINISTRACION,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF ADMINISTRACION Users only
+RMX_STAFF CALIDAD,RMX STAFF CALIDAD,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF CALIDAD Users only
+RMX_STAFF CONTABILIDAD,RMX STAFF CONTABILIDAD,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF CONTABILIDAD Users only
+RMX_STAFF CONTROL DE PRODUCCION,RMX STAFF CONTROL DE PRODUCCION,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF CONTROL DE PRODUCCION Users only
+RMX_STAFF ENSAMBLE,RMX STAFF ENSAMBLE,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF ENSAMBLE Users only
+RMX_STAFF EXTRUSION,RMX STAFF EXTRUSION,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF EXTRUSION Users only
+RMX_STAFF HORNO,RMX STAFF HORNO,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF HORNO Users only
+RMX_STAFF IMPORT-EXPORT,RMX STAFF IMPORT-EXPORT,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF IMPORT-EXPORT Users only
+RMX_STAFF INGENIERIA,RMX STAFF INGENIERIA,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF INGENIERIA Users only
+RMX_STAFF MANTENIMIENTO,RMX STAFF MANTENIMIENTO,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF MANTENIMIENTO Users only
+RMX_STAFF MEZCLADO,STAFF MEZCLADO,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF MEZCLADO Users only
+RMX_STAFF OPERACIONES,RMX STAFF OPERACIONES,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF OPERACIONES Users only
+RMX_STAFF REC / ENV,RMX STAFF REC / ENV,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF REC / ENV Users only
+RMX_STAFF RECURSOS HUMANOS,RMX STAFF RECURSOS HUMANOS,RMX_Division,DefaultAdmin,This Organization is for RMX_STAFF RECURSOS HUMANOS Users only
+RMX102,OVEN,AGGRMX_Departments,DefaultAdmin,This Organization is for RMX102 Users only
+RMX2000,OPERATIONS,AGGRMX_Departments,DefaultAdmin,
+RMX3000,MAINTENANCE,AGGRMX_Departments,DefaultAdmin,
+RMX3010,ENGINEERING,AGGRMX_Departments,DefaultAdmin,
+RMX3520,ASSY-OVEN-EXT,AGGRMX_Departments,DefaultAdmin,
+RMX3535,MIXING,AGGRMX_Departments,DefaultAdmin,
+RMX4000,QC,AGGRMX_Departments,DefaultAdmin,
+RMX5000,PLANNING,AGGRMX_Departments,DefaultAdmin,This Organization is for RMX5000 Users only
+RMX5010,SHIPPING,AGGRMX_Departments,DefaultAdmin,This Organization is for RMX5010 Users only
+RMX7101,ADMINISTRATION,AGGRMX_Departments,DefaultAdmin,
+RMX7200,HR,AGGRMX_Departments,DefaultAdmin,
+RMX8000,ACCOUNTING,AGGRMX_Departments,DefaultAdmin,This Organization is for RMX8000 Users only
+RTC_COM,RTC COM,NA_DIVISION,DefaultAdmin,This Organization is for RTC_COM Users only
+RTC2150,General & Administrative,AGGNA Departments,DefaultAdmin,This Organization is for RTC2150 Users only
+RTC3650,AGGr Technical,AGGNA Departments,DefaultAdmin,This Organization is for RTC3650 Users only
+RTC3660,AGGRTC TRAM Group,AGGNA Departments,DefaultAdmin,This Organization is for RTC3660 Users only
+S4615,MKS4615,Department,DefaultAdmin,This Organization is for S4615 Users only
+S4616,MKS4616,Department,DefaultAdmin,This Organization is for S4616 Users only
+S4617,MKS4617,Department,DefaultAdmin,This Organization is for S4617 Users only
+S6260M,S6260 - Quality Control - 6260M,Department,87571,This Organization is for S6260M Users only
+sampleorg1,Administration - sample org,AGGMO,Administrator,This Organization is for sampleorg1 Users only
+sampleorg2,Production - sample org,AGGMO,Administrator,This Organization is for sampleorg2 Users only
+SGA,SGA,MO_Division,DefaultAdmin,
+SMT1,Specialized Maintenance (Test),AGGSIN,DefaultAdmin,This Organization is for SMT1 Users only
+SS,SS,MO_Division,DefaultAdmin,This Organization is for SS Users only
+SW Assy Bldg 10 Mgmt,SW Assy Bldg 10 Mgmt,Department,DefaultAdmin,This Organization is for SW Assy Bldg 10 Mgmt Users only
+TACOMA INTERIOR - 264452,TACOMA INTERIOR - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for TACOMA INTERIOR - 264452 Users only
+TACOMA TRANSFER - 0,Tacoma Transfer - 0,AGGIMX Departments,DefaultAdmin,This Organization is for TACOMA TRANSFER - 0 Users only
+TACOMA TRANSFER - 264452,Tacoma Transfer - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for TACOMA TRANSFER - 264452 Users only
+TAPEX MANAGER LEVEL,AGGTAPEX MANAGER LEVEL,AGGTAPEX,147480,
+TAPEX_Division,AGGTAPEX Division,AGGTAPEX,147480,This Organization is for TAPEX_Division Users only
+TAPEXWEST MANAGER LEVEL,AGG TAPEX WEST MANAGER LEVEL,AGGTAPEXWEST,147480,This Organization is for TAPEXWEST MANAGER LEVEL Users only
+TAPEXWEST_DIVISION,AGG TAPEXWEST DIVISIONS,AGGTAPEXWEST,147480,This Organization is for TAPEXWEST_DIVISION Users only
+TEAM MEMBERS BANK - 263470,TEAM MEMBERS BANK - 263470,AGGIMX Departments,DefaultAdmin,This Organization is for TEAM MEMBERS BANK - 263470 Users only
+TECNOLOGÍAS DE LA INFORMACIÓN - 0,Tecnologías de la Información - 0,AGGIMX Departments,DefaultAdmin,This Organization is for TECNOLOGÍAS DE LA INFORMACIÓN - 0 Users only
+TECNOLOGÍAS DE LA INFORMACIÓN - 268320,TECNOLOGÍAS DE LA INFORMACIÓN - 268320,AGGIMX Departments,DefaultAdmin,This Organization is for TECNOLOGÍAS DE LA INFORMACIÓN - 268320 Users only
+AGG Gosei,AGG Gosei,AGGMO,DefaultAdmin,
+TPS - 0,TPS - 0,AGGIMX Departments,DefaultAdmin,This Organization is for TPS - 0 Users only
+TPS - 263470,TPS - 263470,AGGIMX Departments,DefaultAdmin,This Organization is for TPS - 263470 Users only
+TPS - 263496,TPS - 263496,AGGIMX Departments,DefaultAdmin,This Organization is for TPS - 263496 Users only
+TPX_MGR LEVEL 0,LEVEL 0 - CHIEF OPERATING OFFICER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 0 Users only
+TPX_MGR LEVEL 1,LEVEL 1 - DIRECTOR,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 1 Users only
+TPX_MGR LEVEL 2,LEVEL 2 - SENIOR OFFICER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 2 Users only
+TPX_MGR LEVEL 3,LEVEL 3 - VICE PRESIDENT,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 3 Users only
+TPX_MGR LEVEL 4,LEVEL 4 - SENIOR MANAGER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 4 Users only
+TPX_MGR LEVEL 5,LEVEL 5 - MID-LEVEL MANAGER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 5 Users only
+TPX_MGR LEVEL 6,LEVEL 6 - FIRST-LINE MANAGER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 6 Users only
+TPX_MGR LEVEL 7,LEVEL 7 - SUPERVISOR,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 7 Users only
+TPX_MGR LEVEL 8,LEVEL 8 - NOT DEFINED,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 8 Users only
+TPX_MGR LEVEL 9,LEVEL 9 - NON-MANAGER,TAPEX MANAGER LEVEL,DefaultAdmin,This Organization is for TPX_MGR LEVEL 9 Users only
+TPX1,WHEELS OPERATORS,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX1 Users only
+TPX11,MAINTENANCE AUXILIARY AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX11 Users only
+TPX12,QC OPERATORS AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX12 Users only
+TPX13,MATERIAL DELIVERY AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX13 Users only
+TPX14,TECH MAINTENANCE,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX14 Users only
+TPX16,INVENTORY,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX16 Users only
+TPX17,PURCHASING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX17 Users only
+TPX18,QUALITY ENG. AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX18 Users only
+TPX20,VICE PRESIDENT,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX20 Users only
+TPX21,ACCOUNTING MGR,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX21 Users only
+TPX22,ACCOUNTING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX22 Users only
+TPX23,PAYROLL,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX23 Users only
+TPX24,NURSE,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX24 Users only
+TPX26,IMPORT EXPORT,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX26 Users only
+TPX27,PRACTICANTE,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX27 Users only
+TPX28,ENVIRONMENTAL AND SECURITY COOR.,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX28 Users only
+TPX30,PLANNER,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX30 Users only
+TPX32,MOULDING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX32 Users only
+TPX33,HR SUPPORT,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX33 Users only
+TPX34,IT SUPPORT,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX34 Users only
+TPX35,QC OPERATORS SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX35 Users only
+TPX36,MATERIAL DELIVERY SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX36 Users only
+TPX37,MAINTENANCE AUXILIARY SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX37 Users only
+TPX4,AIR BAGS OP.,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX4 Users only
+TPX40,LABOR RELATIONS,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX40 Users only
+TPX42,QUALITY ASST MGR PE,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX42 Users only
+TPX43,PRODUCTION ASST MGR AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX43 Users only
+TPX44,TRAINING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX44 Users only
+TPX47,IT ENGINEERING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX47 Users only
+TPX48,MAINTENANCE MGR,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX48 Users only
+TPX50,IT MGR,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX50 Users only
+TPX51,TEAM LEADER (AB),AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX51 Users only
+TPX52,TEAM LEADER (SW),AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX52 Users only
+TPX53,PRODUCTION SUPERVISOR (AB),AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX53 Users only
+TPX54,PRODUCTION SUPERVISOR (SW),AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX54 Users only
+TPX56,MAINTENANCE AUXILIARY,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX56 Users only
+TPX57,MATERIAL DELIVERY,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX57 Users only
+TPX59,TPS,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX59 Users only
+TPX61,APQP,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX61 Users only
+TPX63,TECH MAINTENANCE AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX63 Users only
+TPX64,TECH MAINTENANCE SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX64 Users only
+TPX65,QUALITY ASST MGR AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX65 Users only
+TPX66,MAINTENANCE SUP,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX66 Users only
+TPX67,SHIPPING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX67 Users only
+TPX68,QUALITY ASST MGR AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX68 Users only
+TPX69,QUALITY ENG. INCOMING,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX69 Users only
+TPX70,QUALITY ENG. SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX70 Users only
+TPX71,PRODUCTION ASST MGR SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX71 Users only
+TPX73,AUTOMATION,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX73 Users only
+TPX8,PLANT MGR AB,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX8 Users only
+TPX9,PLANT MGR SW,AGGTAPEX_Departments,DefaultAdmin,This Organization is for TPX9 Users only
+TPXW_MGR LEVEL 0,LEVEL 0 - CHIEF OPERATING OFFICER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 0 Users only
+TPXW_MGR LEVEL 1,LEVEL 1 - DIRECTOR,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 1 Users only
+TPXW_MGR LEVEL 2,LEVEL 2 - SENIOR OFFICER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 2 Users only
+TPXW_MGR LEVEL 3,LEVEL 3 - VICE PRESIDENT,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 3 Users only
+TPXW_MGR LEVEL 4,LEVEL 4 - SENIOR MANAGER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 4 Users only
+TPXW_MGR LEVEL 5,LEVEL 5 - MID-LEVEL MANAGER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 5 Users only
+TPXW_MGR LEVEL 6,LEVEL 6 - FIRST-LINE MANAGER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 6 Users only
+TPXW_MGR LEVEL 7,LEVEL 7 - SUPERVISOR,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 7 Users only
+TPXW_MGR LEVEL 8,LEVEL 8 - NOT DEFINED,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 8 Users only
+TPXW_MGR LEVEL 9,LEVEL 9 - NON-MANAGER,TAPEXWEST MANAGER LEVEL,DefaultAdmin,This Organization is for TPXW_MGR LEVEL 9 Users only
+TPXW12,QC OPERATORS AB,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW12 Users only
+TPXW14,TECH MAINTENANCE,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW14 Users only
+TPXW17,PURCHASING,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW17 Users only
+TPXW18,QUALITY ENG.,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW18 Users only
+TPXW19,ENGINEERING,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW19 Users only
+TPXW2,TRAINING OPERATORS (WHEELS),AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW2 Users only
+TPXW21,ACCOUNTING MGR,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW21 Users only
+TPXW22,ACCOUNTING,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW22 Users only
+TPXW24,NURSE,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW24 Users only
+TPXW28,ENVIRONMENTAL AND SECURITY COOR.,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW28 Users only
+TPXW33,HR SUPPORT,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW33 Users only
+TPXW34,IT SUPPORT,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW34 Users only
+TPXW4,KINEE BAGS,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW4 Users only
+TPXW40,LABOR RELATIONS,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW40 Users only
+TPXW44,TRAINING,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW44 Users only
+TPXW53,PRODUCTION SUPERVISOR (AB),AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW53 Users only
+TPXW60,LOGISTICA,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW60 Users only
+TPXW61,ALMACEN,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW61 Users only
+TPXW62,BOLSAS CORTE,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW62 Users only
+TPXW63,KAIZEN,AGGTAPEXWEST_Departments,DefaultAdmin,This Organization is for TPXW63 Users only
+TX_ADP Division,TX ADP Division,AGGTX,DefaultAdmin,This Organization is for TX_ADP Division Users only
+TX_Chief Operating Officer,TX Chief Operating Officer,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_Chief Operating Officer Users only
+TX_COM,TX COM,TX_DIVISION,DefaultAdmin,This Organization is for TX_COM Users only
+TX_Direct,TX Direct,TX_Labor Type,DefaultAdmin,This Organization is for TX_Direct Users only
+TX_Direct Indirect,TX Direct Indirect,TX_DIVISION,DefaultAdmin,This Organization is for TX_Direct Indirect Users only
+TX_Direct_LaborType,Direct,TX_Labor Type,DefaultAdmin,This Organization is for TX_Direct_LaborType Users only
+TX_DIVISION,AGGTX Division,AGGTX,DefaultAdmin,
+TX_First-Line Manager,TX First-Line Manager,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_First-Line Manager Users only
+TX_IE,TX IE,TX_DIVISION,DefaultAdmin,This Organization is for TX_IE Users only
+TX_Indirect,TX Indirect,TX_Labor Type,DefaultAdmin,This Organization is for TX_Indirect Users only
+TX_Indirect_LaborType,Indirect,TX_Labor Type,DefaultAdmin,This Organization is for TX_Indirect_LaborType Users only
+TX_Interior - Exterior,TX Interior - Exterior,TX_DIVISION,DefaultAdmin,This Organization is for TX_Interior - Exterior Users only
+TX_Interior Exterior,TX Interior Exterior,TX_DIVISION,DefaultAdmin,This Organization is for TX_Interior Exterior Users only
+TX_Labor Type,TX Labor Type Description,AGGTX,DefaultAdmin,This Organization is for TX_Labor Type Users only
+TX_MGR LEVEL 0,LEVEL 0 CHIEF OPERATING OFFICER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 0 Users only
+TX_MGR LEVEL 1,TX LEVEL 1 - DIRECTOR,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 1 Users only
+TX_MGR LEVEL 2,TX LEVEL 2 - SENIOR OFFICER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 2 Users only
+TX_MGR LEVEL 3,TX LEVEL 3 - VICE PRESIDENT,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 3 Users only
+TX_MGR LEVEL 4,LEVEL 4 SENIOR MANAGER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 4 Users only
+TX_MGR LEVEL 5,LEVEL 5 MID-LEVEL MANAGER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 5 Users only
+TX_MGR LEVEL 6,LEVEL 6 FIRST-LINE MANAGER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 6 Users only
+TX_MGR LEVEL 7,LEVEL 7 SUPERVISOR,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 7 Users only
+TX_MGR LEVEL 8,TX LEVEL 8 - NOT DEFINED,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 8 Users only
+TX_MGR LEVEL 9,LEVEL 9 NON-MANAGER,AGGTX MANAGER LEVEL,DefaultAdmin,This Organization is for TX_MGR LEVEL 9 Users only
+TX_Mid-Level Manager,TX Mid-Level Manager,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_Mid-Level Manager Users only
+TX_Non-Manager,TX Non-Manager,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_Non-Manager Users only
+TX_Senior Manager,TX Senior Manager,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_Senior Manager Users only
+TX_SGA,TX SGA,TX_DIVISION,DefaultAdmin,This Organization is for TX_SGA Users only
+TX_SGA_Division,TX SGA Division,TX_ADP Division,DefaultAdmin,This Organization is for TX_SGA_Division Users only
+TX_SGA_LaborType,SGA,TX_Labor Type,DefaultAdmin,This Organization is for TX_SGA_LaborType Users only
+TX_Supervisor,TX Supervisor,AGGTX JOB MANAGER LEVEL,DefaultAdmin,This Organization is for TX_Supervisor Users only
+TX004210,Facilities Maintenance,AGGTX Departments,AdamAdmin,This Organization is for TX004210 Users only
+TX008550,Shipping Staffing,AGGTX Departments,AdamAdmin,This Organization is for TX008550 Users only
+TX008552,Internal Conveyance,AGGTX Departments,AdamAdmin,This Organization is for TX008552 Users only
+TX008555,Service,AGGTX Departments,AdamAdmin,008555 Service
+TX04445X,Production Injection Salary,AGGTX Departments,AdamAdmin,This Organization is for TX04445X Users only
+TX04446X,Production Paint Salary,AGGTX Departments,AdamAdmin,This Organization is for TX04446X Users only
+TX04447X,Production Assembly Salary,AGGTX Departments,AdamAdmin,
+TX2100,Executive,AGGTX Departments,DefaultAdmin,This Organization is for TX2100 Users only
+TX2421,Corporate Is It,AGGTX Departments,DefaultAdmin,This Organization is for TX2421 Users only
+TX4100,GM,AGGTX Departments,DefaultAdmin,This Organization is for TX4100 Users only
+TX4200,Facility Maintenance Staff,AGGTX Departments,DefaultAdmin,This Organization is for TX4200 Users only
+TX4201,Facility Maintenance Hourly,AGGTX Departments,DefaultAdmin,This Organization is for TX4201 Users only
+TX4210,Facilities Maintenance,AGGTX Departments,DefaultAdmin,This Organization is for TX4210 Users only
+TX4220,Technical Engineer Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4220 Users only
+TX4221,Technical Hourly Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4221 Users only
+TX4222,PAINT MAINTENANCE HOURLY INDIRECT,AGGTX Departments,DefaultAdmin,This Organization is for TX4222 Users only
+TX4223,Engineering Tech Hourly,AGGTX Departments,DefaultAdmin,This Organization is for TX4223 Users only
+TX4224,Kaizen,AGGTX Departments,DefaultAdmin,This Organization is for TX4224 Users only
+TX4230,PRODUCTION INJECTION INDIRECT,AGGTX Departments,DefaultAdmin,This Organization is for TX4230 Users only
+TX4232,PRODUCTION ASSEMBLY INDIRECT,AGGTX Departments,DefaultAdmin,This Organization is for TX4232 Users only
+TX4235,PRODUCTION PAINT INDIRECT,AGGTX Departments,DefaultAdmin,This Organization is for TX4235 Users only
+TX4236,Paint Engineer,AGGTX Departments,DefaultAdmin,This Organization is for TX4236 Users only
+TX4240,PPCC Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4240 Users only
+TX4241,Service,AGGTX Departments,DefaultAdmin,This Organization is for TX4241 Users only
+TX4250,Maintenance,AGGTX Departments,DefaultAdmin,This Organization is for TX4250 Users only
+TX4251,Maintenance Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4251 Users only
+TX4252,Housekeeping,AGGTX Departments,DefaultAdmin,This Organization is for TX4252 Users only
+TX4255,Mold Maintenance Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4255 Users only
+TX4256,Mold Maintenance Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4256 Users only
+TX4258,Mold Setter,AGGTX Departments,DefaultAdmin,This Organization is for TX4258 Users only
+TX4260,Quality Assurance Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4260 Users only
+TX4261,Quality Assurance Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4261 Users only
+TX4270,Production Administration Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4270 Users only
+TX4271,Production Administration Indirect,AGGTX Departments,DefaultAdmin,This Organization is for TX4271 Users only
+TX4275,Internal Conveyance Staff,AGGTX Departments,DefaultAdmin,This Organization is for TX4275 Users only
+TX4276,Internal Conveyance Hourly,AGGTX Departments,DefaultAdmin,This Organization is for TX4276 Users only
+TX4280,AGGtx Production Executive,AGGTX Departments,DefaultAdmin,This Organization is for TX4280 Users only
+TX4292,Waste Management,AGGTX Departments,DefaultAdmin,This Organization is for TX4292 Users only
+TX4445,INJECTION (DIRECT),AGGTX Departments,DefaultAdmin,This Organization is for TX4445 Users only
+TX4446,PAINT (DIRECT),AGGTX Departments,DefaultAdmin,This Organization is for TX4446 Users only
+TX4447,ASSEMBLY (DIRECT),AGGTX Departments,DefaultAdmin,This Organization is for TX4447 Users only
+TX4449,Mold Setter,AGGTX Departments,DefaultAdmin,This Organization is for TX4449 Users only
+TX8520,AGGtx Executive,AGGTX Departments,DefaultAdmin,This Organization is for TX8520 Users only
+TX8525,Human Resources SGA,AGGTX Departments,DefaultAdmin,This Organization is for TX8525 Users only
+TX8530,General Affairs Staff,AGGTX Departments,DefaultAdmin,This Organization is for TX8530 Users only
+TX8535,EHS Staff,AGGTX Departments,DefaultAdmin,This Organization is for TX8535 Users only
+TX8540,Accounting SGA,AGGTX Departments,DefaultAdmin,This Organization is for TX8540 Users only
+TX8550,SHIPPING STAFFING,AGGTX Departments,DefaultAdmin,This Organization is for TX8550 Users only
+TX8551,Shipping Hourly,AGGTX Departments,DefaultAdmin,This Organization is for TX8551 Users only
+TX8552,Internal Conveyance,AGGTX Departments,DefaultAdmin,This Organization is for TX8552 Users only
+TX8555,Warehouse,AGGTX Departments,DefaultAdmin,This Organization is for TX8555 Users only
+TX9999,Temp Agency HR Administrators,AGGTX Departments,DefaultAdmin,This Organization is for TX9999 Users only
+VACUUM FORMING - 0,Vacuum forming - 0,AGGIMX Departments,DefaultAdmin,This Organization is for VACUUM FORMING - 0 Users only
+VACUUM FORMING - 264445,Vacuum forming - 264445,AGGIMX Departments,DefaultAdmin,This Organization is for VACUUM FORMING - 264445 Users only
+VACUUM FORMING - 264452,VACUUM FORMING - 264452,AGGIMX Departments,DefaultAdmin,This Organization is for VACUUM FORMING - 264452 Users only
+VACUUM FORMING - 264453,Vacuum forming - 264453,AGGIMX Departments,DefaultAdmin,This Organization is for VACUUM FORMING - 264453 Users only
+VENTAS - 0,Ventas - 0,AGGIMX Departments,DefaultAdmin,This Organization is for VENTAS - 0 Users only
+VENTAS - 268390,VENTAS - 268390,AGGIMX Departments,DefaultAdmin,This Organization is for VENTAS - 268390 Users only
+Work Location,Work Location,,DefaultAdmin,
+X4660,MX4660,Department,DefaultAdmin,This Organization is for X4660 Users only
+X4665,MX4665,Department,DefaultAdmin,This Organization is for X4665 Users only
+X4670,MX4670,Department,DefaultAdmin,This Organization is for X4670 Users only
+X4679,MX4679,Department,DefaultAdmin,This Organization is for X4679 Users only

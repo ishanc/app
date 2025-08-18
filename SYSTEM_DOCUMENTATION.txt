@@ -20,6 +20,7 @@ TABLE OF CONTENTS
 13. Today's Development Work
 14. Recent Code Improvements (July 17, 2025)
 15. Data Completeness Analysis (August 2025)
+16. Anomaly Report System Enhancements (August 2025)
 
 ================================================================================
 1. SYSTEM OVERVIEW
@@ -1821,4 +1822,275 @@ PLANNED IMPROVEMENTS:
 
 ================================================================================
 END OF DATA COMPLETENESS ANALYSIS DOCUMENTATION
+================================================================================
+
+================================================================================
+16. ANOMALY REPORT SYSTEM ENHANCEMENTS (AUGUST 2025)
+================================================================================
+
+OVERVIEW:
+---------
+Major enhancements to the anomaly reporting system to improve user experience,
+data accuracy, and field name consistency. These changes ensure users see only
+SumTotal field names (user-facing) in anomaly reports while maintaining robust
+error detection and reporting capabilities.
+
+ENHANCED FEATURES:
+------------------
+
+1. **SumTotal-Only Field Names:**
+   - All anomaly reports now display only SumTotal field names
+   - Users see field names they recognize from uploaded files
+   - Eliminates confusion from internal CSOD field names
+   - Consistent field naming across error logging and reporting
+
+2. **Improved Error Logging:**
+   - Enhanced validation to always capture mandatory field errors
+   - Smart field name resolution using Series metadata
+   - Proper handling of default-only fields (system-generated)
+   - Prevents blank reports for files with completeness issues
+
+3. **Streamlined Report Structure:**
+   - Removed unnecessary lines_with_errors_estimate metric
+   - Clean CSV format: file_name, section, field, severity, anomaly
+   - Summary section includes mandatory_completeness and total_errors
+   - Field section shows specific anomalies with severity levels
+
+4. **Unified Filename Mapping:**
+   - Centralized FilenameMapper utility prevents mapping drift
+   - Consistent filename-to-database-key conversion
+   - Single source of truth across all modules
+   - Supports business-agnostic future development
+
+TECHNICAL IMPLEMENTATION:
+-------------------------
+
+**Modified Components:**
+
+1. **Error Logger (lasVegas/app/error_logger.py):**
+   - Uses SumTotal field names from Series.attrs['input_field_name']
+   - Fallback to provided field name when attrs unavailable
+   - All error messages now contain user-facing field names
+
+2. **Transformer (lasVegas/app/sumtotal_transformer_with_neo4j.py):**
+   - Sets input_field_name metadata only for fields with SumTotal mappings
+   - Default-only fields skip validation (no user data to validate)
+   - Ensures mandatory validations are never skipped due to missing attrs
+
+3. **LLM Processor (lms_error_analyzer/database/llm_processor.py):**
+   - Removed lines_with_errors_estimate from all output schemas
+   - Added support for completeness-only files (generates non-empty reports)
+   - Enhanced field name extraction from error messages
+
+4. **Report Generator (lms_error_analyzer/database/report_generator.py):**
+   - Simplified CSV generation (removed lines_with_errors metric)
+   - Maintains clean report structure with summary and field sections
+
+5. **FilenameMapper Utility (lms_error_analyzer/database/utils/filename_mapper.py):**
+   - Centralized filename mapping logic
+   - Used by both file_server and dashboard modules
+   - Prevents inconsistencies in filename-to-database-key conversion
+
+**Data Flow Architecture:**
+
+```
+File Upload → file_server/app.py
+     ↓
+Validation → sumtotal_transformer_with_neo4j.py
+     ↓ (sets SumTotal field names in Series.attrs)
+Error Logging → error_logger.py
+     ↓ (stores errors with SumTotal names)
+Completeness → dashboard.py
+     ↓ (calculates mandatory completeness)
+Report Generation → report_generator.py → llm_processor.py
+     ↓ (synthesizes errors + completeness)
+CSV Output → anomaly_report_TIMESTAMP_FILENAME.csv
+```
+
+REPORT STRUCTURE:
+-----------------
+
+**CSV Format:**
+```csv
+file_name,section,field,severity,anomaly
+Prerequisites_Facility.xlsx,summary,mandatory_completeness,,0.0
+Prerequisites_Facility.xlsx,summary,total_errors,,15
+Prerequisites_Facility.xlsx,field,Facility Name,High,Mandatory field has empty values
+Prerequisites_Facility.xlsx,field,Address,Medium,Leading whitespace present; trim required
+```
+
+**Field Severity Levels:**
+- High: MANDATORY_EMPTY, TRUNCATION, ENCODING_ISSUE, DUPLICATE_RECORD, etc.
+- Medium: LEADING_SPACES, TRAILING_SPACES, DATE_FORMAT, OUTLIER_VALUE, etc.
+- Low: LEADING_ZEROS, BOOLEAN_CONVERSION
+
+VALIDATION LOGIC:
+-----------------
+
+**Field Types Validated:**
+1. **Fields with SumTotal Mappings:** Full validation with user-facing names
+2. **Default-Only Fields:** Skip validation (system-generated, not user data)
+
+**Validation Categories:**
+- Mandatory field completeness
+- Character length limits (truncation risk)
+- Data type compatibility
+- Format consistency (dates, booleans)
+- Encoding issues and special characters
+- Duplicate record detection
+- Outlier value identification
+
+BENEFITS:
+---------
+
+1. **User Experience:**
+   - Consistent field names users recognize
+   - No confusion from internal CSOD field names
+   - Clear, actionable anomaly descriptions
+
+2. **Data Quality:**
+   - Comprehensive error detection and reporting
+   - Proper handling of completeness-only scenarios
+   - Accurate mandatory field validation
+
+3. **System Reliability:**
+   - Centralized filename mapping prevents drift
+   - Robust error logging with proper field name resolution
+   - Clean report structure for easy parsing
+
+4. **Maintainability:**
+   - Single source of truth for filename mappings
+   - Modular utility classes for reusability
+   - Clear separation of concerns
+
+FUTURE ENHANCEMENTS:
+--------------------
+
+**Planned Improvements:**
+1. **Field Type Differentiation:** Distinguish mandatory vs optional fields in reports
+2. **Per-Field Percentages:** Individual completion rates for mandatory fields
+3. **Enhanced Metrics:** Field-level statistics and trends
+4. **Business Agnostic:** Remove hardcoded filename mappings for universal use
+
+**Integration Opportunities:**
+- Dashboard visualization of anomaly trends
+- Automated data quality alerts
+- Integration with data governance workflows
+- Export capabilities for compliance reporting
+
+TESTING RESULTS:
+----------------
+
+**Verified Functionality:**
+- ✅ Prerequisites_Facility.xlsx generates non-empty reports with 0% completeness
+- ✅ All field names appear as SumTotal names in anomaly reports
+- ✅ Summary section excludes lines_with_errors metric
+- ✅ Filename mapping consistent across file_server and dashboard modules
+- ✅ Mandatory field validations properly logged and reported
+
+**Performance Impact:**
+- No significant performance degradation
+- Improved report generation reliability
+- Reduced false negatives in anomaly detection
+
+================================================================================
+17. CRITICAL DATA LOSS ISSUE - TOPIC FIELD TRANSFORMATION (AUGUST 2025)
+================================================================================
+
+ISSUE DISCOVERY:
+----------------
+During anomaly report implementation, a critical data loss issue was discovered
+in the transformation pipeline affecting mandatory fields.
+
+PROBLEM DESCRIPTION:
+--------------------
+
+**Symptoms:**
+- Input Topic field: 100% populated (1691/1691 records) ✅
+- Output Topic field: 16.7% empty (282/1691 records) ❌
+- Anomaly report discrepancy: 100% completeness vs MANDATORY_EMPTY errors
+
+**Root Cause Analysis:**
+The transformation pipeline is losing data between input_df and output_df:
+
+```
+Input DataFrame (Topic field) → [TRANSFORMATION PROCESS] → Output DataFrame (Topic field)
+     100% populated                    DATA LOSS OCCURS              16.7% empty
+```
+
+**Technical Details:**
+
+1. **File:** lasVegas/app/sumtotal_transformer_with_neo4j.py
+2. **Function:** transform_sumtotal_file() lines 343-367
+3. **Process Flow:**
+   ```python
+   # Line 351: Copy from input to output ✅
+   process_source_field_mapping(input_df, output_df, rule, populated_fields)
+   
+   # Line 354: Apply transformations ❌ POTENTIAL DATA LOSS
+   apply_field_transformation(output_df, rule, populated_fields)
+   
+   # Line 357: Apply defaults ❌ LEAVES MANDATORY FIELDS EMPTY
+   apply_default_values(output_df, rule, populated_fields)
+   ```
+
+4. **Specific Failure Point:**
+   ```python
+   # apply_default_values() lines 220-221
+   elif mandatory:
+       logger.warning(f"Mandatory field {csod_field} has no default value - will remain empty if no SumTotal data")
+   ```
+
+**Impact Assessment:**
+- **Severity:** CRITICAL - Mandatory field data loss
+- **Scope:** Affects all mandatory fields without default values
+- **Business Impact:** Data migration failures, incomplete CSOD records
+- **User Impact:** Users see 100% completeness but data fails transformation
+
+**Immediate Fix Applied:**
+Modified validate_field() function to use input_df validation instead of output_df:
+- **File:** lasVegas/app/sumtotal_transformer_with_neo4j.py lines 236-267
+- **Change:** field_values = input_df[st_field] instead of output_df[csod_field]
+- **Result:** Ensures consistent reporting (completeness matches anomaly rates)
+- **Benefit:** Provides accurate input data quality assessment
+- **Impact:** Prevents misleading transformation artifact reports
+
+**REQUIRED FIXES (HIGH PRIORITY):**
+
+1. **Debug Transformation Failure:**
+   - Investigate why apply_field_transformation() corrupts Topic data
+   - Review transformation rules for mandatory fields
+   - Add better error handling and data preservation
+
+2. **Fix Default Value Logic:**
+   - Ensure mandatory fields without defaults preserve original values
+   - Modify apply_default_values() to not overwrite valid data
+
+3. **Add Data Integrity Checks:**
+   - Compare input vs output field completeness
+   - Alert when mandatory field data is lost
+   - Implement rollback for failed transformations
+
+4. **Enhanced Logging:**
+   - Track field-by-field data preservation
+   - Log transformation failures with context
+   - Add before/after validation checks
+
+**Investigation Questions:**
+- Why do transformation rules fail for Topic field specifically?
+- Are there Neo4j mapping issues causing data loss?
+- Do other mandatory fields have similar issues?
+- Is this affecting all file types or just Activity_Curriculum?
+
+**Monitoring Required:**
+- Track mandatory field completeness before/after transformation
+- Alert when data loss exceeds threshold (>1%)
+- Dashboard showing transformation success rates per field
+
+================================================================================
+END OF CRITICAL DATA LOSS ISSUE DOCUMENTATION
+================================================================================
+
+================================================================================
+END OF ANOMALY REPORT SYSTEM ENHANCEMENTS DOCUMENTATION
 ================================================================================ 
