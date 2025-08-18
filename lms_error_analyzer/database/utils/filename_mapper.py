@@ -43,7 +43,7 @@ class FilenameMapper:
             # Core mappings
             "Core_Audience": "Core_GroupsOU",
             "Core_Domain": "Core_DivisionOU",
-            "Core_Employee": "Core_Employee", 
+            "Core_Employee": "Core_Employee-CHR", 
             "Core_Jobs": "Core_PositionOU",
             "Core_Organization": "Core_CostCenterOU",
             
