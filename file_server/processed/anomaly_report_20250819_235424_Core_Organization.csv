@@ -1,0 +1,6 @@
+file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
+Core_Organization.xlsx,summary,mandatory_completeness,,100.00,,
+Core_Organization.xlsx,summary,total_errors,,179,,
+Core_Organization.xlsx,field,Organization Code,High,Heterogeneous data types within field (numeric/text mix); validate against target's unique ID rules,10%,"Data Discovery Workshop, field contains heterogeneous data types. Requires workshop confirmation for type standardization approach."
+Core_Organization.xlsx,field,Organization Code,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,1%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."
+Core_Organization.xlsx,field,Organization Name,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,2%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."

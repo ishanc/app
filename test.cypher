@@ -3183,7 +3183,7 @@ MERGE (st)-[:MAPS_TO]->(csod)
 MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 MERGE (f:File {name: "Transcript_CurriculumTranscript"})
-MERGE (st:SumTotalField {name: "TrainingStatus", file: "Transcript_CurriculumTranscript"})
+MERGE (st:SumTotalField {name: "Training Status", file: "Transcript_CurriculumTranscript"})
 MERGE (f)-[:HAS_FIELD]->(st)
 MERGE (csod:CSODField {name: "Transcript Status*", file: "Transcript_CurriculumTranscript"})
 SET csod.mandatory = "Mandatory",

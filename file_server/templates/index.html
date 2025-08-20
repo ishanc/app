@@ -29,10 +29,27 @@
         </div>
 
         <div class="files-section">
-            <h2>Processed Files</h2>
+            <div class="section-header">
+                <h2>Quality Reports (PDF)</h2>
+                <div class="action-buttons">
+                    <button id="generatePDFBtn" class="btn btn-primary">Generate PDF Report</button>
+                    <button id="resetAllBtn" class="btn btn-danger">Reset All Data</button>
+                </div>
+            </div>
+            <div class="files-list" id="pdf-files-list">
+                <!-- PDF files will be listed here -->
+            </div>
+            
+            <h2>Processed Data Files</h2>
             <div class="files-list" id="files-list">
                 <!-- Files will be listed here -->
             </div>
+            
+            <h2>Anomaly Reports</h2>
+            <div class="files-list" id="anomaly-files-list">
+                <!-- Anomaly reports will be listed here -->
+            </div>
+            
             <div class="delete-message" id="delete-message"></div>
         </div>
     </div>

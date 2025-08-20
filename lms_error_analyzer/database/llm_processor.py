@@ -42,6 +42,7 @@ class LLMProcessor:
                 'type': str | None,
                 'severity': 'High' | 'Medium' | 'Low',
                 'anomalies': [str],
+                'remediation_recommendations': [str],
               }
             ]
           }
@@ -53,23 +54,83 @@ class LLMProcessor:
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.use_openai = use_openai and bool(self.api_key)
 
-        # Map validation types to human-readable anomalies and default severities
-        self.validation_to_anomaly: dict[str, tuple[str, str]] = {
-            'MANDATORY_EMPTY': ("Mandatory field has empty values", 'High'),
-            'TRUNCATION': ("Potential truncation risk: value exceeds target length", 'High'),
-            'LEADING_SPACES': ("Leading whitespace present; trim required", 'Medium'),
-            'TRAILING_SPACES': ("Trailing whitespace present; trim required", 'Medium'),
-            'ENCODING_ISSUE': ("Encoding/invalid character issue; validate charset", 'High'),
-            'DATE_FORMAT': ("Invalid or inconsistent date format", 'Medium'),
-            'LEADING_ZEROS': ("Unwanted leading zeros in numeric field", 'Low'),
-            'DUPLICATE_RECORD': ("Duplicate record detected", 'High'),
-            'HETEROGENEOUS_TYPE': ("Heterogeneous data types within field (numeric/text mix)", 'High'),
-            'OUTLIER_VALUE': ("Outlier values detected; review thresholds", 'Medium'),
-            'TYPE_COMPATIBILITY': ("Type compatibility issues vs. target type", 'High'),
-            'BOOLEAN_CONVERSION': ("Boolean normalization required (true/false/yes/no)", 'Low'),
-            'HEADER_INCONSISTENCY': ("Header/structure inconsistency vs. expected mapping", 'High'),
-            'DELIMITER_ISSUE': ("Delimiter/record terminator inconsistencies", 'High'),
-            'COMPLETENESS_SCORE': ("Low completeness vs. threshold", 'Medium'),
+        # Map validation types to human-readable anomalies, default severities, and remediation recommendations
+        self.validation_to_anomaly: dict[str, tuple[str, str, str]] = {
+            'MANDATORY_EMPTY': (
+                "Mandatory field has empty values", 
+                'High',
+                "At Source/Data Discovery Workshop, mandatory field is empty or null. Requires source data correction or default value assignment strategy."
+            ),
+            'TRUNCATION': (
+                "Potential truncation risk: value exceeds target length", 
+                'High',
+                "At Source, field value exceeds character length limit. Remediate by adjusting target field length or truncating source data with approval."
+            ),
+            'LEADING_SPACES': (
+                "Leading whitespace present; trim required", 
+                'Medium',
+                "Data Transformation, field value has leading whitespace. Can be automatically fixed in code/workshop agent by implementing trim logic."
+            ),
+            'TRAILING_SPACES': (
+                "Trailing whitespace present; trim required", 
+                'Medium',
+                "Data Transformation, field value has trailing whitespace. Can be automatically fixed by implementing trim logic during transformation."
+            ),
+            'ENCODING_ISSUE': (
+                "Encoding/invalid character issue; validate charset", 
+                'High',
+                "At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."
+            ),
+            'DATE_FORMAT': (
+                "Invalid or inconsistent date format", 
+                'Medium',
+                "Data Discovery Workshop, invalid date/time format detected. Workshop transformation needed based on target format requirements."
+            ),
+            'LEADING_ZEROS': (
+                "Unwanted leading zeros in numeric field", 
+                'Low',
+                "Data Discovery Workshop, numeric field has unwanted leading zeros. Requires workshop confirmation for zero removal or preservation."
+            ),
+            'DUPLICATE_RECORD': (
+                "Duplicate record detected", 
+                'High',
+                "Data Transformation, duplicate record found. Requires implementation of deduplication logic and business rule confirmation during transformation."
+            ),
+            'HETEROGENEOUS_TYPE': (
+                "Heterogeneous data types within field (numeric/text mix)", 
+                'High',
+                "Data Discovery Workshop, field contains heterogeneous data types. Requires workshop confirmation for type standardization approach."
+            ),
+            'OUTLIER_VALUE': (
+                "Outlier values detected; review thresholds", 
+                'Medium',
+                "At Source/Data Discovery Workshop, field value is an outlier. Date values cannot be too extreme and percentages cannot exceed 100%. Requires validation and potential correction."
+            ),
+            'TYPE_COMPATIBILITY': (
+                "Type compatibility issues vs. target type", 
+                'High',
+                "Data Discovery Workshop, field value is not type compatible. Requires compatibility resolution through workshop parameter adjustment and transformation logic."
+            ),
+            'BOOLEAN_CONVERSION': (
+                "Boolean normalization required (true/false/yes/no)", 
+                'Low',
+                "Data Discovery Workshop, boolean value transformation issue detected. Requires transformation validation workshop for proper boolean mapping."
+            ),
+            'HEADER_INCONSISTENCY': (
+                "Header/structure inconsistency vs. expected mapping", 
+                'High',
+                "At Source/Data Discovery Workshop, file header/structure inconsistency detected. Requires workshop confirmation for header mapping and structure validation."
+            ),
+            'DELIMITER_ISSUE': (
+                "Delimiter/record terminator inconsistencies", 
+                'High',
+                "At Source, file delimiter/structure issue detected. Requires implementation of delimiter detection and parsing logic at source level."
+            ),
+            'COMPLETENESS_SCORE': (
+                "Low completeness vs. threshold", 
+                'Medium',
+                "At Source/Data Discovery Workshop, data completeness issue identified. Report percentage score to user as test metric for data quality assessment."
+            ),
         }
 
     def generate_insights(
@@ -115,6 +176,7 @@ class LLMProcessor:
                         'type': None,
                         'severity': 'Low',
                         'anomalies': [],
+                        'remediation_recommendations': [],
                     })
                 })
 
@@ -143,13 +205,14 @@ class LLMProcessor:
                         'type': None,
                         'severity': 'Low',
                         'anomalies': [],
+                        'remediation_recommendations': [],
                     })
                 })
 
                 file_bucket['summary']['total_errors'] += 1
 
-                anomaly_text, default_severity = self.validation_to_anomaly.get(
-                    validation_type, (f"Unmapped validation: {validation_type}", 'Low')
+                anomaly_text, default_severity, remediation_recommendation = self.validation_to_anomaly.get(
+                    validation_type, (f"Unmapped validation: {validation_type}", 'Low', "Manual review required - no automated remediation recommendation available")
                 )
 
                 field_key = field_name or '<unknown-field>'
@@ -165,6 +228,7 @@ class LLMProcessor:
                     field_meta_by_file=field_meta_by_file,
                 )
                 field_rec['anomalies'].append(enriched_anomaly)
+                field_rec['remediation_recommendations'].append(remediation_recommendation)
 
                 # Escalate severity when high-signal validations are present
                 field_rec['severity'] = self._max_severity(
@@ -321,12 +385,23 @@ class LLMProcessor:
         return inv[max(order.get(a, 0), order.get(b, 0))]
 
     def _dedupe_anomalies(self, rec: dict) -> dict:
-        seen = set()
-        unique = []
+        # Deduplicate anomalies
+        seen_anomalies = set()
+        unique_anomalies = []
         for text in rec.get('anomalies', []):
-            if text not in seen:
-                seen.add(text)
-                unique.append(text)
-        rec['anomalies'] = unique
+            if text not in seen_anomalies:
+                seen_anomalies.add(text)
+                unique_anomalies.append(text)
+        rec['anomalies'] = unique_anomalies
+        
+        # Deduplicate remediation recommendations
+        seen_recommendations = set()
+        unique_recommendations = []
+        for text in rec.get('remediation_recommendations', []):
+            if text not in seen_recommendations:
+                seen_recommendations.add(text)
+                unique_recommendations.append(text)
+        rec['remediation_recommendations'] = unique_recommendations
+        
         return rec
 

@@ -1,5 +1,0 @@
-file_name,section,field,severity,anomaly,anomaly_rate
-Activity_Curriculum.xlsx,summary,mandatory_completeness,,100.00,
-Activity_Curriculum.xlsx,summary,total_errors,,4932,
-Activity_Curriculum.xlsx,field,ActivityName,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,19.5%
-Activity_Curriculum.xlsx,field,Owner,High,Heterogeneous data types within field (numeric/text mix); validate against target's unique ID rules,38.1%

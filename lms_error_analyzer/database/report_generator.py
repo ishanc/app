@@ -18,7 +18,10 @@ def _get_db_connection():
         user=os.getenv('MYSQL_USER'),
         password=os.getenv('MYSQL_PASSWORD'),
         database=os.getenv('MYSQL_NAME'),
-        port=os.getenv('MYSQL_PORT', 3306),
+        port=int(os.getenv('MYSQL_PORT', 3306)),
+        ssl_disabled=True,
+        connect_timeout=30,
+        use_unicode=True
     )
 
 
@@ -91,7 +94,7 @@ def _calculate_anomaly_rates(error_rows: List[Dict[str, Any]], total_records: in
         for validation_type, line_numbers in error_types.items():
             unique_affected_records = len(line_numbers)
             anomaly_rate = (unique_affected_records / total_records) * 100
-            anomaly_rates[field_name][validation_type] = round(anomaly_rate, 1)
+            anomaly_rates[field_name][validation_type] = round(anomaly_rate)
     
     return anomaly_rates
 
@@ -158,9 +161,9 @@ def _write_csv(report_rows: List[Dict[str, Any]], output_path: str) -> None:
         # Fallback to manual CSV writing
         if not report_rows:
             with open(output_path, 'w', encoding='utf-8') as f:
-                f.write('file_name,section,field,severity,anomaly,anomaly_rate\n')
+                f.write('file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation\n')
             return
-        headers = ['file_name', 'section', 'field', 'severity', 'anomaly', 'anomaly_rate']
+        headers = ['file_name', 'section', 'field', 'severity', 'anomaly', 'anomaly_rate', 'remediation_recommendation']
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(','.join(headers) + '\n')
             for row in report_rows:
@@ -227,6 +230,7 @@ def generate_anomaly_report_csv(file_name: str, output_dir: str) -> str:
                         'severity': '',
                         'anomaly': str(summary.get(key)),
                         'anomaly_rate': '',  # Empty for summary rows
+                        'remediation_recommendation': '',  # Empty for summary rows
                     })
 
         # Field anomalies - filter to mandatory fields only and append anomaly rates
@@ -240,9 +244,18 @@ def generate_anomaly_report_csv(file_name: str, output_dir: str) -> str:
                     print(f"DEBUG: Skipping optional field: {field_name}")
                     continue
                 
-                for anomaly in field_rec.get('anomalies', []):
+                anomalies = field_rec.get('anomalies', [])
+                remediation_recommendations = field_rec.get('remediation_recommendations', [])
+                
+                # Ensure we have the same number of anomalies and recommendations
+                max_length = max(len(anomalies), len(remediation_recommendations))
+                
+                for i in range(max_length):
+                    anomaly = anomalies[i] if i < len(anomalies) else ''
+                    recommendation = remediation_recommendations[i] if i < len(remediation_recommendations) else ''
+                    
                     # Try to determine validation type from anomaly text to get rate
-                    validation_type = _get_validation_type_from_anomaly(anomaly)
+                    validation_type = _get_validation_type_from_anomaly(anomaly) if anomaly else ''
                     anomaly_text = anomaly  # Keep original clean text
                     anomaly_rate = ''  # Default empty rate
                     
@@ -259,6 +272,7 @@ def generate_anomaly_report_csv(file_name: str, output_dir: str) -> str:
                         'severity': severity,
                         'anomaly': anomaly_text,
                         'anomaly_rate': anomaly_rate,
+                        'remediation_recommendation': recommendation,
                     })
 
         _write_csv(report_rows, output_path)

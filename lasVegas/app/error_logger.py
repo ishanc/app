@@ -20,8 +20,11 @@ class ErrorLogger:
         'user': 'error_logger',
         'password': 'IerpAgents.com1%',
         'database': 'error_logging',
-        'port': 3306
-        #should we add ssl_ca and ssl_verify?
+        'port': 3306,
+        'ssl_disabled': True,
+        'autocommit': False,
+        'connect_timeout': 30,
+        'use_unicode': True
     }
     
     # Error categories
@@ -76,7 +79,7 @@ class ErrorLogger:
         try:
             if cls._db_connection is None or not cls._db_connection.is_connected():
                 cls._db_connection = mysql.connector.connect(**cls.DB_CONFIG)
-                cls._get_logger().info("Successfully connected to MySQL error logging database")
+                # cls._get_logger().info("Successfully connected to MySQL error logging database")  # Reduced logging
             return cls._db_connection
         except mysql.connector.Error as e:
             cls._get_logger().error(f"Failed to connect to MySQL error logging database: {str(e)}")
@@ -109,7 +112,7 @@ class ErrorLogger:
                 cursor.execute(create_table_sql)
                 connection.commit()
                 cursor.close()
-                cls._get_logger().info("Error logging table created/verified successfully")
+                # cls._get_logger().info("Error logging table created/verified successfully")  # Reduced logging
             else:
                 cls._get_logger().error("Cannot create error table - no database connection")
         except mysql.connector.Error as e:
@@ -242,7 +245,7 @@ class ErrorLogger:
                 cursor.execute("SELECT 1")
                 cursor.fetchone()
                 cursor.close()
-                cls._logger.info("MySQL error logging connection test successful")
+                # cls._logger.info("MySQL error logging connection test successful")  # Reduced logging
                 return True
             else:
                 cls._logger.error("MySQL error logging connection test failed")
@@ -342,10 +345,10 @@ class ErrorLogger:
         with cls._get_queue_lock():
             cls._error_queue.append(error_details)
         
-        # Log to console immediately for visibility
-        logger = cls._get_logger()
-        message = cls._format_validation_message(error_details)
-        logger.error(f"[VALIDATION] {message}")
+        # Log to console immediately for visibility - DISABLED to reduce console spam
+        # logger = cls._get_logger()
+        # message = cls._format_validation_message(error_details)
+        # logger.error(f"[VALIDATION] {message}")  # Validation errors still stored in DB for reports
     
     @classmethod
     def _format_validation_message(cls, error_details: dict) -> str:
@@ -392,7 +395,7 @@ class ErrorLogger:
             cls._error_queue.clear()
         
         logger = cls._get_logger()
-        logger.info(f"Processing {len(errors_to_process)} queued validation errors")
+        # logger.info(f"Processing {len(errors_to_process)} queued validation errors")  # Reduced logging
         
         # Process errors in batches
         for i in range(0, len(errors_to_process), batch_size):
@@ -432,7 +435,7 @@ class ErrorLogger:
             cursor.close()
             
             logger = cls._get_logger()
-            logger.debug(f"Successfully processed batch of {len(error_batch)} validation errors")
+            # logger.debug(f"Successfully processed batch of {len(error_batch)} validation errors")  # Reduced logging
             
         except mysql.connector.Error as e:
             logger = cls._get_logger()

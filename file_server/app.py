@@ -7,14 +7,20 @@ import pandas as pd
 from datetime import datetime
 import logging
 import debugpy
+from typing import List, Optional
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
+logging.getLogger('mysql.connector').setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 # Add the lasVegas app directory to Python path
 LASVEGAS_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
 sys.path.append(LASVEGAS_APP_DIR)
+
+# Add lms_error_analyzer database directory to Python path for PDF generation
+LMS_DATABASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+sys.path.append(LMS_DATABASE_DIR)
 
 import sumtotal_transformer_with_neo4j as transformer
 
@@ -235,6 +241,18 @@ def upload_file():
             except Exception as cleanup_error:
                 logger.warning(f"Could not clean up original file: {cleanup_error}")
             
+            # Auto-generate PDF report after successful processing using original filenames
+            try:
+                from pdf_quality_report import auto_generate_after_upload
+                # auto_generate_after_upload now gets original files from database automatically
+                pdf_filename = auto_generate_after_upload([], app.config['PROCESSED_FOLDER'])  # Empty list, function gets files from DB
+                if pdf_filename:
+                    processed_results['pdf_report'] = pdf_filename
+                    logger.info(f"Auto-generated PDF report: {pdf_filename}")
+            except Exception as pdf_error:
+                logger.error(f"Error auto-generating PDF report: {pdf_error}")
+                # Don't fail the upload if PDF generation fails
+            
             return jsonify(processed_results)
             
         except Exception as e:
@@ -283,16 +301,107 @@ def list_files():
 
 @app.route('/delete/<filename>', methods=['DELETE'])
 def delete_file(filename):
-    """Delete a processed file"""
+    """Delete a processed file (simple deletion without database cleanup)"""
     try:
         file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
         if os.path.exists(file_path):
             os.remove(file_path)
-            return jsonify({'success': True, 'message': 'File deleted successfully'})
+            logger.info(f"Deleted file: {filename}")
+            return jsonify({'success': True, 'message': f'File {filename} deleted successfully'})
         else:
             return jsonify({'error': 'File not found'}), 404
     except Exception as e:
+        logger.error(f"Error deleting file {filename}: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/reset-all-data', methods=['POST'])
+def reset_all_data():
+    """Reset all data for a new batch - clears database and all processed files"""
+    try:
+        from pdf_quality_report import reset_all_data
+        
+        # Reset everything
+        results = reset_all_data(app.config['PROCESSED_FOLDER'])
+        
+        # Determine overall success
+        success = results['database_cleared'] and len(results['errors']) == 0
+        
+        response_data = {
+            'success': success,
+            'message': 'Data reset completed' if success else 'Data reset completed with some errors',
+            'details': {
+                'database_cleared': results['database_cleared'],
+                'files_deleted': results['files_deleted'],
+                'pdf_reports_deleted': results['pdf_reports_deleted']
+            }
+        }
+        
+        if results['errors']:
+            response_data['errors'] = results['errors']
+        
+        logger.info(f"Reset operation completed: {response_data}")
+        return jsonify(response_data)
+        
+    except Exception as e:
+        logger.error(f"Error resetting all data: {e}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to reset data: {str(e)}'
+        }), 500
+
+@app.route('/generate-pdf-report', methods=['POST'])
+def generate_pdf_report():
+    """Manually generate PDF quality report using original filenames from database"""
+    try:
+        from pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db
+        
+        # Get original uploaded filenames from database - much cleaner!
+        original_files = get_original_file_list_from_db()
+        
+        if not original_files:
+            return jsonify({'error': 'No uploaded files found in database for report generation'}), 400
+        
+        # Generate PDF report using original filenames
+        generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])
+        pdf_filename = generator.generate_comprehensive_report(original_files)
+        
+        logger.info(f"Manual PDF report generated: {pdf_filename}")
+        
+        return jsonify({
+            'success': True,
+            'pdf_filename': pdf_filename,
+            'message': f'PDF report generated successfully',
+            'files_analyzed': len(original_files)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error generating manual PDF report: {e}")
+        return jsonify({'error': f'Failed to generate PDF report: {str(e)}'}), 500
+
+@app.route('/quality-dashboard')
+def quality_dashboard():
+    """Get quality dashboard data for all processed files"""
+    try:
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+        from dashboard import Dashboard
+        
+        dashboard = Dashboard()
+        try:
+            quality_data = dashboard.generate_quality_dashboard()
+            dashboard.close_connections()
+            
+            return jsonify({
+                'success': True,
+                'quality_data': quality_data,
+                'total_files': len(quality_data)
+            })
+        except Exception as dashboard_error:
+            dashboard.close_connections()
+            raise dashboard_error
+            
+    except Exception as e:
+        logger.error(f"Error getting quality dashboard: {e}")
+        return jsonify({'error': f'Failed to get quality dashboard: {str(e)}'}), 500
 
 """
 debugpy.listen(("localhost", 5679))  # Listen on all interfaces

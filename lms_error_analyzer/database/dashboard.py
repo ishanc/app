@@ -14,7 +14,11 @@ class Dashboard:
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
-            port=os.getenv('MYSQL_PORT', 3306)
+            port=os.getenv('MYSQL_PORT', 3306),
+            ssl_disabled=True,
+            autocommit=False,
+            connect_timeout=30,
+            use_unicode=True
         )
         
         # Add Neo4j connection
@@ -214,12 +218,17 @@ class Dashboard:
 
         # Build a boolean mask per mandatory field: True where value is non-empty.
         per_field_masks = []
+        print(f"DEBUG: Input DataFrame columns: {list(input_df.columns) if input_df is not None else []}")
+        
         for field in mandatory_fields:
             if field in input_df.columns:
                 mask = input_df[field].apply(is_non_empty)
+                non_empty_count = mask.sum()
+                print(f"DEBUG: Field '{field}' FOUND - {non_empty_count}/{total_records} non-empty values")
             else:
                 # If field not present, treat as all False (every row fails)
                 mask = input_df.index.to_series().apply(lambda _: False)
+                print(f"DEBUG: Field '{field}' NOT FOUND in DataFrame columns")
             per_field_masks.append(mask)
 
         if per_field_masks:

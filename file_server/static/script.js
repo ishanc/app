@@ -83,35 +83,33 @@ window.loadFiles = function() {
             return response.json();
         })
         .then(data => {
+            // Categorize files
+            const pdfFiles = data.files.filter(f => f.startsWith('data_quality_report') && f.endsWith('.pdf'));
+            const processedFiles = data.files.filter(f => f.startsWith('processed_') && f.endsWith('.csv'));
+            const anomalyFiles = data.files.filter(f => f.startsWith('anomaly_report_') && f.endsWith('.csv'));
+            
+            // Display PDF files
+            const pdfFilesList = document.getElementById('pdf-files-list');
+            pdfFilesList.innerHTML = '';
+            pdfFiles.forEach(filename => {
+                const fileItem = createFileItem(filename, 'pdf');
+                pdfFilesList.appendChild(fileItem);
+            });
+            
+            // Display processed files
             const filesList = document.getElementById('files-list');
             filesList.innerHTML = '';
-            data.files.forEach(filename => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'delete-btn';
-                deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', () => deleteFile(filename));
-
-                const downloadButton = document.createElement('button');
-                downloadButton.className = 'download-button';
-                downloadButton.textContent = 'Download';
-                downloadButton.addEventListener('click', () => {
-                    window.location.href = `/download/${encodeURIComponent(filename)}`;
-                });
-
-                const actions = document.createElement('div');
-                actions.className = 'file-actions';
-                actions.appendChild(downloadButton);
-                actions.appendChild(deleteButton);
-
-                const nameSpan = document.createElement('span');
-                nameSpan.className = 'file-name';
-                nameSpan.textContent = filename;
-
-                fileItem.appendChild(nameSpan);
-                fileItem.appendChild(actions);
+            processedFiles.forEach(filename => {
+                const fileItem = createFileItem(filename, 'processed');
                 filesList.appendChild(fileItem);
+            });
+            
+            // Display anomaly files
+            const anomalyFilesList = document.getElementById('anomaly-files-list');
+            anomalyFilesList.innerHTML = '';
+            anomalyFiles.forEach(filename => {
+                const fileItem = createFileItem(filename, 'anomaly');
+                anomalyFilesList.appendChild(fileItem);
             });
             
             // Add the delete message container if it doesn't exist
@@ -345,10 +343,122 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Add event listeners when document is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add event listeners for bulk action buttons
-        document.getElementById('deleteAllBtn').addEventListener('click', deleteAllFiles);
-        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllFiles);
+});
+
+// Create file item with type-specific styling
+function createFileItem(filename, type) {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'delete-btn';
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => deleteFile(filename));
+
+    const downloadButton = document.createElement('button');
+    downloadButton.className = 'download-button';
+    downloadButton.textContent = 'Download';
+    downloadButton.addEventListener('click', () => {
+        window.location.href = `/download/${encodeURIComponent(filename)}`;
     });
+
+    const actions = document.createElement('div');
+    actions.className = 'file-actions';
+    actions.appendChild(downloadButton);
+    actions.appendChild(deleteButton);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'file-name';
+    nameSpan.textContent = filename;
+    
+    // Add type-specific styling
+    if (type === 'pdf') {
+        nameSpan.style.fontWeight = 'bold';
+        nameSpan.style.color = '#2E86AB';
+    }
+
+    fileItem.appendChild(nameSpan);
+    fileItem.appendChild(actions);
+    return fileItem;
+}
+
+// Generate PDF Report
+function generatePDFReport() {
+    fetch('/generate-pdf-report', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        const messageEl = document.getElementById('delete-message');
+        if (data.success) {
+            messageEl.textContent = `PDF report generated: ${data.pdf_filename}`;
+            messageEl.classList.add('success');
+            loadFiles(); // Refresh to show new PDF
+        } else {
+            messageEl.textContent = `Error: ${data.error}`;
+            messageEl.classList.add('error');
+        }
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('success', 'error');
+        }, 5000);
+    })
+    .catch(error => {
+        const messageEl = document.getElementById('delete-message');
+        messageEl.textContent = `Error generating PDF: ${error.message}`;
+        messageEl.classList.add('error');
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('error');
+        }, 5000);
+    });
+}
+
+// Reset All Data
+function resetAllData() {
+    if (!confirm('This will delete ALL files and clear the database. This action cannot be undone. Continue?')) {
+        return;
+    }
+    
+    fetch('/reset-all-data', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        const messageEl = document.getElementById('delete-message');
+        if (data.success) {
+            messageEl.textContent = `Reset completed: ${data.details.files_deleted} files deleted, database cleared`;
+            messageEl.classList.add('success');
+            loadFiles(); // Refresh all file lists
+        } else {
+            messageEl.textContent = `Reset error: ${data.error}`;
+            messageEl.classList.add('error');
+        }
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('success', 'error');
+        }, 5000);
+    })
+    .catch(error => {
+        const messageEl = document.getElementById('delete-message');
+        messageEl.textContent = `Reset failed: ${error.message}`;
+        messageEl.classList.add('error');
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('error');
+        }, 5000);
+    });
+}
+
+// Add event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const generatePDFBtn = document.getElementById('generatePDFBtn');
+    const resetAllBtn = document.getElementById('resetAllBtn');
+    
+    if (generatePDFBtn) {
+        generatePDFBtn.addEventListener('click', generatePDFReport);
+    }
+    if (resetAllBtn) {
+        resetAllBtn.addEventListener('click', resetAllData);
+    }
 });
