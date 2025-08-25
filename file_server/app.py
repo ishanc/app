@@ -363,7 +363,7 @@ def generate_pdf_report():
         
         # Generate PDF report using original filenames
         generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])
-        pdf_filename = generator.generate_comprehensive_report(original_files)
+        pdf_filename = generator.generate_report(original_files)
         
         logger.info(f"Manual PDF report generated: {pdf_filename}")
         

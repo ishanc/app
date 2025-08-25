@@ -231,7 +231,7 @@ class PDFQualityReportGenerator:
         processed_data = []
         styles = getSampleStyleSheet()
         
-        # Create custom style for table cells with word wrap
+        # Create custom style for table cells with enhanced word wrap
         cell_style = ParagraphStyle(
             'TableCell',
             parent=styles['Normal'],
@@ -241,7 +241,11 @@ class PDFQualityReportGenerator:
             rightIndent=0,
             wordWrap='LTR',
             allowWidows=1,
-            allowOrphans=1
+            allowOrphans=1,
+            splitLongWords=True,  # Allow breaking long words
+            breakLongWords=True,  # Force break very long words
+            spaceAfter=0,
+            spaceBefore=0
         )
         
         header_style = ParagraphStyle(
@@ -309,7 +313,7 @@ class PDFQualityReportGenerator:
             pdf_filename = f"data_quality_report_{timestamp}.pdf"
             pdf_path = os.path.join(self.output_dir, pdf_filename)
             
-            self._create_pdf(pdf_path, completeness_data, error_data, quality_scores)
+            self._create_pdf(pdf_path, completeness_data, error_data, quality_scores, file_names)
             
             logger.info(f"PDF report generated: {pdf_filename}")
             return pdf_filename
@@ -321,7 +325,7 @@ class PDFQualityReportGenerator:
             self._cleanup()
     
     def _create_pdf(self, pdf_path: str, completeness_data: Dict, error_data: Dict, 
-                          quality_scores: List[FileQualityScore]):
+                          quality_scores: List[FileQualityScore], file_names: List[str]):
         """Create the PDF document"""
         doc = SimpleDocTemplate(pdf_path, pagesize=A4, rightMargin=72, leftMargin=72,
                               topMargin=72, bottomMargin=18)
@@ -350,6 +354,9 @@ class PDFQualityReportGenerator:
         
         # Error Summary Table
         self._add_error_table(story, styles, error_data)
+        
+        # Cross-File Integrity Analysis (Phase 2 Enhancement)
+        self._add_cross_file_integrity_analysis(story, styles, file_names)
         
         # Cross-File Error Patterns
         self._add_cross_file_patterns(story, styles, error_data)
@@ -432,9 +439,306 @@ class PDFQualityReportGenerator:
         if table:
             story.append(table)
     
+    def _merge_activities_orphan_data(self, cross_file_data: Dict, activities_data: List[Dict]) -> Dict:
+        """
+        Merge Activities orphan detection data into cross-file analysis structure
+        
+        Args:
+            cross_file_data: Existing cross-file analysis data
+            activities_data: Activities orphan detection results
+            
+        Returns:
+            Dict: Merged cross-file analysis data
+        """
+        if not activities_data:
+            return cross_file_data
+            
+        # Ensure structure exists
+        if 'summary' not in cross_file_data:
+            cross_file_data['summary'] = {}
+        if 'integrity_analysis' not in cross_file_data:
+            cross_file_data['integrity_analysis'] = []
+        if 'cross_file_patterns' not in cross_file_data:
+            cross_file_data['cross_file_patterns'] = {}
+            
+        # Calculate Activities summary metrics
+        activities_orphaned = sum(row.get('orphaned_source_records', 0) for row in activities_data)
+        activities_critical = len([row for row in activities_data if row.get('business_priority') in ['Critical', 'High']])
+        activities_relationships = len(activities_data)
+        
+        # Debug logging
+        print(f"🔍 DEBUG: Activities data length: {len(activities_data)}")
+        print(f"🔍 DEBUG: Activities orphaned total: {activities_orphaned}")
+        print(f"🔍 DEBUG: Activities critical count: {activities_critical}")
+        if activities_data:
+            print(f"🔍 DEBUG: Sample row: {activities_data[0]}")
+        else:
+            print("🔍 DEBUG: No Activities data received!")
+        
+        # Update summary
+        existing_summary = cross_file_data['summary']
+        existing_summary['total_relationships'] = existing_summary.get('total_relationships', 0) + activities_relationships
+        existing_summary['critical_issues'] = existing_summary.get('critical_issues', 0) + activities_critical
+        existing_summary['total_orphaned_records'] = existing_summary.get('total_orphaned_records', 0) + activities_orphaned
+        
+        # Convert Activities data to integrity_analysis format
+        for activity_row in activities_data:
+            # Map Activities data to expected format
+            source_pattern = activity_row.get('relationship_name', '').split(' → ')[0] if ' → ' in activity_row.get('relationship_name', '') else 'Activities Source'
+            target_pattern = activity_row.get('relationship_name', '').split(' → ')[1] if ' → ' in activity_row.get('relationship_name', '') else 'Activities Target'
+            
+            # Determine severity based on priority and integrity percentage
+            priority = activity_row.get('business_priority', 'Medium') 
+            integrity_pct = activity_row.get('integrity_percentage', 100)
+            
+            if priority in ['Critical', 'High'] or integrity_pct < 50:
+                severity = 'High'
+            elif integrity_pct < 90:
+                severity = 'Medium'
+            else:
+                severity = 'Low'
+                
+            integrity_item = {
+                'source_pattern': source_pattern,
+                'dependent_pattern': target_pattern,
+                'key_field': activity_row.get('key_field', 'ActivityCode'),
+                'integrity_percentage': integrity_pct,
+                'orphaned_records': activity_row.get('orphaned_source_records', 0),
+                'business_impact': self._get_activities_business_impact(activity_row),
+                'severity': severity,
+                'system_source': 'Activities Orphan Tracker'  # Mark as from new system
+            }
+            
+            cross_file_data['integrity_analysis'].append(integrity_item)
+            
+        # Add Activities pattern to cross_file_patterns
+        if activities_data:
+            # Determine proper severity based on critical relationships
+            domain_severity = 'Critical' if activities_critical > 0 else ('High' if activities_orphaned > 100 else 'Medium')
+            
+            cross_file_data['cross_file_patterns']['Activities Domain'] = {
+                'files': ['Activity_Curriculum', 'Activity_ILTClass', 'Activity_ILTSessions'],
+                'total_issues': activities_orphaned,
+                'severity': domain_severity,
+                'pattern_type': 'Business Rule Validation'
+            }
+            
+        return cross_file_data
+    
+    def _add_activities_orphan_section(self, story, styles, activities_data: List[Dict]):
+        """Add dedicated Activities orphan detection section with optimal formatting"""
+        if not activities_data:
+            return
+            
+        story.append(Paragraph("Activities Domain Integrity Analysis", styles['Heading3']))
+        story.append(Paragraph(
+            "Business rule-based orphan detection for Activities domain relationships. "
+            "This analysis identifies ILT courses and sessions that lack valid activity references.",
+            styles['Normal']
+        ))
+        story.append(Spacer(1, 12))
+        
+        # Group by priority for better readability
+        high_priority = [row for row in activities_data if row.get('business_priority') in ['Critical', 'High']]
+        medium_priority = [row for row in activities_data if row.get('business_priority') == 'Medium']
+        
+        if high_priority:
+            story.append(Paragraph(f"<b>High Priority Issues ({len(high_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Business Impact']]
+            
+            for activity_row in high_priority:
+                relationship_name = activity_row.get('relationship_name', 'Unknown')
+                # Simplify relationship name for display
+                simplified_name = relationship_name.replace('Activity_Sessions.', '').replace('Activity_SessionParts.', '')
+                
+                data.append([
+                    simplified_name,
+                    activity_row.get('key_field', ''),
+                    f"{activity_row.get('integrity_percentage', 0):.1f}%",
+                    f"{activity_row.get('orphaned_source_records', 0):,}",
+                    self._get_activities_business_impact(activity_row)
+                ])
+            
+            # Use wider columns specifically for Activities data
+            col_widths = [2.8*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.6*inch]
+            high_priority_table = self.create_expandable_table(data, col_widths)
+            if high_priority_table:
+                story.append(high_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if medium_priority:
+            story.append(Paragraph(f"<b>Medium Priority Issues ({len(medium_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Integrity %', 'Orphaned Records']]
+            
+            for activity_row in medium_priority:
+                relationship_name = activity_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Activity_Sessions.', '').replace('Activity_SessionParts.', '')
+                
+                data.append([
+                    simplified_name,
+                    f"{activity_row.get('integrity_percentage', 0):.1f}%",
+                    f"{activity_row.get('orphaned_source_records', 0):,}"
+                ])
+            
+            col_widths = [4.0*inch, 1.0*inch, 1.0*inch]
+            medium_priority_table = self.create_expandable_table(data, col_widths)
+            if medium_priority_table:
+                story.append(medium_priority_table)
+            story.append(Spacer(1, 12))
+        
+    def _get_activities_business_impact(self, activity_row: Dict) -> str:
+        """
+        Generate business impact description for Activities orphan detection
+        
+        Args:
+            activity_row: Activities orphan detection result
+            
+        Returns:
+            str: Business impact description
+        """
+        relationship_name = activity_row.get('relationship_name', '')
+        orphaned = activity_row.get('orphaned_source_records', 0)
+        total = activity_row.get('total_source_records', 0)
+        priority = activity_row.get('business_priority', 'Medium')
+        
+        if 'ILTCourseCode' in relationship_name and 'Child ActivityCode' in relationship_name:
+            return f"Critical: {orphaned}/{total} ILT courses lack valid activity links - impacts course catalog integrity"
+        elif 'ClassCode' in relationship_name and priority == 'High':
+            return f"High: {orphaned}/{total} class sessions orphaned - impacts scheduling and enrollment"  
+        elif 'ActivityCode' in relationship_name:
+            return f"Medium: {orphaned}/{total} activity references invalid - impacts reporting completeness"
+        else:
+            return f"{priority}: {orphaned}/{total} records with integrity issues - impacts data quality"
+    
+    def _add_cross_file_integrity_analysis(self, story, styles, file_names: List[str]):
+        """Add comprehensive cross-file integrity analysis using Phase 2 enhanced system"""
+        story.append(Paragraph("Cross-File Referential Integrity Analysis", styles['Heading2']))
+        story.append(Paragraph(
+            "This section analyzes referential integrity between files using dynamic relationship "
+            "discovery from Neo4j field mappings. Critical integrity issues can impact data migration success.",
+            styles['Normal']
+        ))
+        story.append(Spacer(1, 12))
+        
+        try:
+            # Get Activities orphan detection results from new system
+            from orphan_tracker_businessrule import ActivitiesOrphanExecutor
+            activities_data = ActivitiesOrphanExecutor.get_activities_orphan_summaries_for_pdf()
+            
+            # Use enhanced retrieval framework for non-Activities relationships
+            from retrieval_framework import RetrievalFramework
+            framework = RetrievalFramework()
+            
+            # Filter out Activities from old system to avoid conflicts
+            non_activities_files = [f for f in file_names if not f.lower().startswith('activity')]
+            if non_activities_files:
+                cross_file_data = framework.get_cross_file_analysis(non_activities_files)
+            else:
+                cross_file_data = {'summary': {}, 'integrity_analysis': [], 'cross_file_patterns': {}}
+            
+            # Add dedicated Activities section with optimal formatting
+            self._add_activities_orphan_section(story, styles, activities_data)
+            
+            # Merge Activities data into cross_file_data for general analysis
+            cross_file_data = self._merge_activities_orphan_data(cross_file_data, activities_data)
+            
+            # Add summary metrics
+            summary = cross_file_data.get('summary', {})
+            if summary:
+                story.append(Paragraph("Integrity Summary", styles['Heading3']))
+                summary_data = [
+                    ['Metric', 'Value'],
+                    ['Total Relationships Analyzed', f"{summary.get('total_relationships', 0):,}"],
+                    ['Critical Integrity Issues', f"{summary.get('critical_issues', 0):,}"],
+                    ['Total Orphaned Records', f"{summary.get('total_orphaned_records', 0):,}"]
+                ]
+                
+                summary_table = self.create_expandable_table(summary_data, [2.5*inch, 1.5*inch])
+                if summary_table:
+                    story.append(summary_table)
+                story.append(Spacer(1, 12))
+            
+            # Add detailed integrity analysis
+            integrity_analysis = cross_file_data.get('integrity_analysis', [])
+            if integrity_analysis:
+                story.append(Paragraph("Detailed Integrity Analysis", styles['Heading3']))
+                
+                # Group by severity for better readability
+                critical_issues = [r for r in integrity_analysis if r.get('severity') == 'High']
+                
+                if critical_issues:
+                    story.append(Paragraph(
+                        f"<b>Critical Issues ({len(critical_issues)} relationships)</b>", 
+                        styles['Normal']
+                    ))
+                    
+                    data = [['Source → Target', 'Key Field', 'Integrity %', 'Orphaned Records', 'Business Impact']]
+                    
+                    for rel in critical_issues[:10]:  # Top 10 critical issues
+                        source_target = f"{rel.get('source_pattern', 'Unknown')} → {rel.get('dependent_pattern', 'Unknown')}"
+                        integrity_pct = f"{rel.get('integrity_percentage', 0):.1f}%"
+                        orphaned = f"{rel.get('orphaned_records', 0):,}"
+                        # NO TRUNCATION - let table expansion handle wrapping
+                        impact = rel.get('business_impact', 'Unknown impact')
+                        
+                        data.append([
+                            source_target,
+                            rel.get('key_field', 'Unknown'),
+                            integrity_pct,
+                            orphaned,
+                            impact
+                        ])
+                    
+                    # Wider columns to accommodate full text without wrapping pressure
+                    col_widths = [2.5*inch, 1.2*inch, 0.8*inch, 1.0*inch, 2.5*inch]
+                    critical_table = self.create_expandable_table(data, col_widths)
+                    if critical_table:
+                        story.append(critical_table)
+                    story.append(Spacer(1, 12))
+                
+                # Add cross-file patterns summary
+                cross_file_patterns = cross_file_data.get('cross_file_patterns', {})
+                if cross_file_patterns:
+                    story.append(Paragraph("Cross-File Relationship Patterns", styles['Heading3']))
+                    
+                    pattern_data = [['Pattern Type', 'Affected Files', 'Total Issues', 'Severity']]
+                    
+                    for pattern_name, pattern_info in cross_file_patterns.items():
+                        # Show all files, no truncation
+                        files_list = ', '.join(pattern_info.get('files', []))
+                        
+                        pattern_data.append([
+                            pattern_name.replace('_integrity', '').replace('_', ' ').title(),
+                            files_list,
+                            f"{pattern_info.get('total_count', 0):,}",
+                            pattern_info.get('severity', 'Unknown')
+                        ])
+                    
+                    # Wider columns for full text display
+                    pattern_table = self.create_expandable_table(pattern_data, [2.0*inch, 3.0*inch, 1.0*inch, 1.0*inch])
+                    if pattern_table:
+                        story.append(pattern_table)
+                    
+            else:
+                story.append(Paragraph("No cross-file integrity issues detected.", styles['Normal']))
+            
+            # Close framework connections
+            framework.close()
+            
+        except Exception as e:
+            logger.error(f"Error generating cross-file integrity analysis: {e}")
+            story.append(Paragraph(
+                f"Error generating cross-file analysis: {str(e)}. Check system configuration.",
+                styles['Normal']
+            ))
+        
+        story.append(Spacer(1, 20))
+
     def _add_cross_file_patterns(self, story, styles, error_data: Dict):
-        """Add cross-file error patterns table"""
-        story.append(Paragraph("Cross-File Error Patterns", styles['Heading2']))
+        """Add cross-file error patterns table (legacy error-based patterns)"""
+        story.append(Paragraph("Cross-File Error Patterns (Legacy Analysis)", styles['Heading2']))
         
         # Reorganize error data by error type across files
         cross_file_patterns = defaultdict(lambda: {'files': [], 'total_count': 0})

@@ -117,19 +117,86 @@ class ContextBundle:
 
 
 @dataclass
+class RelationshipDefinition:
+    """Configuration for cross-file relationship analysis"""
+    relationship_name: str
+    source_pattern: str          # File pattern for source files (e.g., 'Core_*')
+    target_pattern: str          # File pattern for target files (e.g., 'Transcript_*')
+    key_field: str              # Field name used for cross-reference
+    relationship_type: str       # PARENT_CHILD, REFERENCE, MANY_TO_MANY
+    business_priority: str       # Critical, High, Medium, Low
+    cardinality: str            # 1:1, 1:N, N:N
+    validation_rules: List[str]  # List of validation rules to apply
+    discovered_from_neo4j: bool = False  # Whether discovered dynamically
+
+
+@dataclass
+class CrossFileRelationship:
+    """Referential integrity analysis between files"""
+    relationship_name: str        # e.g., "core_employee_to_transcript_integrity"
+    primary_file: str            # e.g., "Core_Employee.xlsx"  
+    dependent_file: str          # e.g., "Transcript_History.xlsx"
+    key_field: str              # e.g., "Employee_ID"
+    total_source_records: int    # Records in primary file
+    total_dependent_records: int # Records in dependent file  
+    orphaned_records: int        # Records with missing parent reference
+    integrity_percentage: float  # Valid references percentage
+    orphaned_samples: List[str]  # Sample orphaned key values
+    severity: str               # High, Medium, Low
+    business_impact: str        # Impact description
+    processing_time_ms: int = 0  # Time taken for analysis
+    analysis_run_id: str = ""    # Unique identifier for analysis run
+
+
+@dataclass
 class MultiFileContext:
     """Aggregated context for multiple related files"""
     file_names: List[str]
     bundles: Dict[str, ContextBundle]
     aggregate_summary: Dict[str, Any]
+    cross_file_relationships: List[CrossFileRelationship]
     metadata: Dict[str, Any]
+
+
+class PerformanceMonitor:
+    """Tracks performance metrics for cross-file analysis"""
+    
+    def __init__(self):
+        self.start_times = {}
+        self.metrics = defaultdict(list)
+    
+    def start_timer(self, operation_name: str):
+        """Start timing an operation"""
+        self.start_times[operation_name] = datetime.now()
+    
+    def end_timer(self, operation_name: str) -> int:
+        """End timing and return milliseconds elapsed"""
+        if operation_name in self.start_times:
+            elapsed = (datetime.now() - self.start_times[operation_name]).total_seconds() * 1000
+            self.metrics[operation_name].append(elapsed)
+            del self.start_times[operation_name]
+            return int(elapsed)
+        return 0
+    
+    def get_average_time(self, operation_name: str) -> float:
+        """Get average execution time for an operation"""
+        times = self.metrics.get(operation_name, [])
+        return sum(times) / len(times) if times else 0.0
+    
+    def log_performance_summary(self):
+        """Log performance summary for all operations"""
+        logger.info("📊 Performance Summary:")
+        for operation, times in self.metrics.items():
+            avg_time = sum(times) / len(times)
+            logger.info(f"   • {operation}: {avg_time:.1f}ms average ({len(times)} runs)")
 
 
 class MySQLRetrieval:
     """Handles MySQL database queries for raw data and quality signals"""
     
-    def __init__(self):
+    def __init__(self, performance_monitor: Optional[PerformanceMonitor] = None):
         self.connection = None
+        self.performance_monitor = performance_monitor or PerformanceMonitor()
         self._connect()
     
     def _connect(self):
@@ -235,7 +302,7 @@ class MySQLRetrieval:
                     blank_count=null_blank_count or 0,
                     distinct_count=distinct_count or 0,
                     max_length=max_length or 0,
-                    avg_length=avg_length or 0.0,
+                    avg_length=float(avg_length) if avg_length is not None else 0.0,
                     sample_values=samples
                 )
             else:
@@ -287,7 +354,16 @@ class MySQLRetrieval:
                 FROM file_completeness_summary 
                 WHERE file_name = %s
             """, (file_name,))
-            completeness = cursor.fetchone() or {}
+            completeness_raw = cursor.fetchone() or {}
+            
+            # Convert Decimal values to avoid JSON serialization issues
+            completeness = {}
+            if completeness_raw:
+                completeness = {
+                    'mandatory_completeness': float(completeness_raw.get('mandatory_completeness', 0)) if completeness_raw.get('mandatory_completeness') is not None else 0.0,
+                    'total_records': int(completeness_raw.get('total_records', 0)) if completeness_raw.get('total_records') is not None else 0,
+                    'incomplete_records': int(completeness_raw.get('incomplete_records', 0)) if completeness_raw.get('incomplete_records') is not None else 0
+                }
             
             # Get error summary by type
             cursor.execute("""
@@ -315,6 +391,114 @@ class MySQLRetrieval:
                 error_summary={}
             )
     
+    def get_orphaned_records_analysis(self, primary_table: str, dependent_table: str, key_field: str, 
+                                     batch_size: int = 10000) -> Dict[str, Any]:
+        """Direct MySQL query for orphaned record detection with batch processing"""
+        operation_name = f"orphaned_analysis_{primary_table}_{dependent_table}"
+        self.performance_monitor.start_timer(operation_name)
+        
+        try:
+            cursor = self.connection.cursor(dictionary=True)
+            
+            # Verify tables exist
+            for table in [primary_table, dependent_table]:
+                cursor.execute("""
+                    SELECT COUNT(*) as table_exists 
+                    FROM information_schema.tables 
+                    WHERE table_schema = %s AND table_name = %s
+                """, (MYSQL_CONFIG['database'], table))
+                if not cursor.fetchone()['table_exists']:
+                    raise ValueError(f"Table {table} does not exist")
+            
+            # Verify key field exists in both tables
+            for table in [primary_table, dependent_table]:
+                cursor.execute("""
+                    SELECT COUNT(*) as field_exists
+                    FROM information_schema.columns 
+                    WHERE table_schema = %s AND table_name = %s AND column_name = %s
+                """, (MYSQL_CONFIG['database'], table, key_field))
+                if not cursor.fetchone()['field_exists']:
+                    logger.error(f"Error analyzing orphaned records for {primary_table}->{dependent_table} on {key_field}: Field {key_field} does not exist in table {table}")
+                    raise ValueError(f"Field {key_field} does not exist in table {table}")
+            
+            # Count orphaned records using LEFT JOIN with batch processing for large datasets
+            orphaned_query = f"""
+                SELECT COUNT(*) as orphaned_count
+                FROM `{dependent_table}` d
+                LEFT JOIN `{primary_table}` p ON d.`{key_field}` = p.`{key_field}`
+                WHERE p.`{key_field}` IS NULL 
+                AND d.`{key_field}` IS NOT NULL 
+                AND d.`{key_field}` != ''
+            """
+            
+            cursor.execute(orphaned_query)
+            orphaned_result = cursor.fetchone()
+            orphaned_count = orphaned_result['orphaned_count'] if orphaned_result else 0
+            
+            # Count total dependent records with non-null key field
+            total_query = f"""
+                SELECT COUNT(*) as total_count
+                FROM `{dependent_table}` 
+                WHERE `{key_field}` IS NOT NULL 
+                AND `{key_field}` != ''
+            """
+            
+            cursor.execute(total_query)
+            total_result = cursor.fetchone()
+            total_count = total_result['total_count'] if total_result else 0
+            
+            # Get sample orphaned values (limit to prevent memory issues)
+            sample_query = f"""
+                SELECT DISTINCT d.`{key_field}` as orphaned_value
+                FROM `{dependent_table}` d
+                LEFT JOIN `{primary_table}` p ON d.`{key_field}` = p.`{key_field}`
+                WHERE p.`{key_field}` IS NULL 
+                AND d.`{key_field}` IS NOT NULL 
+                AND d.`{key_field}` != ''
+                LIMIT 5
+            """
+            
+            cursor.execute(sample_query)
+            sample_results = cursor.fetchall()
+            orphaned_samples = [str(row['orphaned_value']) for row in sample_results]
+            
+            # Count primary records
+            primary_query = f"""
+                SELECT COUNT(DISTINCT `{key_field}`) as primary_count
+                FROM `{primary_table}` 
+                WHERE `{key_field}` IS NOT NULL 
+                AND `{key_field}` != ''
+            """
+            
+            cursor.execute(primary_query)
+            primary_result = cursor.fetchone()
+            primary_count = primary_result['primary_count'] if primary_result else 0
+            
+            cursor.close()
+            
+            processing_time = self.performance_monitor.end_timer(operation_name)
+            
+            return {
+                'orphaned_count': orphaned_count,
+                'total_dependent_records': total_count,
+                'total_primary_records': primary_count,
+                'orphaned_samples': orphaned_samples,
+                'integrity_percentage': round((total_count - orphaned_count) / total_count * 100, 1) if total_count > 0 else 100.0,
+                'processing_time_ms': processing_time
+            }
+            
+        except Exception as e:
+            self.performance_monitor.end_timer(operation_name)
+            logger.error(f"Error analyzing orphaned records for {primary_table}->{dependent_table} on {key_field}: {e}")
+            return {
+                'orphaned_count': 0,
+                'total_dependent_records': 0,
+                'total_primary_records': 0,
+                'orphaned_samples': [],
+                'integrity_percentage': 100.0,
+                'processing_time_ms': 0
+            }
+    
     def close(self):
         """Close MySQL connection"""
         if self.connection:
@@ -325,8 +509,9 @@ class MySQLRetrieval:
 class Neo4jRetrieval:
     """Handles Neo4j queries for mapping rules and constraints"""
     
-    def __init__(self):
+    def __init__(self, performance_monitor: Optional[PerformanceMonitor] = None):
         self.driver = None
+        self.performance_monitor = performance_monitor or PerformanceMonitor()
         self._connect()
     
     def _connect(self):
@@ -387,11 +572,406 @@ class Neo4jRetrieval:
             logger.error(f"Error getting mapping constraints for {file_key}: {e}")
             return {}
     
+    def discover_cross_file_relationships(self) -> List[RelationshipDefinition]:
+        """Discover cross-file relationships dynamically from Neo4j field mappings with confidence scoring"""
+        operation_name = "neo4j_relationship_discovery"
+        self.performance_monitor.start_timer(operation_name)
+        
+        try:
+            with self.driver.session() as session:
+                # Enhanced query with stricter criteria and confidence scoring
+                discovery_query = """
+                MATCH (f1:File)-[:HAS_FIELD]->(sf1:SumTotalField)
+                MATCH (f2:File)-[:HAS_FIELD]->(sf2:SumTotalField)
+                WHERE f1.name <> f2.name 
+                AND (
+                    // High confidence: Exact field name matches
+                    sf1.name = sf2.name OR
+                    // Medium confidence: Key relationship fields with exact patterns
+                    (sf1.name ENDS WITH 'ID' AND sf2.name ENDS WITH 'ID' AND sf1.name = sf2.name) OR
+                    (sf1.name ENDS WITH 'Code' AND sf2.name ENDS WITH 'Code' AND sf1.name = sf2.name) OR
+                    // Business-critical relationships with validated patterns
+                    (sf1.name IN ['Employee_ID', 'EmployeeID', 'Employee ID'] AND sf2.name IN ['Employee_ID', 'EmployeeID', 'Employee ID']) OR
+                    (sf1.name IN ['Activity_ID', 'ActivityID', 'Activity ID', 'ActivityCode'] AND sf2.name IN ['Activity_ID', 'ActivityID', 'Activity ID', 'ActivityCode']) OR
+                    (sf1.name IN ['Curriculum_ID', 'CurriculumID', 'Curriculum ID'] AND sf2.name IN ['Curriculum_ID', 'CurriculumID', 'Curriculum ID'])
+                )
+                RETURN DISTINCT 
+                    f1.name as source_file,
+                    f2.name as target_file,
+                    sf1.name as source_field,
+                    sf2.name as target_field,
+                    CASE 
+                        WHEN sf1.name = sf2.name THEN 'High'
+                        WHEN sf1.name IN ['Employee_ID', 'EmployeeID', 'Employee ID'] THEN 'Critical'
+                        WHEN sf1.name ENDS WITH 'ID' OR sf1.name ENDS WITH 'Code' THEN 'Medium'
+                        ELSE 'Low'
+                    END as confidence_level,
+                    'REFERENCE' as relationship_type
+                ORDER BY confidence_level DESC, f1.name, f2.name
+                """
+                
+                result = session.run(discovery_query)
+                
+                discovered_relationships = []
+                processed_pairs = set()
+                
+                for record in result:
+                    source_file = record.get('source_file')
+                    target_file = record.get('target_file')
+                    source_field = record.get('source_field')
+                    target_field = record.get('target_field')
+                    confidence_level = record.get('confidence_level', 'Low')
+                    
+                    # Use the more common field name between source and target
+                    common_field = source_field if source_field == target_field else source_field
+                    
+                    # Create a unique key to avoid duplicate relationships
+                    relationship_key = f"{source_file}_{target_file}_{common_field}"
+                    if relationship_key in processed_pairs:
+                        continue
+                    processed_pairs.add(relationship_key)
+                    
+                    # TEMPORARY DEBUG: Don't skip any relationships for now
+                    if confidence_level == 'Low' and not self._is_business_critical_field(common_field):
+                        logger.info(f"🔍 TEMP DEBUG: Would skip low confidence relationship: {relationship_key}, but allowing for debug")
+                        # continue  # Commented out for debugging
+                    
+                    # Enhanced priority mapping based on confidence and business rules
+                    priority = self._determine_business_priority(common_field, confidence_level)
+                    
+                    # Add confidence-based validation rules
+                    validation_rules = ['orphaned_record_check']
+                    if confidence_level in ['High', 'Critical']:
+                        validation_rules.extend(['minimum_sample_size_100', 'integrity_threshold_10'])
+                    else:
+                        validation_rules.extend(['minimum_sample_size_500', 'integrity_threshold_25'])
+                    
+                    relationship_def = RelationshipDefinition(
+                        relationship_name=f"neo4j_discovered_{source_file}_to_{target_file}_{common_field}",
+                        source_pattern=source_file,
+                        target_pattern=target_file,
+                        key_field=common_field,
+                        relationship_type='REFERENCE',
+                        business_priority=priority,
+                        cardinality='1:N',
+                        validation_rules=validation_rules,
+                        discovered_from_neo4j=True
+                    )
+                    
+                    discovered_relationships.append(relationship_def)
+                
+                processing_time = self.performance_monitor.end_timer(operation_name)
+                logger.info(f"🔍 Neo4j discovered {len(discovered_relationships)} cross-file relationships in {processing_time}ms")
+                
+                return discovered_relationships
+                
+        except Exception as e:
+            self.performance_monitor.end_timer(operation_name)
+            logger.error(f"Error discovering relationships from Neo4j: {e}")
+            # Return fallback hardcoded relationships
+            return self._get_fallback_relationships()
+    
+    def _is_business_critical_field(self, field_name: str) -> bool:
+        """Determine if a field is business-critical regardless of confidence level"""
+        critical_patterns = [
+            'Employee_ID', 'EmployeeID', 'Employee ID',
+            'User_ID', 'UserID', 'User ID',
+            'Curriculum_ID', 'CurriculumID', 'Curriculum ID'
+        ]
+        return any(pattern.lower() in field_name.lower() for pattern in critical_patterns)
+    
+    def _determine_business_priority(self, field_name: str, confidence_level: str) -> str:
+        """Enhanced business priority determination with confidence scoring"""
+        field_lower = field_name.lower()
+        
+        # Override based on business criticality
+        if any(critical in field_lower for critical in ['employee', 'user']):
+            return 'Critical'
+        elif any(high_priority in field_lower for high_priority in ['activity', 'curriculum', 'course']):
+            return 'High' if confidence_level in ['High', 'Critical'] else 'Medium'
+        elif confidence_level == 'Critical':
+            return 'Critical'
+        elif confidence_level == 'High':
+            return 'High'
+        else:
+            return 'Medium'
+    
+
+    
+    def _get_fallback_relationships(self) -> List[RelationshipDefinition]:
+        """Fallback to hardcoded relationships if Neo4j discovery fails"""
+        logger.info("🔄 Using fallback hardcoded relationships")
+        
+        return [
+            RelationshipDefinition(
+                relationship_name="fallback_activity_to_transcript",
+                source_pattern="Activity_*",
+                target_pattern="Transcript_*",
+                key_field="ActivityCode",
+                relationship_type="PARENT_CHILD",
+                business_priority="High",
+                cardinality="1:N",
+                validation_rules=["orphaned_record_check"],
+                discovered_from_neo4j=False
+            ),
+            RelationshipDefinition(
+                relationship_name="fallback_core_to_transcript",
+                source_pattern="Core_*",
+                target_pattern="Transcript_*",
+                key_field="EmployeeID",
+                relationship_type="PARENT_CHILD",
+                business_priority="Critical",
+                cardinality="1:N",
+                validation_rules=["orphaned_record_check"],
+                discovered_from_neo4j=False
+            )
+        ]
+    
     def close(self):
         """Close Neo4j connection"""
         if self.driver:
             self.driver.close()
             logger.info("🔌 Disconnected from Neo4j")
+
+
+class CrossFileAnalyzer:
+    """Analyzes referential integrity across SumTotal source files using dynamic discovery"""
+    
+    def __init__(self, mysql_retrieval: MySQLRetrieval, neo4j_retrieval: Neo4jRetrieval, 
+                 performance_monitor: Optional[PerformanceMonitor] = None):
+        self.mysql_retrieval = mysql_retrieval
+        self.neo4j_retrieval = neo4j_retrieval
+        self.performance_monitor = performance_monitor or PerformanceMonitor()
+        self.analysis_run_id = f"analysis_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+    
+    def analyze_relationships(self, bundles: Dict[str, ContextBundle]) -> List[CrossFileRelationship]:
+        """Analyze all cross-file relationships using dynamic discovery"""
+        self.performance_monitor.start_timer("total_cross_file_analysis")
+        relationships = []
+        
+        # Step 1: Discover relationships dynamically from Neo4j
+        logger.info("🔍 Discovering cross-file relationships from Neo4j...")
+        relationship_definitions = self.neo4j_retrieval.discover_cross_file_relationships()
+        
+        logger.info(f"📋 Found {len(relationship_definitions)} relationship definitions:")
+        for rel_def in relationship_definitions:
+            discovery_source = "Neo4j" if rel_def.discovered_from_neo4j else "Fallback"
+            logger.info(f"   • {rel_def.relationship_name} ({discovery_source})")
+        
+        # Step 2: Analyze each discovered relationship
+        for rel_def in relationship_definitions:
+            try:
+                discovered_relationships = self._analyze_relationship_definition(bundles, rel_def)
+                relationships.extend(discovered_relationships)
+            except Exception as e:
+                logger.error(f"❌ Error analyzing relationship {rel_def.relationship_name}: {e}")
+                continue
+        
+        # Step 3: Persist results to database
+        self._persist_analysis_results(relationships)
+        
+        processing_time = self.performance_monitor.end_timer("total_cross_file_analysis")
+        logger.info(f"✅ Cross-file analysis complete: {len(relationships)} relationships analyzed in {processing_time}ms")
+        
+        # Log performance summary
+        self.performance_monitor.log_performance_summary()
+        
+        return relationships
+    
+    def _analyze_relationship_definition(self, bundles: Dict[str, ContextBundle], 
+                                       rel_def: RelationshipDefinition) -> List[CrossFileRelationship]:
+        """Analyze a specific relationship definition"""
+        relationships = []
+        
+        # Find files matching source and target patterns
+        source_files = self._find_matching_files(bundles, rel_def.source_pattern)
+        target_files = self._find_matching_files(bundles, rel_def.target_pattern)
+        
+        logger.debug(f"🔗 Analyzing {rel_def.relationship_name}:")
+        logger.debug(f"   Source files: {source_files}")
+        logger.debug(f"   Target files: {target_files}")
+        logger.debug(f"   Key field: {rel_def.key_field}")
+        
+        for source_file in source_files:
+            for target_file in target_files:
+                if source_file == target_file:
+                    continue
+                
+                # Check if both files have the key field
+                if not self._file_has_field(bundles[source_file], rel_def.key_field):
+                    logger.debug(f"   ⚠️ Source file {source_file} missing field {rel_def.key_field}")
+                    continue
+                if not self._file_has_field(bundles[target_file], rel_def.key_field):
+                    logger.debug(f"   ⚠️ Target file {target_file} missing field {rel_def.key_field}")
+                    continue
+                
+                # Perform MySQL analysis
+                relationship = self._perform_mysql_analysis(source_file, target_file, rel_def, bundles)
+                if relationship:
+                    relationships.append(relationship)
+        
+        return relationships
+    
+    def _find_matching_files(self, bundles: Dict[str, ContextBundle], pattern: str) -> List[str]:
+        """Find files matching a pattern (supports wildcards)"""
+        if pattern.endswith('*'):
+            # Pattern matching (e.g., 'Activity_*')
+            prefix = pattern[:-1].lower()
+            return [name for name in bundles.keys() if name.lower().startswith(prefix)]
+        else:
+            # Exact matching or table name matching
+            matching_files = []
+            for name, bundle in bundles.items():
+                if (name.lower() == pattern.lower() or 
+                    bundle.table_name.lower() == pattern.lower() or
+                    bundle.file_key.lower() == pattern.lower()):
+                    matching_files.append(name)
+            return matching_files
+    
+    def _file_has_field(self, bundle: ContextBundle, field_name: str) -> bool:
+        """Check if a file has a specific field (case-insensitive)"""
+        for profile in bundle.field_profiles:
+            if profile.sumtotal_field_name.lower() == field_name.lower():
+                return True
+        return False
+    
+    def _perform_mysql_analysis(self, source_file: str, target_file: str, 
+                               rel_def: RelationshipDefinition, bundles: Dict[str, ContextBundle]) -> Optional[CrossFileRelationship]:
+        """Perform MySQL orphaned record analysis with validation rules"""
+        source_table = self.mysql_retrieval.resolve_table_name(source_file)
+        target_table = self.mysql_retrieval.resolve_table_name(target_file)
+        
+        try:
+            analysis = self.mysql_retrieval.get_orphaned_records_analysis(
+                source_table, target_table, rel_def.key_field
+            )
+            
+            # Apply validation rules to filter low-quality relationships
+            if not self._passes_validation_rules(analysis, rel_def.validation_rules):
+                logger.debug(f"   ❌ Relationship {rel_def.relationship_name} failed validation rules")
+                return None
+            
+            if analysis['total_dependent_records'] > 0:
+                relationship = self._create_relationship_from_analysis(
+                    rel_def, source_file, target_file, analysis
+                )
+                
+                logger.info(f"✅ {source_file} -> {target_file} on {rel_def.key_field}: "
+                          f"{analysis['integrity_percentage']}% integrity, "
+                          f"{analysis['orphaned_count']} orphaned records")
+                
+                return relationship
+            
+        except Exception as e:
+            logger.warning(f"⚠️ Could not analyze {source_file} -> {target_file} on {rel_def.key_field}: {e}")
+        
+        return None
+    
+    def _create_relationship_from_analysis(self, rel_def: RelationshipDefinition, source_file: str, 
+                                         target_file: str, analysis: Dict[str, Any]) -> CrossFileRelationship:
+        """Create CrossFileRelationship from MySQL analysis results"""
+        integrity_percentage = analysis['integrity_percentage']
+        orphaned_count = analysis['orphaned_count']
+        
+        # Determine severity based on business priority and integrity
+        if rel_def.business_priority == 'Critical' or integrity_percentage < 70:
+            severity = "High"
+            impact = f"Critical: {orphaned_count:,} orphaned records ({100-integrity_percentage:.1f}% missing references)"
+        elif rel_def.business_priority == 'High' or integrity_percentage < 90:
+            severity = "Medium"
+            impact = f"Moderate: {orphaned_count:,} orphaned records ({100-integrity_percentage:.1f}% missing references)"
+        else:
+            severity = "Low"
+            impact = f"Minor: {orphaned_count:,} orphaned records ({100-integrity_percentage:.1f}% missing references)"
+        
+        return CrossFileRelationship(
+            relationship_name=f"{rel_def.relationship_name}_{source_file}_to_{target_file}",
+            primary_file=source_file,
+            dependent_file=target_file,
+            key_field=rel_def.key_field,
+            total_source_records=analysis['total_primary_records'],
+            total_dependent_records=analysis['total_dependent_records'],
+            orphaned_records=orphaned_count,
+            integrity_percentage=integrity_percentage,
+            orphaned_samples=analysis['orphaned_samples'],
+            severity=severity,
+            business_impact=impact,
+            processing_time_ms=analysis['processing_time_ms'],
+            analysis_run_id=self.analysis_run_id
+        )
+    
+    def _persist_analysis_results(self, relationships: List[CrossFileRelationship]):
+        """Persist analysis results to cross_file_integrity_summary table"""
+        if not relationships:
+            return
+        
+        try:
+            cursor = self.mysql_retrieval.connection.cursor()
+            
+            insert_query = """
+            INSERT INTO cross_file_integrity_summary (
+                analysis_run_id, relationship_name, source_file_pattern, target_file_pattern,
+                key_field, total_source_records, total_target_records, orphaned_source_records,
+                orphaned_target_records, integrity_percentage, processing_time_ms,
+                relationship_type, business_priority, discovered_from_neo4j
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            
+            for rel in relationships:
+                cursor.execute(insert_query, (
+                    rel.analysis_run_id,
+                    rel.relationship_name,
+                    rel.primary_file,
+                    rel.dependent_file,
+                    rel.key_field,
+                    rel.total_source_records,
+                    rel.total_dependent_records,
+                    rel.orphaned_records,
+                    0,  # orphaned_target_records (not calculated in current implementation)
+                    rel.integrity_percentage,
+                    rel.processing_time_ms,
+                    'REFERENCE',  # Default relationship type
+                    rel.severity,
+                    True  # Assume discovered from Neo4j for now
+                ))
+            
+            self.mysql_retrieval.connection.commit()
+            cursor.close()
+            
+            logger.info(f"💾 Persisted {len(relationships)} relationship analysis results to database")
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to persist analysis results: {e}")
+    
+    def _passes_validation_rules(self, analysis: Dict[str, Any], validation_rules: List[str]) -> bool:
+        """Check if relationship analysis passes validation rules"""
+        # TEMPORARY DEBUG: Log all analysis data for debugging
+        logger.info(f"🔍 DEBUGGING: Analysis data: {analysis}")
+        logger.info(f"🔍 DEBUGGING: Validation rules: {validation_rules}")
+        
+        for rule in validation_rules:
+            if rule == 'minimum_sample_size_100' and analysis['total_dependent_records'] < 100:
+                logger.info(f"   ⚠️ TEMP DEBUG: Failed minimum_sample_size_100: {analysis['total_dependent_records']} records")
+                # TEMPORARY: Don't reject for now, just log
+                continue
+            elif rule == 'minimum_sample_size_500' and analysis['total_dependent_records'] < 500:
+                logger.info(f"   ⚠️ TEMP DEBUG: Failed minimum_sample_size_500: {analysis['total_dependent_records']} records")
+                # TEMPORARY: Don't reject for now, just log
+                continue
+            elif rule == 'integrity_threshold_10' and analysis['integrity_percentage'] < 10.0:
+                logger.info(f"   ⚠️ TEMP DEBUG: Failed integrity_threshold_10: {analysis['integrity_percentage']}% integrity")
+                # TEMPORARY: Don't reject for now, just log
+                continue
+            elif rule == 'integrity_threshold_25' and analysis['integrity_percentage'] < 25.0:
+                logger.info(f"   ⚠️ TEMP DEBUG: Failed integrity_threshold_25: {analysis['integrity_percentage']}% integrity")
+                # TEMPORARY: Don't reject for now, just log
+                continue
+        
+        # TEMPORARY: Always return True for debugging
+        logger.info("🔍 TEMP DEBUG: Allowing all relationships for debugging")
+        return True
+    
+    # Legacy methods removed - use instance methods instead
 
 
 class FieldProfiler:
@@ -574,7 +1154,7 @@ class ContextAssembler:
             'error_count': len(quality_signals.error_logs),
             'completeness': quality_signals.completeness_summary
         }
-        return hashlib.md5(json.dumps(key_data, sort_keys=True).encode()).hexdigest()
+        return hashlib.md5(json.dumps(key_data, sort_keys=True, default=str).encode()).hexdigest()
 
     @staticmethod
     def create_multi_bundle(
@@ -614,6 +1194,17 @@ class ContextAssembler:
                 if p.severity in severity_counts:
                     severity_counts[p.severity] += 1
 
+        # Perform cross-file relationship analysis using enhanced analyzer
+        logger.info("Analyzing cross-file relationships...")
+        
+        # Create enhanced analyzer with performance monitoring
+        analyzer = CrossFileAnalyzer(mysql_retrieval, neo4j_retrieval)
+        cross_file_relationships = analyzer.analyze_relationships(bundles)
+        
+        # Add cross-file metrics to aggregate summary
+        critical_relationships = [r for r in cross_file_relationships if r.severity == "High"]
+        total_orphaned_records = sum(r.orphaned_records for r in cross_file_relationships)
+        
         aggregate_summary = {
             'files_analyzed': len(bundles),
             'total_rows': total_rows,
@@ -621,6 +1212,9 @@ class ContextAssembler:
             'total_error_logs': total_errors,
             'total_violations': total_violations,
             'severity_counts': severity_counts,
+            'cross_file_relationships': len(cross_file_relationships),
+            'critical_integrity_issues': len(critical_relationships),
+            'total_orphaned_records': total_orphaned_records,
         }
 
         metadata = {
@@ -632,10 +1226,13 @@ class ContextAssembler:
             }
         }
 
+        logger.info(f"✅ Cross-file analysis complete: {len(cross_file_relationships)} relationships, {len(critical_relationships)} critical issues")
+
         return MultiFileContext(
             file_names=file_names,
             bundles=bundles,
             aggregate_summary=aggregate_summary,
+            cross_file_relationships=cross_file_relationships,
             metadata=metadata
         )
 
@@ -644,8 +1241,9 @@ class RetrievalFramework:
     """Main retrieval framework class"""
     
     def __init__(self):
-        self.mysql_retrieval = MySQLRetrieval()
-        self.neo4j_retrieval = Neo4jRetrieval()
+        self.performance_monitor = PerformanceMonitor()
+        self.mysql_retrieval = MySQLRetrieval(self.performance_monitor)
+        self.neo4j_retrieval = Neo4jRetrieval(self.performance_monitor)
     
     def build_analysis_context(self, file_name: str, 
                              save_bundle: bool = False,
@@ -797,6 +1395,64 @@ class RetrievalFramework:
                 if p.violations
             ]
         }
+    
+    def get_cross_file_analysis(self, file_names: List[str]) -> Dict[str, Any]:
+        """Get cross-file relationship analysis for PDF generator"""
+        try:
+            multi_context = self.build_multi_file_context(file_names)
+            
+            # Convert cross-file relationships to PDF-friendly format
+            cross_file_patterns = {}
+            integrity_analysis = []
+            
+            for relationship in multi_context.cross_file_relationships:
+                # Format for cross-file patterns table
+                pattern_key = f"{relationship.key_field}_integrity"
+                if pattern_key not in cross_file_patterns:
+                    cross_file_patterns[pattern_key] = {
+                        'files': [],
+                        'total_count': 0,
+                        'severity': relationship.severity
+                    }
+                
+                cross_file_patterns[pattern_key]['files'].extend([
+                    relationship.primary_file, relationship.dependent_file
+                ])
+                cross_file_patterns[pattern_key]['total_count'] += relationship.orphaned_records
+                
+                # Format for integrity analysis table
+                integrity_analysis.append({
+                    'source_pattern': relationship.primary_file.split('_')[0] + '_*',
+                    'dependent_pattern': relationship.dependent_file.split('_')[0] + '_*', 
+                    'key_field': relationship.key_field,
+                    'total_references': relationship.total_dependent_records,
+                    'orphaned_records': relationship.orphaned_records,
+                    'integrity_percentage': relationship.integrity_percentage,
+                    'severity': relationship.severity,
+                    'business_impact': relationship.business_impact
+                })
+            
+            # Remove duplicates from files lists
+            for pattern in cross_file_patterns.values():
+                pattern['files'] = list(set(pattern['files']))
+            
+            return {
+                'cross_file_patterns': cross_file_patterns,
+                'integrity_analysis': integrity_analysis,
+                'summary': {
+                    'total_relationships': len(multi_context.cross_file_relationships),
+                    'critical_issues': len([r for r in multi_context.cross_file_relationships if r.severity == "High"]),
+                    'total_orphaned_records': sum(r.orphaned_records for r in multi_context.cross_file_relationships)
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting cross-file analysis: {e}")
+            return {
+                'cross_file_patterns': {},
+                'integrity_analysis': [],
+                'summary': {'total_relationships': 0, 'critical_issues': 0, 'total_orphaned_records': 0}
+            }
     
     def get_multi_bundle_summary(self, multi_bundle: MultiFileContext) -> Dict[str, Any]:
         """Get a concise summary for a multi-file context bundle"""
