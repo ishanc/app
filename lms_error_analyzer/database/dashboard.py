@@ -68,47 +68,37 @@ class Dashboard:
         return result
     
     def generate_quality_dashboard(self):
-        #this is a dashboard for the user to see the quality of the data. 
+        """Generate dashboard for data quality with completeness as primary source"""
         self.create_completeness_tables()
+        
+        # A1: Completeness-driven query with LEFT JOIN aggregated errors
         query = """
+        WITH err AS (
+          SELECT 
+            e.file_name,
+            COUNT(*)                             AS total_errors,
+            COUNT(DISTINCT e.line_number)        AS lines_with_errors,
+            SUM(e.validation_type = 'MANDATORY_EMPTY')                                                       AS nulls_found,
+            SUM(e.validation_type IN ('TYPE_COMPATIBILITY','HEADER_INCONSISTENCY'))                          AS unlinked_fk
+          FROM error_logs e
+          WHERE e.file_name IS NOT NULL
+          GROUP BY e.file_name
+        )
         SELECT 
-            file_name,
-            MAX(total_records) as total_records,
-            MAX(total_errors) as total_errors,
-            MAX(lines_with_errors) as lines_with_errors,
-            MAX(nulls_found) as nulls_found,
-            MAX(unlinked_fk) as unlinked_fk,
-            MAX(percent_complete) as percent_complete,
-            MAX(mandatory_complete) as mandatory_complete
-        FROM (
-            SELECT 
-                e.file_name,
-                MAX(e.line_number) as total_records,
-                COUNT(*) as total_errors,
-                COUNT(DISTINCT e.line_number) as lines_with_errors,
-                SUM(CASE WHEN e.validation_type = 'MANDATORY_EMPTY' THEN 1 ELSE 0 END) as nulls_found,
-                SUM(CASE WHEN e.validation_type IN ('TYPE_COMPATIBILITY', 'HEADER_INCONSISTENCY') THEN 1 ELSE 0 END) as unlinked_fk,
-                0 as percent_complete,
-                0 as mandatory_complete
-            FROM error_logs e
-            WHERE e.file_name IS NOT NULL
-            GROUP BY e.file_name
-            
-            UNION ALL
-            
-            SELECT 
-                c.file_name,
-                0 as total_records,
-                0 as total_errors,
-                0 as lines_with_errors,
-                0 as nulls_found,
-                0 as unlinked_fk,
-                c.mandatory_completeness as percent_complete,
-                c.mandatory_completeness as mandatory_complete
-            FROM file_completeness_summary c
-            WHERE c.file_name IS NOT NULL
-        ) combined_data
-        GROUP BY file_name
+          c.file_name,
+          c.total_records,
+          COALESCE(err.total_errors, 0)          AS total_errors,
+          COALESCE(err.lines_with_errors, 0)     AS lines_with_errors,
+          COALESCE(err.nulls_found, 0)           AS nulls_found,
+          COALESCE(err.unlinked_fk, 0)           AS unlinked_fk,
+          c.mandatory_completeness               AS percent_complete,
+          CASE 
+            WHEN c.total_records <= 0 THEN 0
+            ELSE ROUND(100.0 * (c.total_records - COALESCE(err.lines_with_errors,0)) / c.total_records, 2)
+          END                                     AS percent_valid
+        FROM file_completeness_summary c
+        LEFT JOIN err ON err.file_name = c.file_name
+        ORDER BY c.file_name
         """
         
         cursor = self.connection.cursor(dictionary=True)
@@ -116,17 +106,111 @@ class Dashboard:
         results = cursor.fetchall()
         cursor.close()
         
-        return [{
-            'file_name': row['file_name'],
-            'record_count': row['total_records'],
-            'total_errors': row['total_errors'],
-            'lines_with_errors': row['lines_with_errors'],
-            'nulls_found': row['nulls_found'],
-            'unlinked_fk': row['unlinked_fk'],
-            'percent_valid': self._calculate_percent_valid(row['total_records'], row['lines_with_errors']),
-            'percent_complete': row['percent_complete'],
-            'mandatory_complete': row['mandatory_complete']
-        } for row in results]
+        # A2: Get total fields data and merge into results
+        total_fields_data = self.get_total_fields_data([row['file_name'] for row in results])
+        
+        # A5: Build response with new structure
+        dashboard_results = []
+        for row in results:
+            file_name = row['file_name']
+            dashboard_results.append({
+                'file_name': file_name,
+                'record_count': int(row['total_records']),  # A3: Use completeness total_records
+                'total_errors': int(row['total_errors']),
+                'lines_with_errors': int(row['lines_with_errors']),
+                'nulls_found': int(row['nulls_found']),
+                'unlinked_fk': int(row['unlinked_fk']),
+                'percent_valid': float(row['percent_valid']),  # A3: From SQL calculation
+                'percent_complete': float(row['percent_complete']),  # A3: mandatory_completeness
+                'mandatory_complete': float(row['percent_complete']),  # Backward compatibility
+                'total_fields_in_file': total_fields_data.get(file_name, 0)  # A2: New field
+            })
+        
+        return dashboard_results
+
+    def get_total_fields_data(self, file_names):
+        """
+        A2: Get total fields count for each file using information_schema with SumTotal-only mapping
+        
+        Args:
+            file_names: List of SumTotal file names (e.g., "Activity_Curriculum", "Core_Audience")
+            
+        Returns:
+            Dict[str, int]: Mapping of file_name -> total_fields_in_file
+        """
+        # SumTotal-only file name to MySQL table mapping
+        sumtotal_to_mysql_table = {
+            # Activity files
+            "Activity_Curriculum": "activity_curriculum",
+            "Activity_Document": "activity_document", 
+            "Activity_ILTClass": "activity_ilt_class",
+            "Activity_ILTCourse": "activity_ilt_course",
+            "Activity_ILTSessions": "activity_ilt_sessions",
+            "Activity_Online Course": "activity_online_course",
+            "Activity_Online_Course": "activity_online_course",
+            "Activity_QuickAssessment": "activity_quick_assessment",
+            
+            # Core files
+            "Core_Audience": "core_audience",
+            "Core_Domain": "core_domain",
+            "Core_Employee": "core_employee",
+            "Core_Jobs": "core_jobs", 
+            "Core_Organization": "core_organization",
+            
+            # Prerequisites files
+            "Prerequisites_Facility": "prerequisites_facility",
+            "Prerequisites_Instructor": "prerequisites_instructor",
+            "Prerequisites_Provider": "prerequisites_provider",
+            "Prerequisites_Question": "prerequisites_question",
+            "Prerequisites_QuestionBanks": "prerequisites_question_banks",
+            "Prerequisites_Subject": "prerequisites_subject",
+            
+            # Transcript files
+            "Transcript_Curriculum": "transcript_curriculum",
+            "Transcript_Document": "transcript_document",
+            "Transcript_ILTClass": "transcript_ilt_class",
+            "Transcript_Online Course": "transcript_online_course",
+            "Transcript_Online_Course": "transcript_online_course",
+            "Transcript_QuickAssessment": "transcript_quick_assessment"
+        }
+        
+        total_fields_data = {}
+        cursor = self.connection.cursor(dictionary=True)
+        
+        try:
+            for file_name in file_names:
+                # Clean file name (remove .xlsx extension if present)
+                clean_file_name = file_name.replace('.xlsx', '').replace('.csv', '')
+                table_name = sumtotal_to_mysql_table.get(clean_file_name)
+                
+                if table_name:
+                    try:
+                        # Query information_schema for column count
+                        cursor.execute("""
+                            SELECT COUNT(*) as field_count
+                            FROM information_schema.columns
+                            WHERE table_schema = DATABASE()
+                              AND table_name = %s
+                        """, (table_name,))
+                        
+                        result = cursor.fetchone()
+                        field_count = result['field_count'] if result else 0
+                        total_fields_data[file_name] = field_count
+                        
+                        if field_count == 0:
+                            print(f"WARNING: No fields found for table '{table_name}' (file: {file_name})")
+                            
+                    except Exception as e:
+                        print(f"ERROR: Failed to get field count for {file_name} -> {table_name}: {e}")
+                        total_fields_data[file_name] = 0
+                else:
+                    print(f"WARNING: No table mapping found for SumTotal file '{clean_file_name}'")
+                    total_fields_data[file_name] = 0
+                    
+        finally:
+            cursor.close()
+            
+        return total_fields_data
 
     def create_completeness_tables(self):
         connection = self.connection
@@ -154,36 +238,76 @@ class Dashboard:
             cursor.close()
             
     def get_mandatory_fields_from_neo4j(self, file_name):
-        """Get mandatory fields for a file from Neo4j mapping rules"""
+        """
+        A4: Get mandatory fields for a file from Neo4j using SumTotal-only file names
+        
+        Args:
+            file_name: SumTotal file name (e.g., "Activity_Curriculum", "Core_Audience")
+            
+        Returns:
+            List[str]: List of mandatory SumTotal field names
+        """
         mandatory_fields = []
         
         try:
             with self.neo4j_driver.session() as session:
+                # A4: Updated Cypher query for SumTotal-only lookup
                 query = """
-                MATCH (f:File {name: $fileName})
-                MATCH (f)-[:HAS_FIELD]->(st:SumTotalField)
+                MATCH (f:File {name: $fileName})-[:HAS_FIELD]->(st:SumTotalField)
                 MATCH (st)-[:MAPS_TO]->(csod:CSODField)
-                WHERE csod.mandatory = "Mandatory"
-                WITH DISTINCT st.name as field_name
-                RETURN field_name
+                WHERE csod.mandatory = 'Mandatory'
+                RETURN DISTINCT st.name AS field_name
                 """
-                # Use the same file mapping logic as the transformation pipeline
-                file_key = self.map_filename_to_database_key(file_name)
+                
+                # A4: Use SumTotal-only file name mapping (no CSOD conversion)
+                sumtotal_file_key = self.get_sumtotal_file_key(file_name)
                 print(f"DEBUG: Original filename: {file_name}")
-                print(f"DEBUG: Mapped file key: {file_key}")
-                result = session.run(query, fileName=file_key)
+                print(f"DEBUG: SumTotal file key: {sumtotal_file_key}")
+                
+                result = session.run(query, fileName=sumtotal_file_key)
                 
                 for record in result:
                     mandatory_fields.append(record["field_name"])
+                    
+                print(f"DEBUG: Found {len(mandatory_fields)} mandatory fields for {sumtotal_file_key}")
+                
         except Exception as e:
-            print(f"Error getting mandatory fields from Neo4j: {e}")
+            print(f"ERROR: Failed to get mandatory fields from Neo4j for {file_name}: {e}")
         
         return mandatory_fields
     
-    def map_filename_to_database_key(self, filename):
-        """Map filename to the correct database key for mapping rules"""
-        from utils.filename_mapper import FilenameMapper
-        return FilenameMapper.to_db_key(filename)
+    def get_sumtotal_file_key(self, filename):
+        """
+        A4: Map filename to SumTotal File.name in Neo4j (SumTotal-only, no CSOD mapping)
+        
+        Args:
+            filename: Original filename or SumTotal file name
+            
+        Returns:
+            str: SumTotal file key for Neo4j File.name lookup
+        """
+        # Clean filename (remove extensions)
+        clean_filename = filename.replace('.xlsx', '').replace('.csv', '')
+        
+        # SumTotal file name variations (handle space/underscore differences)
+        sumtotal_file_mappings = {
+            # Handle space/underscore variants
+            "Activity_Online Course": "Activity_ILTCourse",  # Map to Neo4j File.name
+            "Activity_Online_Course": "Activity_ILTCourse",
+            "Transcript_Online Course": "Transcript_ILTCourse", 
+            "Transcript_Online_Course": "Transcript_ILTCourse",
+            "Transcript_ILT Class": "Transcript_ILTClass",
+            "Transcript_ILT_Class": "Transcript_ILTClass",
+            
+            # Employee files need -CHR suffix in Neo4j
+            "Core_Employee": "Core_Employee-CHR",
+            
+            # For most files, the clean filename IS the SumTotal File.name
+            # Examples: Activity_Curriculum, Activity_ILTClass, Core_Audience, etc.
+        }
+        
+        # Return mapped name or original clean name for direct SumTotal files
+        return sumtotal_file_mappings.get(clean_filename, clean_filename)
     
     def calculate_file_completeness(self, file_name, input_df):
         """Calculate mandatory completeness as percent of records with all mandatory fields populated.

@@ -315,9 +315,12 @@ def delete_file(filename):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/reset-all-data', methods=['POST'])
-def reset_all_data():
+def reset_all_data_endpoint():
     """Reset all data for a new batch - clears database and all processed files"""
+    logger.info("🔍 Reset all data endpoint called") # DEBUG
     try:
+        # Import from the parent directory where pdf_quality_report.py is located
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
         from pdf_quality_report import reset_all_data
         
         # Reset everything
@@ -339,11 +342,14 @@ def reset_all_data():
         if results['errors']:
             response_data['errors'] = results['errors']
         
-        logger.info(f"Reset operation completed: {response_data}")
+        logger.info(f"✅ Reset operation completed: {response_data}")
         return jsonify(response_data)
         
     except Exception as e:
-        logger.error(f"Error resetting all data: {e}")
+        logger.error(f"❌ Error resetting all data: {e}")
+        logger.error(f"❌ Exception type: {type(e)}")
+        import traceback
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
         return jsonify({
             'success': False,
             'error': f'Failed to reset data: {str(e)}'

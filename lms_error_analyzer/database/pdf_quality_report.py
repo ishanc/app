@@ -33,8 +33,7 @@ class FileQualityScore:
     """Quality score breakdown for a file"""
     file_name: str
     mandatory_fields_complete: float
-    records_without_errors: float
-    overall_quality_score: float
+    records_without_errors: float  # This is now Quality %
     total_records: int
     error_count: int
 
@@ -168,59 +167,181 @@ class PDFQualityReportGenerator:
             logger.error(f"Error getting error data: {e}")
             return {f: {'total_errors': 0, 'error_types': {}} for f in file_names}
     
+    def _extract_field_name_from_error_message(self, message: str) -> Optional[str]:
+        """
+        Extract SumTotal field name from error message.
+        
+        Error messages typically follow format: "Field 'FieldName' at row X has [error description]"
+        
+        Args:
+            message: Error message string
+            
+        Returns:
+            Extracted field name or None if not found
+        """
+        import re
+        # Pattern to match "Field 'FieldName'" or similar variations
+        patterns = [
+            r"Field '([^']+)'",      # Field 'FieldName'
+            r"field '([^']+)'",      # field 'FieldName' 
+            r"Field \"([^\"]+)\"",   # Field "FieldName"
+            r"field \"([^\"]+)\""    # field "FieldName"
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, message)
+            if match:
+                return match.group(1).strip()
+        
+        return None
+    
+    def _get_mandatory_fields_for_file(self, file_name: str) -> List[str]:
+        """
+        Get mandatory fields for a file using Dashboard's Neo4j integration.
+        
+        Args:
+            file_name: Name of the file
+            
+        Returns:
+            List of mandatory SumTotal field names
+        """
+        try:
+            from dashboard import Dashboard
+            dashboard = Dashboard()
+            try:
+                mandatory_fields = dashboard.get_mandatory_fields_from_neo4j(file_name)
+                logger.debug(f"Found {len(mandatory_fields)} mandatory fields for {file_name}: {mandatory_fields}")
+                return mandatory_fields
+            finally:
+                dashboard.close_connections()
+        except Exception as e:
+            logger.warning(f"Could not get mandatory fields for {file_name}: {e}")
+            return []
+    
+    def _calculate_error_prone_records(self, file_name: str, total_records: int, incomplete_records: int) -> int:
+        """
+        Calculate the number of error-prone records for a file.
+        
+        An error-prone record is one that has one or more errors in mandatory fields.
+        
+        Args:
+            file_name: Name of the file
+            total_records: Total number of records in the file
+            incomplete_records: Number of records with incomplete mandatory fields
+            
+        Returns:
+            Number of error-prone records
+        """
+        if total_records == 0:
+            return 0
+            
+        try:
+            cursor = self.db_connection.cursor(dictionary=True)
+            
+            # Get mandatory fields for this file
+            mandatory_fields = self._get_mandatory_fields_for_file(file_name)
+            if not mandatory_fields:
+                logger.warning(f"No mandatory fields found for {file_name}, falling back to incomplete_records: {incomplete_records}")
+                # Fallback: If we can't determine mandatory fields, use incomplete_records as proxy
+                # This ensures consistency with mandatory completeness calculation
+                return incomplete_records
+            
+            # Build SQL to get errors in mandatory fields
+            # We need to extract field names from error messages and match against mandatory fields
+            cursor.execute("""
+                SELECT DISTINCT line_number, message
+                FROM error_logs 
+                WHERE file_name = %s 
+                AND line_number IS NOT NULL
+            """, (file_name,))
+            
+            error_results = cursor.fetchall()
+            cursor.close()
+            
+            # Track which line numbers (records) have errors in mandatory fields
+            error_prone_lines = set()
+            
+            for error_row in error_results:
+                line_number = error_row['line_number']
+                message = error_row['message']
+                
+                # Extract field name from error message
+                field_name = self._extract_field_name_from_error_message(message)
+                
+                # Check if this field is mandatory
+                if field_name and field_name in mandatory_fields:
+                    error_prone_lines.add(line_number)
+                    logger.debug(f"Found error in mandatory field '{field_name}' at line {line_number}")
+            
+            error_prone_count = len(error_prone_lines)
+            logger.info(f"File {file_name}: {error_prone_count} out of {total_records} records are error-prone (detailed analysis)")
+            
+            # Sanity check: If detailed analysis gives 0 but we have incomplete_records, use incomplete_records
+            if error_prone_count == 0 and incomplete_records > 0:
+                logger.warning(f"File {file_name}: Detailed analysis found 0 error-prone records but incomplete_records={incomplete_records}. Using incomplete_records as fallback.")
+                return incomplete_records
+            
+            return error_prone_count
+            
+        except Exception as e:
+            logger.error(f"Error calculating error-prone records for {file_name}: {e}")
+            # If detailed analysis fails, fall back to incomplete_records
+            logger.info(f"Using incomplete_records ({incomplete_records}) as fallback for {file_name}")
+            return incomplete_records
+    
     def calculate_quality_scores(self, completeness_data: Dict, error_data: Dict) -> List[FileQualityScore]:
-        """Calculate quality scores for files"""
+        """
+        Calculate quality scores for files using the new Quality % methodology.
+        
+        Quality % = (total_records - error_prone_records) / total_records * 100
+        where error_prone_records are records with 1+ errors in mandatory fields.
+        
+        FIXED: Now uses incomplete_records as fallback when Neo4j mandatory field lookup fails.
+        This ensures Quality % is consistent with Mandatory Complete %.
+        
+        Args:
+            completeness_data: Completeness data for each file
+            error_data: Error data for each file
+            
+        Returns:
+            List of FileQualityScore objects sorted by Quality %
+        """
         scores = []
         
         for file_name in completeness_data.keys():
             comp = completeness_data[file_name]
             errors = error_data[file_name]
             
+            # Extract basic metrics
             mandatory_complete = comp.get('mandatory_completeness', 0.0)
             total_records = comp.get('total_records', 0)
             incomplete_records = comp.get('incomplete_records', 0)
             total_errors = errors.get('total_errors', 0)
             
-                        # Calculate completion percentage
-            completion_percentage = 0.0
+            # Calculate error-prone records (records with errors in mandatory fields)
+            error_prone_records = self._calculate_error_prone_records(file_name, total_records, incomplete_records)
+            
+            # Calculate Quality % = (total_records - error_prone_records) / total_records * 100
+            quality_percentage = 0.0
             if total_records > 0:
-                complete_records = total_records - incomplete_records
-                completion_percentage = (complete_records / total_records) * 100
+                clean_records = total_records - error_prone_records
+                quality_percentage = (clean_records / total_records) * 100
             
-            # Overall quality score (80% mandatory completeness, 20% penalty for critical errors)
-            overall_quality = mandatory_complete * 0.8
+            # Ensure bounds [0, 100]
+            quality_percentage = max(0.0, min(100.0, quality_percentage))
             
-            # Apply penalty for critical errors
-            critical_errors = sum(
-                errors['error_types'].get(error_type, 0) 
-                for error_type in self.SEVERITY_CATEGORIES.get('Critical', [])
-            )
-            
-            if total_records > 0 and critical_errors > 0:
-                critical_penalty = min(critical_errors / total_records, 1.0) * 20
-                overall_quality = max(0, overall_quality - critical_penalty)
-            
-            # Add usability bonus
-            if mandatory_complete > 0:
-                usability_bonus = 20 if total_records > 0 else 0
-                if total_records > 0:
-                    error_density = total_errors / total_records
-                    if error_density > 3.0:
-                        usability_bonus = 10
-                    elif error_density > 1.0:
-                        usability_bonus = 15
-                overall_quality += usability_bonus
+            logger.info(f"File {file_name}: Quality % = {quality_percentage:.1f}% "
+                       f"({total_records - error_prone_records}/{total_records} clean records)")
                 
             scores.append(FileQualityScore(
                     file_name=file_name,
                     mandatory_fields_complete=mandatory_complete,
-                    records_without_errors=round(completion_percentage, 1),
-                    overall_quality_score=round(overall_quality, 1),
+                    records_without_errors=round(quality_percentage, 1),  # This is Quality %
                     total_records=total_records,
                     error_count=total_errors
                 ))
             
-        return sorted(scores, key=lambda x: x.overall_quality_score, reverse=True)
+        return sorted(scores, key=lambda x: x.records_without_errors, reverse=True)
     
     def create_expandable_table(self, data: List[List[str]], col_widths: List[float]) -> Table:
         """Create table with vertical text expansion instead of truncation"""
@@ -385,25 +506,29 @@ class PDFQualityReportGenerator:
         story.append(Spacer(1, 20))
     
     def _add_quality_table(self, story, styles, quality_scores: List[FileQualityScore]):
-        """Add quality scores table"""
+        """
+        Add quality scores table to PDF report.
+        
+        Quality % is calculated as: (total_records - error_prone_records) / total_records * 100
+        where error_prone_records are records with 1+ errors in mandatory fields.
+        """
         if not quality_scores:
             return
             
         story.append(Paragraph("File Quality Scores", styles['Heading2']))
         
-        data = [['File Name', 'Mandatory Complete', 'Completion %', 'Quality Score', 'Total Records', 'Errors']]
+        data = [['File Name', 'Mandatory Complete', 'Total Records', 'Errors', 'Quality %']]
         
         for score in quality_scores:
             data.append([
                 score.file_name,
                 f"{score.mandatory_fields_complete:.1f}%",
-                f"{score.records_without_errors:.1f}%",
-                f"{score.overall_quality_score:.1f}%",
                 f"{score.total_records:,}",
-                f"{score.error_count:,}"
+                f"{score.error_count:,}",
+                f"{score.records_without_errors:.1f}%"
             ])
         
-        col_widths = [2.2*inch, 1*inch, 1*inch, 1*inch, 0.9*inch, 0.9*inch]
+        col_widths = [2.5*inch, 1.2*inch, 1.0*inch, 1.0*inch, 1.2*inch]
         table = self.create_expandable_table(data, col_widths)
         
         if table:
@@ -525,6 +650,178 @@ class PDFQualityReportGenerator:
             
         return cross_file_data
     
+    def _merge_employees_orphan_data(self, cross_file_data: Dict, employees_data: List[Dict]) -> Dict:
+        """
+        Merge Employees orphan detection data into cross-file analysis structure
+        
+        Args:
+            cross_file_data: Existing cross-file analysis data
+            employees_data: Employees orphan detection results
+            
+        Returns:
+            Dict: Merged cross-file analysis data
+        """
+        if not employees_data:
+            return cross_file_data
+            
+        # Ensure structure exists
+        if 'summary' not in cross_file_data:
+            cross_file_data['summary'] = {}
+        if 'integrity_analysis' not in cross_file_data:
+            cross_file_data['integrity_analysis'] = []
+        if 'cross_file_patterns' not in cross_file_data:
+            cross_file_data['cross_file_patterns'] = {}
+            
+        # Calculate Employees summary metrics
+        employees_orphaned = sum(row.get('orphaned_source_records', 0) for row in employees_data)
+        employees_critical = len([row for row in employees_data if row.get('business_priority') in ['Critical', 'High']])
+        employees_relationships = len(employees_data)
+        
+        # Debug logging
+        print(f"🔍 DEBUG: Employees data length: {len(employees_data)}")
+        print(f"🔍 DEBUG: Employees orphaned total: {employees_orphaned}")
+        print(f"🔍 DEBUG: Employees critical count: {employees_critical}")
+        if employees_data:
+            print(f"🔍 DEBUG: Sample row: {employees_data[0]}")
+        else:
+            print("🔍 DEBUG: No Employees data received!")
+        
+        # Update summary
+        existing_summary = cross_file_data['summary']
+        existing_summary['total_relationships'] = existing_summary.get('total_relationships', 0) + employees_relationships
+        existing_summary['critical_issues'] = existing_summary.get('critical_issues', 0) + employees_critical
+        existing_summary['total_orphaned_records'] = existing_summary.get('total_orphaned_records', 0) + employees_orphaned
+        
+        # Convert Employees data to integrity_analysis format
+        for employee_row in employees_data:
+            # Map Employees data to expected format
+            source_pattern = employee_row.get('relationship_name', '').split(' → ')[0] if ' → ' in employee_row.get('relationship_name', '') else 'Employees Source'
+            target_pattern = employee_row.get('relationship_name', '').split(' → ')[1] if ' → ' in employee_row.get('relationship_name', '') else 'Employees Target'
+            
+            # Determine severity based on priority and integrity percentage
+            priority = employee_row.get('business_priority', 'Medium') 
+            integrity_pct = employee_row.get('integrity_percentage', 100)
+            
+            if priority in ['Critical', 'High'] or integrity_pct < 50:
+                severity = 'High'
+            elif integrity_pct < 90:
+                severity = 'Medium'
+            else:
+                severity = 'Low'
+                
+            integrity_item = {
+                'source_pattern': source_pattern,
+                'dependent_pattern': target_pattern,
+                'key_field': employee_row.get('key_field', 'PersonNumber'),
+                'integrity_percentage': integrity_pct,
+                'orphaned_records': employee_row.get('orphaned_source_records', 0),
+                'business_impact': self._get_employees_business_impact(employee_row),
+                'severity': severity,
+                'system_source': 'Employees Orphan Tracker'  # Mark as from new system
+            }
+            
+            cross_file_data['integrity_analysis'].append(integrity_item)
+            
+        # Add Employees pattern to cross_file_patterns
+        if employees_data:
+            # Determine proper severity based on critical relationships
+            domain_severity = 'Critical' if employees_critical > 0 else ('High' if employees_orphaned > 100 else 'Medium')
+            
+            cross_file_data['cross_file_patterns']['Employees Domain'] = {
+                'files': ['Core_Employee', 'Transcript_Curriculum', 'Prerequisites_Instructor'],
+                'total_issues': employees_orphaned,
+                'severity': domain_severity,
+                'pattern_type': 'Employee Referential Integrity'
+            }
+            
+        return cross_file_data
+    
+    def _merge_orgs_orphan_data(self, cross_file_data: Dict, orgs_data: List[Dict]) -> Dict:
+        """
+        Merge Organizations orphan detection data into cross-file analysis structure
+        
+        Args:
+            cross_file_data: Existing cross-file analysis data
+            orgs_data: Organizations orphan detection results
+            
+        Returns:
+            Dict: Merged cross-file analysis data
+        """
+        if not orgs_data:
+            return cross_file_data
+            
+        # Ensure structure exists
+        if 'summary' not in cross_file_data:
+            cross_file_data['summary'] = {}
+        if 'integrity_analysis' not in cross_file_data:
+            cross_file_data['integrity_analysis'] = []
+        if 'cross_file_patterns' not in cross_file_data:
+            cross_file_data['cross_file_patterns'] = {}
+            
+        # Calculate Organizations summary metrics
+        orgs_orphaned = sum(row.get('orphaned_source_records', 0) for row in orgs_data)
+        orgs_critical = len([row for row in orgs_data if row.get('business_priority') in ['Critical', 'High']])
+        orgs_relationships = len(orgs_data)
+        
+        # Debug logging
+        print(f"🔍 DEBUG: Organizations data length: {len(orgs_data)}")
+        print(f"🔍 DEBUG: Organizations orphaned total: {orgs_orphaned}")
+        print(f"🔍 DEBUG: Organizations critical count: {orgs_critical}")
+        if orgs_data:
+            print(f"🔍 DEBUG: Sample row: {orgs_data[0]}")
+        else:
+            print("🔍 DEBUG: No Organizations data received!")
+        
+        # Update summary
+        existing_summary = cross_file_data['summary']
+        existing_summary['total_relationships'] = existing_summary.get('total_relationships', 0) + orgs_relationships
+        existing_summary['critical_issues'] = existing_summary.get('critical_issues', 0) + orgs_critical
+        existing_summary['total_orphaned_records'] = existing_summary.get('total_orphaned_records', 0) + orgs_orphaned
+        
+        # Convert Organizations data to integrity_analysis format
+        for org_row in orgs_data:
+            # Map Organizations data to expected format
+            source_pattern = org_row.get('relationship_name', '').split(' → ')[0] if ' → ' in org_row.get('relationship_name', '') else 'Organizations Source'
+            target_pattern = org_row.get('relationship_name', '').split(' → ')[1] if ' → ' in org_row.get('relationship_name', '') else 'Organizations Target'
+            
+            # Determine severity based on priority and integrity percentage
+            priority = org_row.get('business_priority', 'Medium') 
+            integrity_pct = org_row.get('integrity_percentage', 100)
+            
+            if priority in ['Critical', 'High'] or integrity_pct < 50:
+                severity = 'High'
+            elif integrity_pct < 90:
+                severity = 'Medium'
+            else:
+                severity = 'Low'
+                
+            integrity_item = {
+                'source_pattern': source_pattern,
+                'dependent_pattern': target_pattern,
+                'key_field': org_row.get('key_field', 'OrganizationCode'),
+                'integrity_percentage': integrity_pct,
+                'orphaned_records': org_row.get('orphaned_source_records', 0),
+                'business_impact': self._get_orgs_business_impact(org_row),
+                'severity': severity,
+                'system_source': 'Organizations Orphan Tracker'  # Mark as from new system
+            }
+            
+            cross_file_data['integrity_analysis'].append(integrity_item)
+            
+        # Add Organizations pattern to cross_file_patterns
+        if orgs_data:
+            # Determine proper severity based on critical relationships
+            domain_severity = 'Critical' if orgs_critical > 0 else ('High' if orgs_orphaned > 100 else 'Medium')
+            
+            cross_file_data['cross_file_patterns']['Organizations Domain'] = {
+                'files': ['Core_Employee', 'Core_Organization', 'Core_Domain'],
+                'total_issues': orgs_orphaned,
+                'severity': domain_severity,
+                'pattern_type': 'Organizational Structure Integrity'
+            }
+            
+        return cross_file_data
+    
     def _add_activities_orphan_section(self, story, styles, activities_data: List[Dict]):
         """Add dedicated Activities orphan detection section with optimal formatting"""
         if not activities_data:
@@ -541,6 +838,7 @@ class PDFQualityReportGenerator:
         # Group by priority for better readability
         high_priority = [row for row in activities_data if row.get('business_priority') in ['Critical', 'High']]
         medium_priority = [row for row in activities_data if row.get('business_priority') == 'Medium']
+        info_priority = [row for row in activities_data if row.get('business_priority') in ['Info', 'Low']]
         
         if high_priority:
             story.append(Paragraph(f"<b>High Priority Issues ({len(high_priority)} relationships)</b>", styles['Normal']))
@@ -555,8 +853,8 @@ class PDFQualityReportGenerator:
                 data.append([
                     simplified_name,
                     activity_row.get('key_field', ''),
-                    f"{activity_row.get('integrity_percentage', 0):.1f}%",
-                    f"{activity_row.get('orphaned_source_records', 0):,}",
+                    f"{self._safe_format_number(activity_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(activity_row.get('orphaned_source_records'), 0):,}",
                     self._get_activities_business_impact(activity_row)
                 ])
             
@@ -578,14 +876,134 @@ class PDFQualityReportGenerator:
                 
                 data.append([
                     simplified_name,
-                    f"{activity_row.get('integrity_percentage', 0):.1f}%",
-                    f"{activity_row.get('orphaned_source_records', 0):,}"
+                    f"{self._safe_format_number(activity_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(activity_row.get('orphaned_source_records'), 0):,}"
                 ])
             
             col_widths = [4.0*inch, 1.0*inch, 1.0*inch]
             medium_priority_table = self.create_expandable_table(data, col_widths)
             if medium_priority_table:
                 story.append(medium_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if info_priority:
+            story.append(Paragraph(f"<b>Informational Findings ({len(info_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Notes']]
+            
+            for activity_row in info_priority:
+                relationship_name = activity_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Activity_Sessions.', '').replace('Activity_SessionParts.', '')
+                # Remove "(report-only)" suffix for cleaner display
+                simplified_name = simplified_name.replace(' (report-only)', '')
+                
+                integrity_pct = activity_row.get('integrity_percentage')
+                integrity_str = f"{self._safe_format_number(integrity_pct, 0):.1f}%" if integrity_pct is not None else "N/A"
+                
+                data.append([
+                    simplified_name,
+                    activity_row.get('key_field', ''),
+                    integrity_str,
+                    f"{self._safe_format_number(activity_row.get('orphaned_source_records'), 0):,}",
+                    "Reference data quality tracking"
+                ])
+            
+            col_widths = [2.3*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.1*inch]
+            info_priority_table = self.create_expandable_table(data, col_widths)
+            if info_priority_table:
+                story.append(info_priority_table)
+            story.append(Spacer(1, 12))
+        
+    def _add_employees_orphan_section(self, story, styles, employees_data: List[Dict]):
+        """Add dedicated Employees orphan detection section with optimal formatting"""
+        if not employees_data:
+            return
+            
+        story.append(Paragraph("Employees Domain Integrity Analysis", styles['Heading3']))
+        story.append(Paragraph(
+            "Business rule-based orphan detection for Employee domain relationships. "
+            "This analysis identifies transcript records, instructor assignments, and curriculum ownership that lack valid employee references.",
+            styles['Normal']
+        ))
+        story.append(Spacer(1, 12))
+        
+        # Group by priority for better readability
+        high_priority = [row for row in employees_data if row.get('business_priority') in ['Critical', 'High']]
+        medium_priority = [row for row in employees_data if row.get('business_priority') == 'Medium']
+        info_priority = [row for row in employees_data if row.get('business_priority') in ['Info', 'Low']]
+        
+        if high_priority:
+            story.append(Paragraph(f"<b>High Priority Issues ({len(high_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Business Impact']]
+            
+            for employee_row in high_priority:
+                relationship_name = employee_row.get('relationship_name', 'Unknown')
+                # Simplify relationship name for display
+                simplified_name = relationship_name.replace('Employees.', '').replace('Prerequisites_Instructor.', 'Prereq_Instr.')
+                
+                data.append([
+                    simplified_name,
+                    employee_row.get('key_field', ''),
+                    f"{self._safe_format_number(employee_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(employee_row.get('orphaned_source_records'), 0):,}",
+                    self._get_employees_business_impact(employee_row)
+                ])
+            
+            # Use wider columns specifically for Employees data
+            col_widths = [2.8*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.6*inch]
+            high_priority_table = self.create_expandable_table(data, col_widths)
+            if high_priority_table:
+                story.append(high_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if medium_priority:
+            story.append(Paragraph(f"<b>Medium Priority Issues ({len(medium_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Integrity %', 'Orphaned Records']]
+            
+            for employee_row in medium_priority:
+                relationship_name = employee_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Employees.', '').replace('Prerequisites_Instructor.', 'Prereq_Instr.')
+                
+                data.append([
+                    simplified_name,
+                    f"{self._safe_format_number(employee_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(employee_row.get('orphaned_source_records'), 0):,}"
+                ])
+            
+            col_widths = [4.0*inch, 1.0*inch, 1.0*inch]
+            medium_priority_table = self.create_expandable_table(data, col_widths)
+            if medium_priority_table:
+                story.append(medium_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if info_priority:
+            story.append(Paragraph(f"<b>Informational Findings ({len(info_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Notes']]
+            
+            for employee_row in info_priority:
+                relationship_name = employee_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Employees.', '').replace('Prerequisites_Instructor.', 'Prereq_Instr.')
+                # Remove "(report-only)" suffix for cleaner display
+                simplified_name = simplified_name.replace(' (report-only)', '')
+                
+                integrity_pct = employee_row.get('integrity_percentage')
+                integrity_str = f"{self._safe_format_number(integrity_pct, 0):.1f}%" if integrity_pct is not None else "N/A"
+                
+                data.append([
+                    simplified_name,
+                    employee_row.get('key_field', ''),
+                    integrity_str,
+                    f"{self._safe_format_number(employee_row.get('orphaned_source_records'), 0):,}",
+                    "Reference data quality tracking"
+                ])
+            
+            col_widths = [2.3*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.1*inch]
+            info_priority_table = self.create_expandable_table(data, col_widths)
+            if info_priority_table:
+                story.append(info_priority_table)
             story.append(Spacer(1, 12))
         
     def _get_activities_business_impact(self, activity_row: Dict) -> str:
@@ -612,6 +1030,153 @@ class PDFQualityReportGenerator:
         else:
             return f"{priority}: {orphaned}/{total} records with integrity issues - impacts data quality"
     
+    def _safe_format_number(self, value, default=0):
+        """Safely format a number, handling None values"""
+        if value is None:
+            return default
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return default
+    
+    def _get_employees_business_impact(self, employee_row: Dict) -> str:
+        """
+        Generate business impact description for Employees orphan detection
+        
+        Args:
+            employee_row: Employees orphan detection result
+            
+        Returns:
+            str: Business impact description
+        """
+        relationship_name = employee_row.get('relationship_name', '')
+        orphaned = employee_row.get('orphaned_source_records', 0)
+        total = employee_row.get('total_source_records', 0)
+        priority = employee_row.get('business_priority', 'Medium')
+        
+        if 'Transcript' in relationship_name:
+            return f"High: {orphaned}/{total} training records lack valid employee references - impacts completion tracking and compliance"
+        elif 'Prerequisites_Instructor' in relationship_name:
+            return f"High: {orphaned}/{total} instructor assignments invalid - impacts training delivery authorization"
+        elif 'Activity_Curriculum' in relationship_name and 'Owner' in relationship_name:
+            return f"Medium: {orphaned}/{total} curriculum ownership unclear - impacts content governance"
+        else:
+            return f"{priority}: {orphaned}/{total} records with employee integrity issues - impacts data quality"
+    
+    def _add_orgs_orphan_section(self, story, styles, orgs_data: List[Dict]):
+        """Add dedicated Organizations orphan detection section with optimal formatting"""
+        if not orgs_data:
+            return
+            
+        story.append(Paragraph("Organizations Domain Integrity Analysis", styles['Heading3']))
+        story.append(Paragraph(
+            "Business rule-based orphan detection for Organization domain relationships. "
+            "This analysis identifies employee organizational assignments that lack valid organization references.",
+            styles['Normal']
+        ))
+        story.append(Spacer(1, 12))
+        
+        # Group by priority for better readability
+        high_priority = [row for row in orgs_data if row.get('business_priority') in ['Critical', 'High']]
+        medium_priority = [row for row in orgs_data if row.get('business_priority') == 'Medium']
+        info_priority = [row for row in orgs_data if row.get('business_priority') in ['Info', 'Low']]
+        
+        if high_priority:
+            story.append(Paragraph(f"<b>High Priority Issues ({len(high_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Business Impact']]
+            
+            for org_row in high_priority:
+                relationship_name = org_row.get('relationship_name', 'Unknown')
+                # Simplify relationship name for display
+                simplified_name = relationship_name.replace('Orgs.', '').replace('Employees.', '')
+                
+                data.append([
+                    simplified_name,
+                    org_row.get('key_field', ''),
+                    f"{self._safe_format_number(org_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(org_row.get('orphaned_source_records'), 0):,}",
+                    self._get_orgs_business_impact(org_row)
+                ])
+            
+            # Use wider columns specifically for Organizations data
+            col_widths = [2.8*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.6*inch]
+            high_priority_table = self.create_expandable_table(data, col_widths)
+            if high_priority_table:
+                story.append(high_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if medium_priority:
+            story.append(Paragraph(f"<b>Medium Priority Issues ({len(medium_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Integrity %', 'Orphaned Records']]
+            
+            for org_row in medium_priority:
+                relationship_name = org_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Orgs.', '').replace('Employees.', '')
+                
+                data.append([
+                    simplified_name,
+                    f"{self._safe_format_number(org_row.get('integrity_percentage'), 0):.1f}%",
+                    f"{self._safe_format_number(org_row.get('orphaned_source_records'), 0):,}"
+                ])
+            
+            col_widths = [4.0*inch, 1.0*inch, 1.0*inch]
+            medium_priority_table = self.create_expandable_table(data, col_widths)
+            if medium_priority_table:
+                story.append(medium_priority_table)
+            story.append(Spacer(1, 12))
+        
+        if info_priority:
+            story.append(Paragraph(f"<b>Informational Findings ({len(info_priority)} relationships)</b>", styles['Normal']))
+            
+            data = [['Relationship', 'Key Field', 'Integrity %', 'Orphaned', 'Notes']]
+            
+            for org_row in info_priority:
+                relationship_name = org_row.get('relationship_name', 'Unknown')
+                simplified_name = relationship_name.replace('Orgs.', '').replace('Employees.', '')
+                # Remove "(report-only)" suffix for cleaner display
+                simplified_name = simplified_name.replace(' (report-only)', '')
+                
+                integrity_pct = org_row.get('integrity_percentage')
+                integrity_str = f"{self._safe_format_number(integrity_pct, 0):.1f}%" if integrity_pct is not None else "N/A"
+                
+                data.append([
+                    simplified_name,
+                    org_row.get('key_field', ''),
+                    integrity_str,
+                    f"{self._safe_format_number(org_row.get('orphaned_source_records'), 0):,}",
+                    "Organizational reference tracking"
+                ])
+            
+            col_widths = [2.3*inch, 1.0*inch, 0.8*inch, 0.8*inch, 2.1*inch]
+            info_priority_table = self.create_expandable_table(data, col_widths)
+            if info_priority_table:
+                story.append(info_priority_table)
+            story.append(Spacer(1, 12))
+    
+    def _get_orgs_business_impact(self, org_row: Dict) -> str:
+        """
+        Generate business impact description for Organizations orphan detection
+        
+        Args:
+            org_row: Organizations orphan detection result
+            
+        Returns:
+            str: Business impact description
+        """
+        relationship_name = org_row.get('relationship_name', '')
+        orphaned = org_row.get('orphaned_source_records', 0)
+        total = org_row.get('total_source_records', 0)
+        priority = org_row.get('business_priority', 'Medium')
+        
+        if 'Primary Domain Name' in relationship_name:
+            return f"High: {orphaned}/{total} employees assigned to invalid domains - impacts organizational hierarchy"
+        elif 'Primary Organization Name' in relationship_name:
+            return f"High: {orphaned}/{total} employees assigned to invalid organizations - impacts reporting structure"
+        else:
+            return f"{priority}: {orphaned}/{total} records with organizational integrity issues - impacts data quality"
+    
     def _add_cross_file_integrity_analysis(self, story, styles, file_names: List[str]):
         """Add comprehensive cross-file integrity analysis using Phase 2 enhanced system"""
         story.append(Paragraph("Cross-File Referential Integrity Analysis", styles['Heading2']))
@@ -623,26 +1188,33 @@ class PDFQualityReportGenerator:
         story.append(Spacer(1, 12))
         
         try:
-            # Get Activities orphan detection results from new system
-            from orphan_tracker_businessrule import ActivitiesOrphanExecutor
+            # Get orphan detection results from dedicated trackers ONLY
+            from orphan_tracker_businessrule import ActivitiesOrphanExecutor, EmployeeOrphanExecutor, OrganizationOrphanExecutor
             activities_data = ActivitiesOrphanExecutor.get_activities_orphan_summaries_for_pdf()
+            employees_data = EmployeeOrphanExecutor.get_employees_orphan_summaries_for_pdf()
+            orgs_data = OrganizationOrphanExecutor.get_orgs_orphan_summaries_for_pdf()
             
-            # Use enhanced retrieval framework for non-Activities relationships
-            from retrieval_framework import RetrievalFramework
-            framework = RetrievalFramework()
-            
-            # Filter out Activities from old system to avoid conflicts
-            non_activities_files = [f for f in file_names if not f.lower().startswith('activity')]
-            if non_activities_files:
-                cross_file_data = framework.get_cross_file_analysis(non_activities_files)
-            else:
-                cross_file_data = {'summary': {}, 'integrity_analysis': [], 'cross_file_patterns': {}}
+            # COMPLETELY DISABLE old RetrievalFramework to prevent Core_* relationships
+            # Only use dedicated orphan trackers - no legacy framework
+            cross_file_data = {'summary': {}, 'integrity_analysis': [], 'cross_file_patterns': {}}
             
             # Add dedicated Activities section with optimal formatting
             self._add_activities_orphan_section(story, styles, activities_data)
             
+            # Add dedicated Employees section with optimal formatting
+            self._add_employees_orphan_section(story, styles, employees_data)
+            
+            # Add dedicated Organizations section with optimal formatting
+            self._add_orgs_orphan_section(story, styles, orgs_data)
+            
             # Merge Activities data into cross_file_data for general analysis
             cross_file_data = self._merge_activities_orphan_data(cross_file_data, activities_data)
+            
+            # Merge Employees data into cross_file_data for general analysis
+            cross_file_data = self._merge_employees_orphan_data(cross_file_data, employees_data)
+            
+            # Merge Organizations data into cross_file_data for general analysis
+            cross_file_data = self._merge_orgs_orphan_data(cross_file_data, orgs_data)
             
             # Add summary metrics
             summary = cross_file_data.get('summary', {})
@@ -650,9 +1222,9 @@ class PDFQualityReportGenerator:
                 story.append(Paragraph("Integrity Summary", styles['Heading3']))
                 summary_data = [
                     ['Metric', 'Value'],
-                    ['Total Relationships Analyzed', f"{summary.get('total_relationships', 0):,}"],
-                    ['Critical Integrity Issues', f"{summary.get('critical_issues', 0):,}"],
-                    ['Total Orphaned Records', f"{summary.get('total_orphaned_records', 0):,}"]
+                    ['Total Relationships Analyzed', f"{self._safe_format_number(summary.get('total_relationships'), 0):,}"],
+                    ['Critical Integrity Issues', f"{self._safe_format_number(summary.get('critical_issues'), 0):,}"],
+                    ['Total Orphaned Records', f"{self._safe_format_number(summary.get('total_orphaned_records'), 0):,}"]
                 ]
                 
                 summary_table = self.create_expandable_table(summary_data, [2.5*inch, 1.5*inch])
@@ -678,8 +1250,8 @@ class PDFQualityReportGenerator:
                     
                     for rel in critical_issues[:10]:  # Top 10 critical issues
                         source_target = f"{rel.get('source_pattern', 'Unknown')} → {rel.get('dependent_pattern', 'Unknown')}"
-                        integrity_pct = f"{rel.get('integrity_percentage', 0):.1f}%"
-                        orphaned = f"{rel.get('orphaned_records', 0):,}"
+                        integrity_pct = f"{self._safe_format_number(rel.get('integrity_percentage'), 0):.1f}%"
+                        orphaned = f"{self._safe_format_number(rel.get('orphaned_records'), 0):,}"
                         # NO TRUNCATION - let table expansion handle wrapping
                         impact = rel.get('business_impact', 'Unknown impact')
                         
@@ -724,8 +1296,7 @@ class PDFQualityReportGenerator:
             else:
                 story.append(Paragraph("No cross-file integrity issues detected.", styles['Normal']))
             
-            # Close framework connections
-            framework.close()
+            # No framework connections to close (using dedicated trackers only)
             
         except Exception as e:
             logger.error(f"Error generating cross-file integrity analysis: {e}")

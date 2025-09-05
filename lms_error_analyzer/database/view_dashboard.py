@@ -26,6 +26,7 @@ def view_dashboard():
             
             # Basic metrics
             print(f"📈 Total Rows: {file_data['record_count']:,}")  # Changed from "Total Records"
+            print(f"📊 Total Fields: {file_data.get('total_fields_in_file', 'N/A')}")  # New field
             print(f"❌ Total Errors: {file_data['total_errors']:,}")
             print(f"⚠️  Lines with Errors: {file_data['lines_with_errors']:,}")
             print(f"🔍 Nulls Found: {file_data['nulls_found']:,}")
