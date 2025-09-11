@@ -2189,7 +2189,7 @@ MERGE (f)-[:OUTPUTS_FIELD]->(csod);
 
 
 MERGE (f:File {name: "Core_Employee-CHR"})
-MERGE (st:SumTotalField {name: "Time Zone", file: "Core_Employee-CHR"})
+MERGE (st:SumTotalField {name: "Timezone", file: "Core_Employee-CHR"})
 MERGE (f) -[:HAS_FIELD] -> (st)
 MERGE (csod:CSODField {name: "Time Zone", file: "Core_Employee-CHR"})
 SET csod.mandatory = "Optional",

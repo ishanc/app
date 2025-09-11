@@ -1,0 +1,31 @@
+{
+  "session_id": "7c0e6a1e-8f0b-4d13-8f40-bb5b8e2f2b1a",
+  "reset": false,
+  "domains": ["activities", "employees", "orgs"],
+  "mysql_target": {
+    "host": "Hank2313",
+    "port": 3306,
+    "schema": "error_logging"
+  },
+  "rules": {
+    "run_if_uploaded_only": true,
+    "require_session_match": true,
+    "delete_today_rows_before_insert": true
+  },
+  "front_end_name_to_table": {
+    "Activities - Curriculum": "activity_curriculum",
+    "Activities - ILT Classes": "activity_ilt_class",
+    "Activities - ILT Sessions": "activity_ilt_sessions",
+    "Employees - Core": "core_employee",
+    "Employees - Transcript Curriculum": "transcript_curriculum",
+    "Employees - Prerequisites Instructor": "prerequisites_instructor",
+    "Organizations - Orgs": "core_organization",
+    "Organizations - Domains": "core_domain"
+  },
+  "uploaded_files": [],
+  "active_tables": {
+    "activities": ["activity_curriculum", "activity_ilt_class", "activity_ilt_sessions"],
+    "employees": ["core_employee", "transcript_curriculum", "prerequisites_instructor"],
+    "orgs": ["core_organization", "core_domain", "core_employee"]
+  }
+}

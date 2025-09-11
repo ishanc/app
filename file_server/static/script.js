@@ -185,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const filesList = document.getElementById('files-list');
     const deleteAllBtn = document.getElementById('deleteAllBtn');
     const downloadAllBtn = document.getElementById('downloadAllBtn');
+    const generatePDFBtn = document.getElementById('generatePDFBtn');
+    const resetAllBtn = document.getElementById('resetAllBtn');
 
     // Add event listeners for bulk action buttons
     if (deleteAllBtn) {
@@ -192,6 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (downloadAllBtn) {
         downloadAllBtn.addEventListener('click', downloadAllFiles);
+    }
+    if (generatePDFBtn) {
+        generatePDFBtn.addEventListener('click', generatePDFReport);
+    }
+    if (resetAllBtn) {
+        resetAllBtn.addEventListener('click', resetAllData);
     }
 
     // Prevent default drag behaviors
@@ -416,9 +424,14 @@ function generatePDFReport() {
 
 // Reset All Data
 function resetAllData() {
+    console.log('🔍 Reset button clicked!'); // DEBUG
+    
     if (!confirm('This will delete ALL files and clear the database. This action cannot be undone. Continue?')) {
+        console.log('❌ User cancelled reset'); // DEBUG
         return;
     }
+    
+    console.log('🚀 Starting reset request...'); // DEBUG
     
     fetch('/reset-all-data', {
         method: 'POST'
@@ -450,15 +463,4 @@ function resetAllData() {
     });
 }
 
-// Add event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    const generatePDFBtn = document.getElementById('generatePDFBtn');
-    const resetAllBtn = document.getElementById('resetAllBtn');
-    
-    if (generatePDFBtn) {
-        generatePDFBtn.addEventListener('click', generatePDFReport);
-    }
-    if (resetAllBtn) {
-        resetAllBtn.addEventListener('click', resetAllData);
-    }
-});
+// Event listeners are already added in the main DOMContentLoaded listener above

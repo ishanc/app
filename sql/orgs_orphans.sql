@@ -4,14 +4,13 @@ SET SESSION time_zone = '+00:00';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
--- Clear today's Orgs rows
+-- Clear today's Orgs rows - enhanced deduplication
 DELETE FROM cross_file_integrity_summary
 WHERE relationship_name LIKE 'Orgs.%'
-  AND analysis_timestamp >= CURRENT_DATE()
-  AND analysis_timestamp < CURRENT_DATE() + INTERVAL 1 DAY;
+  AND DATE(analysis_timestamp) = CURDATE();
 
 /* 1) Employees.Primary Domain Name → Organizations.Organization Code (via name) */
-INSERT INTO cross_file_integrity_summary (
+INSERT IGNORE INTO cross_file_integrity_summary (
   analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
   total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
   integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j, analysis_timestamp
@@ -49,10 +48,11 @@ FROM (
            WHERE UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(d.`Organization Name` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))) = 
                  UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(e.`Primary Domain Name` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')))
          )) AS orphans_fk
+    LIMIT 1
 ) x;
 
 /* 2) Employees.Primary Organization Name → Organizations.Organization Code (via name) */
-INSERT INTO cross_file_integrity_summary (
+INSERT IGNORE INTO cross_file_integrity_summary (
   analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
   total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
   integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j, analysis_timestamp
@@ -90,4 +90,5 @@ FROM (
            WHERE UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(d.`Organization Name` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))) = 
                  UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(e.`Primary Organization Name` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')))
          )) AS orphans_fk
+    LIMIT 1
 ) x;

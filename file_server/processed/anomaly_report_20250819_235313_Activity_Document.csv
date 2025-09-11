@@ -1,5 +1,0 @@
-file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
-Activity_Document.xlsx,summary,mandatory_completeness,,100.00,,
-Activity_Document.xlsx,summary,total_errors,,1461,,
-Activity_Document.xlsx,field,ActivityCode,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,1%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."
-Activity_Document.xlsx,field,ActivityName,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,2%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."

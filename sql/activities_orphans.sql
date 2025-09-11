@@ -1,252 +1,117 @@
--- activities_orphans.sql (v2, stateless + UTC + sargable "today")
+-- activities_orphans.sql (v3, stateless + no temp tables + subquery approach)
 SET SESSION time_zone = '+00:00';
 SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 SET SESSION innodb_lock_wait_timeout = 5;
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
--- Purge today's Activities rows (idempotent reruns)
+-- Purge today's Activities rows (idempotent reruns) - enhanced deduplication
 DELETE FROM cross_file_integrity_summary
 WHERE discovered_from_neo4j = 1
-  AND analysis_timestamp >= CURRENT_DATE()
-  AND analysis_timestamp <  CURRENT_DATE() + INTERVAL 1 DAY
+  AND DATE(analysis_timestamp) = CURDATE()
   AND relationship_name LIKE 'Activities.%';
 
--- =========================================
--- 1) Canonical Activity PK cache (Activity Code)
--- =========================================
-DROP TEMPORARY TABLE IF EXISTS valid_activity_pk;
-CREATE TEMPORARY TABLE valid_activity_pk ( pk VARCHAR(500) PRIMARY KEY ) ENGINE=InnoDB;
-
-INSERT IGNORE INTO valid_activity_pk (pk)
-SELECT DISTINCT
-  UPPER(
-    TRIM(
-      REPLACE(
-        REPLACE(
-          REPLACE(
-            CONVERT(`Activity Code` USING utf8mb4),
-            CHAR(194,160), ' '      -- NBSP
-          ),
-          CHAR(226,128,175), ' '    -- figure dash
-        ),
-        CHAR(226,128,135), ' '      -- hyphen (U+0087 in some exports)
-      )
-    )
-  ) AS pk
-FROM activity_curriculum
-WHERE `Activity Code` IS NOT NULL
-  AND TRIM(
-        REPLACE(
-          REPLACE(
-            REPLACE(
-              CONVERT(`Activity Code` USING utf8mb4),
-              CHAR(194,160), ' '
-            ),
-            CHAR(226,128,175), ' '
-          ),
-          CHAR(226,128,135), ' '
-        )
-      ) <> '';
-
--- =========================================
--- 2) DISABLED: ILTCourseCode → Activity Code relationship
--- =========================================
--- REASON: Data format incompatibility between ILT titles and Activity codes
--- ILTCourseCode contains descriptive titles like "11th Annual Steel Markets..."
--- Activity Code contains structured codes like "5S_5S Workplace Productivity..."
--- Will re-enable when ETL corrects ILTCourseCode to contain actual Activity Code tokens
-
--- =========================================
--- 3) Child Activity PK cache (Child ActivityCode)
--- =========================================
-DROP TEMPORARY TABLE IF EXISTS valid_child_pk;
-CREATE TEMPORARY TABLE valid_child_pk ( pk VARCHAR(500) PRIMARY KEY ) ENGINE=InnoDB;
-
-INSERT IGNORE INTO valid_child_pk (pk)
-SELECT DISTINCT
-  UPPER(
-    TRIM(
-      REPLACE(
-        REPLACE(
-          REPLACE(
-            CONVERT(`Child ActivityCode` USING utf8mb4),
-            CHAR(194,160), ' '
-          ),
-          CHAR(226,128,175), ' '
-        ),
-        CHAR(226,128,135), ' '
-      )
-    )
-  ) AS pk
-FROM activity_curriculum
-WHERE `Child ActivityCode` IS NOT NULL
-  AND TRIM(
-        REPLACE(
-          REPLACE(
-            REPLACE(
-              CONVERT(`Child ActivityCode` USING utf8mb4),
-              CHAR(194,160), ' '
-            ),
-            CHAR(226,128,175), ' '
-          ),
-          CHAR(226,128,135), ' '
-        )
-      ) <> '';
-
--- 3a) ILTCourseCode → Child ActivityCode (report-only)
-INSERT INTO cross_file_integrity_summary (
+/* 1) ClassCode → Activity Code (report-only) */
+-- Use INSERT IGNORE to prevent duplicates if DELETE somehow fails
+INSERT IGNORE INTO cross_file_integrity_summary (
   analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
   total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
-  integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j
-)
-SELECT
-  UUID(),
-  'Activities.ILTCourseCode → Activity Links.Child ActivityCode (report-only)',
-  'activity_ilt_class*','activity_curriculum*','ILTCourseCode→Child ActivityCode',
-  src.total_src,
-  tgt.total_tgt,
-  (src.total_src - src.matched),
-  0,
-  CASE WHEN src.total_src = 0 THEN NULL
-       ELSE ROUND(100.0 * src.matched / src.total_src, 2) END,
-  NULL, 'many_to_one','Medium',1
-FROM (
-  SELECT
-    COUNT(*) AS total_src,
-    SUM(CASE WHEN p.pk IS NOT NULL THEN 1 ELSE 0 END) AS matched
-  FROM (
-    SELECT DISTINCT UPPER(TRIM(
-      REPLACE(REPLACE(REPLACE(CONVERT(ILTCourseCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-    ))))) AS fk
-    FROM activity_ilt_class
-    WHERE ILTCourseCode IS NOT NULL
-      AND TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ILTCourseCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-      )) <> ''
-  ) s
-  LEFT JOIN valid_child_pk p ON s.fk = p.pk
-) src
-CROSS JOIN (
-  SELECT COUNT(*) AS total_tgt FROM valid_child_pk
-) tgt;
-
--- =========================================
--- 4) ClassCode → Activity Code (report-only)
--- =========================================
-INSERT INTO cross_file_integrity_summary (
-  analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
-  total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
-  integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j
+  integrity_percentage, analysis_timestamp, processing_time_ms,
+  relationship_type, business_priority, discovered_from_neo4j
 )
 SELECT
   UUID(),
   'Activities.ClassCode → Activities.Activity Code (report-only)',
   'activity_ilt_class*','activity_curriculum*','ClassCode→Activity Code',
-  src.total_src,
-  tgt.total_tgt,
-  (src.total_src - src.matched),
-  0,
-  CASE WHEN src.total_src = 0 THEN NULL
-       ELSE ROUND(100.0 * src.matched / src.total_src, 2) END,
-  NULL, 'many_to_one','Medium',1
+  x.total_fk, x.total_pk, x.orphans_fk, 0,
+  CASE WHEN x.total_fk = 0 THEN 100.00
+       ELSE ROUND(100.0 * (x.total_fk - x.orphans_fk) / x.total_fk, 2)
+  END,
+  NOW(), 0, 'many_to_one', 'Medium', 1
 FROM (
   SELECT
-    COUNT(*) AS total_src,
-    SUM(CASE WHEN p.pk IS NOT NULL THEN 1 ELSE 0 END) AS matched
-  FROM (
-    SELECT DISTINCT UPPER(TRIM(
-      REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-    ))))) AS fk
-    FROM activity_ilt_class
-    WHERE ClassCode IS NOT NULL
-      AND TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-      )) <> ''
-  ) s
-  LEFT JOIN valid_activity_pk p ON s.fk = p.pk
-) src
-CROSS JOIN (
-  SELECT COUNT(*) AS total_tgt FROM valid_activity_pk
-) tgt;
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_ilt_class
+       WHERE ClassCode IS NOT NULL AND TRIM(ClassCode) <> '') AS total_fk,
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(`Activity Code` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_curriculum
+       WHERE `Activity Code` IS NOT NULL AND TRIM(`Activity Code`) <> '') AS total_pk,
+    (SELECT COUNT(DISTINCT s.ClassCode)
+       FROM activity_ilt_class s
+       WHERE s.ClassCode IS NOT NULL AND TRIM(s.ClassCode) <> ''
+         AND NOT EXISTS (
+           SELECT 1 FROM activity_curriculum t
+           WHERE UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(t.`Activity Code` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))) = 
+                 UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(s.ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')))
+         )) AS orphans_fk
+    LIMIT 1
+) x;
 
--- =========================================
--- 5a) ClassCode (ILT Class) → Child ActivityCode (report-only)
--- =========================================
-INSERT INTO cross_file_integrity_summary (
+/* 2) ClassCode → Child ActivityCode (report-only) */
+INSERT IGNORE INTO cross_file_integrity_summary (
   analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
   total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
-  integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j
+  integrity_percentage, analysis_timestamp, processing_time_ms,
+  relationship_type, business_priority, discovered_from_neo4j
 )
 SELECT
   UUID(),
   'Activities.ClassCode → Activity Links.Child ActivityCode (report-only)',
   'activity_ilt_class*','activity_curriculum*','ClassCode→Child ActivityCode',
-  src.total_src,
-  tgt.total_tgt,
-  (src.total_src - src.matched),
-  0,
-  CASE WHEN src.total_src = 0 THEN NULL
-       ELSE ROUND(100.0 * src.matched / src.total_src, 2) END,
-  NULL, 'many_to_one','Medium',1
+  x.total_fk, x.total_pk, x.orphans_fk, 0,
+  CASE WHEN x.total_fk = 0 THEN 100.00
+       ELSE ROUND(100.0 * (x.total_fk - x.orphans_fk) / x.total_fk, 2)
+  END,
+  NOW(), 0, 'many_to_one', 'Medium', 1
 FROM (
   SELECT
-    COUNT(*) AS total_src,
-    SUM(CASE WHEN p.pk IS NOT NULL THEN 1 ELSE 0 END) AS matched
-  FROM (
-    SELECT DISTINCT UPPER(TRIM(
-      REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-    ))))) AS fk
-    FROM activity_ilt_class
-    WHERE ClassCode IS NOT NULL
-      AND TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-      )) <> ''
-  ) s
-  LEFT JOIN valid_child_pk p ON s.fk = p.pk
-) src
-CROSS JOIN (
-  SELECT COUNT(*) AS total_tgt FROM valid_child_pk
-) tgt;
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_ilt_class
+       WHERE ClassCode IS NOT NULL AND TRIM(ClassCode) <> '') AS total_fk,
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(`Child ActivityCode` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_curriculum
+       WHERE `Child ActivityCode` IS NOT NULL AND TRIM(`Child ActivityCode`) <> '') AS total_pk,
+    (SELECT COUNT(DISTINCT s.ClassCode)
+       FROM activity_ilt_class s
+       WHERE s.ClassCode IS NOT NULL AND TRIM(s.ClassCode) <> ''
+         AND NOT EXISTS (
+           SELECT 1 FROM activity_curriculum t
+           WHERE UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(t.`Child ActivityCode` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))) = 
+                 UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(s.ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')))
+         )) AS orphans_fk
+    LIMIT 1
+) x;
 
--- =========================================
--- 5b) ClassCode (ILT Sessions) → Child ActivityCode (report-only)
--- =========================================
-INSERT INTO cross_file_integrity_summary (
+/* 3) ILTSessions ClassCode → Child ActivityCode (report-only) */
+INSERT IGNORE INTO cross_file_integrity_summary (
   analysis_run_id, relationship_name, source_file_pattern, target_file_pattern, key_field,
   total_source_records, total_target_records, orphaned_source_records, orphaned_target_records,
-  integrity_percentage, processing_time_ms, relationship_type, business_priority, discovered_from_neo4j
+  integrity_percentage, analysis_timestamp, processing_time_ms,
+  relationship_type, business_priority, discovered_from_neo4j
 )
 SELECT
   UUID(),
   'Activities.SessionParts.ClassCode → Activity Links.Child ActivityCode (report-only)',
   'activity_ilt_sessions*','activity_curriculum*','ClassCode→Child ActivityCode',
-  src.total_src,
-  tgt.total_tgt,
-  (src.total_src - src.matched),
-  0,
-  CASE WHEN src.total_src = 0 THEN NULL
-       ELSE ROUND(100.0 * src.matched / src.total_src, 2) END,
-  NULL, 'many_to_one','Medium',1
+  x.total_fk, x.total_pk, x.orphans_fk, 0,
+  CASE WHEN x.total_fk = 0 THEN 100.00
+       ELSE ROUND(100.0 * (x.total_fk - x.orphans_fk) / x.total_fk, 2)
+  END,
+  NOW(), 0, 'many_to_one', 'Medium', 1
 FROM (
   SELECT
-    COUNT(*) AS total_src,
-    SUM(CASE WHEN p.pk IS NOT NULL THEN 1 ELSE 0 END) AS matched
-  FROM (
-    SELECT DISTINCT UPPER(TRIM(
-      REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-    ))))) AS fk
-    FROM activity_ilt_sessions
-    WHERE ClassCode IS NOT NULL
-      AND TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4),
-        CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')
-      )) <> ''
-  ) s
-  LEFT JOIN valid_child_pk p ON s.fk = p.pk
-) src
-CROSS JOIN (
-  SELECT COUNT(*) AS total_tgt FROM valid_child_pk
-) tgt;
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_ilt_sessions
+       WHERE ClassCode IS NOT NULL AND TRIM(ClassCode) <> '') AS total_fk,
+    (SELECT COUNT(DISTINCT UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(`Child ActivityCode` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))))
+       FROM activity_curriculum
+       WHERE `Child ActivityCode` IS NOT NULL AND TRIM(`Child ActivityCode`) <> '') AS total_pk,
+    (SELECT COUNT(DISTINCT s.ClassCode)
+       FROM activity_ilt_sessions s
+       WHERE s.ClassCode IS NOT NULL AND TRIM(s.ClassCode) <> ''
+         AND NOT EXISTS (
+           SELECT 1 FROM activity_curriculum t
+           WHERE UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(t.`Child ActivityCode` USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' '))) = 
+                 UPPER(TRIM(REPLACE(REPLACE(REPLACE(CONVERT(s.ClassCode USING utf8mb4), CHAR(194,160),' '), CHAR(226,128,175),' '), CHAR(226,128,135),' ')))
+         )) AS orphans_fk
+    LIMIT 1
+) x;

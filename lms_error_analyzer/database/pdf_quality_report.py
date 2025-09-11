@@ -1190,9 +1190,14 @@ class PDFQualityReportGenerator:
         try:
             # Get orphan detection results from dedicated trackers ONLY
             from orphan_tracker_businessrule import ActivitiesOrphanExecutor, EmployeeOrphanExecutor, OrganizationOrphanExecutor
-            activities_data = ActivitiesOrphanExecutor.get_activities_orphan_summaries_for_pdf()
-            employees_data = EmployeeOrphanExecutor.get_employees_orphan_summaries_for_pdf()
-            orgs_data = OrganizationOrphanExecutor.get_orgs_orphan_summaries_for_pdf()
+            activities_data_raw = ActivitiesOrphanExecutor.get_activities_orphan_summaries_for_pdf()
+            employees_data_raw = EmployeeOrphanExecutor.get_employees_orphan_summaries_for_pdf()
+            orgs_data_raw = OrganizationOrphanExecutor.get_orgs_orphan_summaries_for_pdf()
+            
+            # Apply deduplication at PDF level to ensure clean data
+            activities_data = self._deduplicate_orphan_data(activities_data_raw, "Activities")
+            employees_data = self._deduplicate_orphan_data(employees_data_raw, "Employees") 
+            orgs_data = self._deduplicate_orphan_data(orgs_data_raw, "Organizations")
             
             # COMPLETELY DISABLE old RetrievalFramework to prevent Core_* relationships
             # Only use dedicated orphan trackers - no legacy framework
@@ -1270,28 +1275,7 @@ class PDFQualityReportGenerator:
                         story.append(critical_table)
                     story.append(Spacer(1, 12))
                 
-                # Add cross-file patterns summary
-                cross_file_patterns = cross_file_data.get('cross_file_patterns', {})
-                if cross_file_patterns:
-                    story.append(Paragraph("Cross-File Relationship Patterns", styles['Heading3']))
-                    
-                    pattern_data = [['Pattern Type', 'Affected Files', 'Total Issues', 'Severity']]
-                    
-                    for pattern_name, pattern_info in cross_file_patterns.items():
-                        # Show all files, no truncation
-                        files_list = ', '.join(pattern_info.get('files', []))
-                        
-                        pattern_data.append([
-                            pattern_name.replace('_integrity', '').replace('_', ' ').title(),
-                            files_list,
-                            f"{pattern_info.get('total_count', 0):,}",
-                            pattern_info.get('severity', 'Unknown')
-                        ])
-                    
-                    # Wider columns for full text display
-                    pattern_table = self.create_expandable_table(pattern_data, [2.0*inch, 3.0*inch, 1.0*inch, 1.0*inch])
-                    if pattern_table:
-                        story.append(pattern_table)
+                # Cross-file patterns summary removed - was showing zeros due to data structure mismatch
                     
             else:
                 story.append(Paragraph("No cross-file integrity issues detected.", styles['Normal']))
@@ -1356,6 +1340,48 @@ class PDFQualityReportGenerator:
             story.append(table)
             story.append(Spacer(1, 20))
     
+    def _deduplicate_orphan_data(self, data: List[Dict], domain_name: str) -> List[Dict]:
+        """
+        Remove duplicate relationships from orphan detection data at PDF level.
+        
+        This ensures the PDF always shows clean, deduplicated data regardless of 
+        database-level duplicate issues.
+        
+        Args:
+            data: Raw orphan detection data with potential duplicates
+            domain_name: Domain name for logging (Activities, Employees, Organizations)
+            
+        Returns:
+            Deduplicated list with unique relationships only
+        """
+        if not data:
+            return data
+            
+        # Use relationship_name as the deduplication key
+        seen_relationships = {}
+        deduplicated_data = []
+        
+        for item in data:
+            relationship_name = item.get('relationship_name', '')
+            
+            if relationship_name not in seen_relationships:
+                # First occurrence - keep it
+                seen_relationships[relationship_name] = item
+                deduplicated_data.append(item)
+                logger.debug(f"✅ {domain_name}: Keeping relationship '{relationship_name}'")
+            else:
+                # Duplicate found - skip it
+                logger.warning(f"🔄 {domain_name}: Skipping duplicate relationship '{relationship_name}'")
+        
+        original_count = len(data)
+        final_count = len(deduplicated_data)
+        if original_count != final_count:
+            logger.info(f"📊 {domain_name}: Deduplicated {original_count} → {final_count} relationships (removed {original_count - final_count} duplicates)")
+        else:
+            logger.debug(f"📊 {domain_name}: No duplicates found in {final_count} relationships")
+            
+        return deduplicated_data
+    
     def _get_severity(self, error_type: str) -> str:
         """Get severity for error type"""
         for severity, types in self.SEVERITY_CATEGORIES.items():
@@ -1407,11 +1433,117 @@ def get_original_file_list_from_db() -> List[str]:
         return []
 
 
+def _run_orphan_detection_for_uploaded_files(file_names: List[str]):
+    """
+    Run orphan detection for domains based on uploaded files
+    
+    Args:
+        file_names: List of uploaded file names
+    """
+    try:
+        # Import orphan tracker
+        import sys
+        import os
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        sys.path.append(current_dir)
+        from orphan_tracker_businessrule import run_sql, _db_conn, _tune_session, EmployeeOrphanExecutor
+        
+        # Determine which domains to run based on file names
+        domains_to_run = set()
+        
+        for file_name in file_names:
+            file_lower = file_name.lower()
+            if any(keyword in file_lower for keyword in ['activity', 'curriculum', 'ilt']):
+                domains_to_run.add('activities')
+            elif any(keyword in file_lower for keyword in ['employee', 'transcript', 'instructor']):
+                domains_to_run.add('employees')
+            elif any(keyword in file_lower for keyword in ['organization', 'domain', 'audience']):
+                domains_to_run.add('orgs')
+        
+        # Use session manager for authoritative session-based domain detection
+        from session_manager import session_manager
+        
+        # Load most recent active session if not already loaded
+        if not session_manager.current_session:
+            try:
+                conn_temp = session_manager._get_db_connection()
+                cursor = conn_temp.cursor(dictionary=True)
+                cursor.execute("""
+                    SELECT session_id FROM upload_sessions 
+                    WHERE is_active = TRUE 
+                    ORDER BY created_at DESC LIMIT 1
+                """)
+                row = cursor.fetchone()
+                cursor.close()
+                conn_temp.close()
+                
+                if row:
+                    session_config = session_manager.load_session(row['session_id'])
+                    if session_config:
+                        logger.info(f"📋 PDF generator loaded session: {row['session_id']} with {len(session_config.uploaded_files)} files")
+                    else:
+                        logger.warning(f"📋 Failed to load session config for {row['session_id']}")
+                else:
+                    logger.warning("📋 No active sessions found - using filename-based detection fallback")
+            except Exception as e:
+                logger.error(f"📋 Error loading session for PDF: {e} - using filename-based detection fallback")
+        
+        # Determine domains from session if available, otherwise fall back to filename detection
+        if session_manager.current_session and session_manager.current_session.uploaded_files:
+            domains_to_run = set()
+            for domain in ['activities', 'employees', 'orgs']:
+                if session_manager.should_run_orphan_detection(domain):
+                    domains_to_run.add(domain)
+                    uploaded_tables = session_manager.get_uploaded_tables_for_domain(domain)
+                    logger.info(f"📋 Session-based: Will run {domain} domain (tables: {uploaded_tables})")
+        
+        if not domains_to_run:
+            logger.info("📋 No domains detected from session or files, skipping orphan detection")
+            return
+        
+        logger.info(f"📋 Running orphan detection for domains: {', '.join(domains_to_run)}")
+        
+        # Run orphan detection for each detected domain
+        conn = _db_conn()
+        try:
+            _tune_session(conn)
+            
+            if 'activities' in domains_to_run:
+                logger.info("Running Activities orphan detection...")
+                run_sql('activities_orphans.sql', conn)
+                conn.commit()
+                logger.info("✅ Activities orphan detection completed")
+            
+            if 'employees' in domains_to_run:
+                logger.info("📋 Running Employees orphan detection for PDF...")
+                EmployeeOrphanExecutor(conn).execute()
+                conn.commit()
+                logger.info("✅ Employees orphan detection completed")
+            
+            if 'orgs' in domains_to_run:
+                logger.info("Running Organizations orphan detection...")
+                run_sql('orgs_orphans.sql', conn)
+                conn.commit()
+                logger.info("✅ Organizations orphan detection completed")
+                
+        finally:
+            conn.close()
+            
+    except Exception as e:
+        logger.error(f"Error running orphan detection: {e}")
+        # Don't fail PDF generation if orphan detection fails
+
+
 def auto_generate_after_upload(file_names: List[str], output_dir: str) -> Optional[str]:
-    """Auto-generate PDF report"""
+    """Auto-generate PDF report with fresh orphan detection"""
     try:
         original_files = get_original_file_list_from_db()
         if len(original_files) >= 1:
+            # Run fresh orphan detection for all domains before generating PDF
+            logger.info("Running fresh orphan detection before PDF generation...")
+            _run_orphan_detection_for_uploaded_files(original_files)
+            
+            # Generate PDF with fresh data
             generator = PDFQualityReportGenerator(output_dir)
             return generator.generate_report(original_files)
     except Exception as e:
@@ -1440,10 +1572,24 @@ def reset_all_data(processed_folder: str) -> Dict[str, Any]:
         cursor = connection.cursor()
         cursor.execute("TRUNCATE error_logs")
         cursor.execute("TRUNCATE file_completeness_summary")
+        
+        # Clear orphan detection results
+        cursor.execute("DELETE FROM cross_file_integrity_summary WHERE discovered_from_neo4j = 1")
+        orphan_records_deleted = cursor.rowcount
+        
+        # Clear session data from authoritative table
+        cursor.execute("DELETE FROM file_ingest_log_session")
+        session_files_deleted = cursor.rowcount
+        cursor.execute("DELETE FROM upload_sessions")
+        sessions_deleted = cursor.rowcount
+        
         connection.commit()
         cursor.close()
         connection.close()
         results['database_cleared'] = True
+        results['orphan_records_deleted'] = orphan_records_deleted
+        results['session_files_deleted'] = session_files_deleted
+        results['sessions_deleted'] = sessions_deleted
         
     except Exception as e:
         results['errors'].append(f"Database error: {e}")

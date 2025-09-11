@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-SumTotal→CSOD Orphan Tracker (Simplified)
-Simple implementation that just runs existing SQL files - no overengineering
+SumTotal→CSOD Orphan Tracker (Session-based)
+Only runs orphan detection on files uploaded in the current session
 
 Changes in this version:
+- Session-based file tracking - only process uploaded files
 - Use sargable time range filters (no DATE() wrapper) for today's rows
 - Commit per-domain (Activities, then Employees) to reduce lock footprint
 - Set safe session params (lock wait timeout, isolation)
@@ -18,6 +19,7 @@ from dotenv import load_dotenv
 from neo4j import GraphDatabase
 from dataclasses import dataclass
 from typing import List, Dict, Optional, Any
+from session_manager import session_manager
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -431,48 +433,90 @@ def test_rule_discovery():
 # -----------------------------
 
 def main():
-    """Main function - simple domain selection"""
+    """Main function - session-aware domain selection"""
     import argparse
     import sys
     load_dotenv()
-    parser = argparse.ArgumentParser(description="Simple Orphan Detection Tool")
+    parser = argparse.ArgumentParser(description="Session-based Orphan Detection Tool")
     parser.add_argument("--mode", choices=["neo4j", "sql", "both"], default="both",
                        help="Test mode: neo4j (rule discovery), sql (orphan execution), or both")
     parser.add_argument("--domain", choices=["activities", "employees", "orgs", "all"], default="all",
                        help="Domain to analyze: activities, employees, orgs, or all")
+    parser.add_argument("--session-id", type=str, help="Session ID to load (if not provided, uses current session)")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
+    
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
+    
     success = True
     try:
+        # Load or check session
+        if args.session_id:
+            session_config = session_manager.load_session(args.session_id)
+            if not session_config:
+                logger.error(f"❌ Session {args.session_id} not found")
+                return False
+            logger.info(f"✅ Loaded session: {args.session_id}")
+        else:
+            session_config = session_manager.current_session
+            if not session_config:
+                logger.warning("⚠️ No active session found - results may include historical data")
+        
+        if session_config:
+            logger.info(f"📝 Session {session_config.session_id} has {len(session_config.uploaded_files)} uploaded files")
+            # Log canonical tables for domain filtering clarity
+            uploaded_tables = [f.canonical_table for f in session_config.uploaded_files]
+            logger.info(f"📋 Uploaded canonical tables: {uploaded_tables}")
+            if args.debug:
+                logger.debug(f"Session config:\n{session_manager.get_session_json()}")
+        
         if args.mode in ["neo4j", "both"]:
             print("🔍 Testing Neo4j rule discovery...")
             test_rule_discovery()
+        
         if args.mode in ["sql", "both"]:
             print(f"\n📊 Testing SQL orphan detection for domain(s): {args.domain}")
             conn = _db_conn()
             _tune_session(conn)
             _log_where_am_i(conn)
             try:
-                # Activities first (shorter, proves pipeline), then Employees
-                if args.domain in ("activities", "all"):
-                    print("🔍 Executing Activities orphan detection...")
-                    run_sql('activities_orphans.sql', conn)
-                    conn.commit()  # commit per domain
-                    print("✅ Activities orphan analysis completed")
-                    _log_activities_results(conn)
-                if args.domain in ("employees", "all"):
-                    print("🔍 Executing Employees orphan detection...")
-                    EmployeeOrphanExecutor(conn).execute()
-                    conn.commit()  # commit per domain
-                    print("✅ Employees orphan analysis completed")
-                if args.domain in ("orgs", "all"):
-                    print("🔍 Executing Organizations orphan detection...")
-                    run_sql('orgs_orphans.sql', conn)
-                    conn.commit()  # commit per domain
-                    print("✅ Organizations orphan analysis completed")
-                    _log_orgs_results(conn)
+                # Check each domain against session uploads
+                domains_to_run = []
+                if args.domain == "all":
+                    domains_to_run = ["activities", "employees", "orgs"]
+                else:
+                    domains_to_run = [args.domain]
+                
+                for domain in domains_to_run:
+                    should_run = session_manager.should_run_orphan_detection(domain)
+                    uploaded_tables = session_manager.get_uploaded_tables_for_domain(domain)
+                    
+                    if not should_run:
+                        logger.info(f"⏭️ Skipping {domain} - no files uploaded in current session")
+                        print(f"⏭️ Skipping {domain} - no files uploaded in current session")
+                        continue
+                    
+                    logger.info(f"🔍 Executing {domain.title()} orphan detection for session {session_config.session_id if session_config else 'unknown'}")
+                    logger.info(f"📁 Session uploaded tables for {domain}: {uploaded_tables}")
+                    print(f"🔍 Executing {domain.title()} orphan detection...")
+                    print(f"   📁 Session uploaded tables: {uploaded_tables}")
+                    
+                    if domain == "activities":
+                        run_sql('activities_orphans.sql', conn)
+                        conn.commit()
+                        print("✅ Activities orphan analysis completed")
+                        _log_activities_results(conn)
+                    elif domain == "employees":
+                        EmployeeOrphanExecutor(conn).execute()
+                        conn.commit()
+                        print("✅ Employees orphan analysis completed")
+                    elif domain == "orgs":
+                        run_sql('orgs_orphans.sql', conn)
+                        conn.commit()
+                        print("✅ Organizations orphan analysis completed")
+                        _log_orgs_results(conn)
+                
                 print("✅ All orphan detection committed successfully")
             except Exception as e:
                 conn.rollback()

@@ -58,3 +58,58 @@ class FilenameMapper:
         
         # Return mapped key if exists, otherwise return original
         return filename_mappings.get(file_key, file_key)
+    
+    @staticmethod
+    def to_frontend_name(filename: str) -> str:
+        """
+        Map filename to frontend display name for session tracking.
+        
+        Args:
+            filename: Original uploaded filename (e.g., "Activity_Curriculum.xlsx")
+            
+        Returns:
+            Frontend display name (e.g., "Activities - Curriculum")
+        """
+        # Remove file extension
+        file_key = os.path.splitext(filename)[0]
+        
+        # Define mapping from file keys to frontend names
+        file_to_frontend = {
+            # Activity mappings
+            "Activity_Curriculum": "Activities - Curriculum",
+            "Activity_QuickAssessment": "Activities - Quick Assessment", 
+            "Activity_ILTSessions": "Activities - ILT Sessions",
+            "Activity_ILTClass": "Activities - ILT Class",
+            "Activity_ILTCourse": "Activities - ILT Course",
+            "Activity_OnlineCourse": "Activities - Online Course",
+            "Activity_Online Course": "Activities - Online Course",
+            "Activity_Online_Course": "Activities - Online Course",
+            "Activity_Document": "Activities - Document",
+            
+            # Transcript mappings
+            "Transcript_Curriculum": "Employees - Transcript Curriculum",
+            "Transcript_Document": "Employees - Transcript Document",
+            "Transcript_ILT Class": "Employees - Transcript ILT Class",
+            "Transcript_ILT_Class": "Employees - Transcript ILT Class",
+            "Transcript_Online Course": "Employees - Transcript Online Course",
+            "Transcript_Online_Course": "Employees - Transcript Online Course",
+            "Transcript_QuickAssessment": "Employees - Transcript Quick Assessment",
+            
+            # Core mappings
+            "Core_Audience": "Core - Audience",
+            "Core_Domain": "Organizations - Domains",
+            "Core_Employee": "Employees - Core",
+            "Core_Jobs": "Core - Jobs",
+            "Core_Organization": "Organizations - Orgs",
+            
+            # Prerequisites mappings
+            "Prerequisites_Facility": "Prerequisites - Facility",
+            "Prerequisites_Instructor": "Employees - Prerequisites Instructor",
+            "Prerequisites_Provider": "Prerequisites - Provider",
+            "Prerequisites_Question": "Prerequisites - Question",
+            "Prerequisites_QuestionBanks": "Prerequisites - Question Banks",
+            "Prerequisites_Subject": "Prerequisites - Subject"
+        }
+        
+        # Return mapped frontend name if exists, otherwise return original
+        return file_to_frontend.get(file_key, file_key)

@@ -24,6 +24,10 @@ sys.path.append(LMS_DATABASE_DIR)
 
 import sumtotal_transformer_with_neo4j as transformer
 
+# Import session manager
+sys.path.append(LMS_DATABASE_DIR)
+from session_manager import session_manager
+
 app = Flask(__name__)
 
 # Use absolute paths for all directories
@@ -48,6 +52,11 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/lms')
+def lms_ui():
+    """Serve the new LMS Migration Agent UI"""
+    return send_from_directory('.', 'index.html')
 
 def map_filename_to_database_key(filename):
     """Map filename to the correct database key for mapping rules"""
@@ -225,6 +234,18 @@ def upload_file():
             
             logger.info(f"Processing file: {filename}")
             
+            # Initialize session if needed - ensure we have active session for file tracking
+            if not session_manager.current_session:
+                try:
+                    session_id = session_manager.start_new_session("web_user")
+                    logger.info(f"✅ Started new upload session: {session_id}")
+                except Exception as session_init_error:
+                    logger.error(f"❌ Failed to initialize session: {session_init_error}")
+                    # Continue without session tracking for now
+                    pass
+            else:
+                logger.info(f"📋 Using existing session: {session_manager.current_session.session_id}")
+            
             # Process the file using the transformer
             try:
                 processed_results = process_file(filepath)
@@ -235,6 +256,50 @@ def upload_file():
                     os.remove(filepath)
                 return jsonify({'error': f'Processing error: {str(process_error)}'}), 500
             
+            # Track file in session after successful processing - critical for orphan detection scope
+            if processed_results.get('success'):
+                try:
+                    sys.path.append(LMS_DATABASE_DIR)
+                    from utils.filename_mapper import FilenameMapper
+                    
+                    # Map filename to frontend display name and get row count
+                    frontend_name = FilenameMapper.to_frontend_name(filename)
+                    logger.info(f"📁 Mapping {filename} -> {frontend_name}")
+                    
+                    # Extract row count from processing results
+                    row_count = 0
+                    if 'validation' in processed_results and 'total_records' in processed_results['validation']:
+                        row_count = processed_results['validation']['total_records']
+                    
+                    # Generate simple checksum for file integrity tracking
+                    import hashlib
+                    checksum = hashlib.md5(filename.encode()).hexdigest()[:8]
+                    
+                    logger.info(f"📊 Session tracking: {frontend_name}, rows: {row_count}, checksum: {checksum}")
+                    
+                    # Record file upload in session for domain-scoped orphan detection
+                    if session_manager.current_session:
+                        logger.info(f"📋 Recording upload in session: {session_manager.current_session.session_id}")
+                        
+                        success = session_manager.add_uploaded_file(
+                            front_end_name=frontend_name,
+                            original_file_name=filename,
+                            row_count=row_count,
+                            checksum_md5=checksum,
+                            uploader="web_user"
+                        )
+                        
+                        if success:
+                            logger.info(f"✅ Successfully tracked in session: {frontend_name} ({row_count} rows)")
+                        else:
+                            logger.error(f"❌ Failed to track {frontend_name} in session")
+                    else:
+                        logger.warning("⚠️ No active session available for file tracking - orphan detection may include historical data")
+                    
+                except Exception as session_error:
+                    logger.error(f"❌ Error tracking file in session: {session_error}")
+                    # Don't fail the upload if session tracking fails - allow processing to continue
+            
             # Clean up the original file
             try:
                 os.remove(filepath)
@@ -243,6 +308,8 @@ def upload_file():
             
             # Auto-generate PDF report after successful processing using original filenames
             try:
+                # Ensure proper import path for PDF generation
+                sys.path.append(LMS_DATABASE_DIR)
                 from pdf_quality_report import auto_generate_after_upload
                 # auto_generate_after_upload now gets original files from database automatically
                 pdf_filename = auto_generate_after_upload([], app.config['PROCESSED_FOLDER'])  # Empty list, function gets files from DB
@@ -316,18 +383,35 @@ def delete_file(filename):
 
 @app.route('/reset-all-data', methods=['POST'])
 def reset_all_data_endpoint():
-    """Reset all data for a new batch - clears database and all processed files"""
+    """Reset all data for a new batch - clears database, files, and session data"""
     logger.info("🔍 Reset all data endpoint called") # DEBUG
     try:
         # Import from the parent directory where pdf_quality_report.py is located
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+        sys.path.append(LMS_DATABASE_DIR)
         from pdf_quality_report import reset_all_data
         
         # Reset everything
         results = reset_all_data(app.config['PROCESSED_FOLDER'])
         
+        # Reset session data - clear current session and start fresh for next upload batch
+        session_reset_success = False
+        if session_manager.current_session:
+            session_reset_success = session_manager.reset_session()
+            logger.info(f"📋 Session reset: {'✅ Success' if session_reset_success else '❌ Failed'}")
+        else:
+            logger.info("📋 No active session to reset")
+        
+        # Always start a fresh session for the next upload batch
+        try:
+            session_id = session_manager.start_new_session("web_user")
+            session_reset_success = True
+            logger.info(f"✅ Started fresh session for next uploads: {session_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to start new session: {e}")
+            session_reset_success = False
+        
         # Determine overall success
-        success = results['database_cleared'] and len(results['errors']) == 0
+        success = results['database_cleared'] and len(results['errors']) == 0 and session_reset_success
         
         response_data = {
             'success': success,
@@ -335,7 +419,11 @@ def reset_all_data_endpoint():
             'details': {
                 'database_cleared': results['database_cleared'],
                 'files_deleted': results['files_deleted'],
-                'pdf_reports_deleted': results['pdf_reports_deleted']
+                'pdf_reports_deleted': results['pdf_reports_deleted'],
+                'orphan_records_deleted': results.get('orphan_records_deleted', 0),
+                'session_files_deleted': results.get('session_files_deleted', 0),
+                'sessions_deleted': results.get('sessions_deleted', 0),
+                'session_reset': session_reset_success
             }
         }
         
@@ -359,6 +447,8 @@ def reset_all_data_endpoint():
 def generate_pdf_report():
     """Manually generate PDF quality report using original filenames from database"""
     try:
+        # Ensure proper import path for PDF generation
+        sys.path.append(LMS_DATABASE_DIR)
         from pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db
         
         # Get original uploaded filenames from database - much cleaner!
@@ -367,7 +457,12 @@ def generate_pdf_report():
         if not original_files:
             return jsonify({'error': 'No uploaded files found in database for report generation'}), 400
         
-        # Generate PDF report using original filenames
+        # Run fresh session-aware orphan detection before generating PDF
+        from pdf_quality_report import _run_orphan_detection_for_uploaded_files
+        logger.info("Running session-aware orphan detection for manual PDF generation...")
+        _run_orphan_detection_for_uploaded_files(original_files)
+        
+        # Generate PDF report using original filenames with fresh orphan data
         generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])
         pdf_filename = generator.generate_report(original_files)
         
