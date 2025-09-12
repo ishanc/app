@@ -1,0 +1,5 @@
+file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
+Activity_Curriculum.xlsx,summary,mandatory_completeness,,100.00,,
+Activity_Curriculum.xlsx,summary,total_errors,,9864,,
+Activity_Curriculum.xlsx,field,ActivityName,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,19%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."
+Activity_Curriculum.xlsx,field,Owner,High,Heterogeneous data types within field (numeric/text mix); validate against target's unique ID rules,38%,"Data Discovery Workshop, field contains heterogeneous data types. Requires workshop confirmation for type standardization approach."
