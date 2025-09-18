@@ -22,6 +22,9 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.enums import TA_CENTER
 from dotenv import load_dotenv
 
+# Import database utilities
+from .db_utils import DatabaseConnectionManager, get_original_file_list, get_total_records_processed, reset_database_state
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,6 +43,26 @@ class FileQualityScore:
 
 class PDFQualityReportGenerator:
     """Optimized PDF quality report generator"""
+    # [MODIFIED: 2025-09-16] Previous class definition with simpler error mapping and severity categories:
+    """
+    class PDFQualityReportGenerator:
+        # Basic error remediation mapping
+        REMEDIATION_MAPPING = {
+            'MANDATORY_EMPTY': "Fill in required field",
+            'TRUNCATION': "Shorten field value",
+            'ENCODING_ISSUE': "Fix encoding",
+            'TYPE_COMPATIBILITY': "Fix data type",
+            'DATE_FORMAT': "Correct date format"
+        }
+        
+        SEVERITY_CATEGORIES = {
+            'Critical': ['MANDATORY_EMPTY'],
+            'High': ['TYPE_COMPATIBILITY'],
+            'Medium': ['TRUNCATION', 'ENCODING_ISSUE'],
+            'Low': ['DATE_FORMAT']
+        }
+    """
+    # Reason for change: Extended error categories and remediation guidance for better analysis
     
     # Simplified remediation mapping
     REMEDIATION_MAPPING = {
@@ -69,32 +92,25 @@ class PDFQualityReportGenerator:
     
     def __init__(self, output_dir: str):
         self.output_dir = output_dir
-        self.db_connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER'),
-            password=os.getenv('MYSQL_PASSWORD'),
-            database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
-            ssl_disabled=True,
-            autocommit=False,
-            connect_timeout=30,
-            use_unicode=True
-        )
+        self.db_manager = DatabaseConnectionManager()
+        with self.db_manager.get_connection(autocommit=False) as connection:
+            self.db_connection = connection
     
     def get_completeness_data(self, file_names: List[str]) -> Dict[str, Dict[str, Any]]:
         """Get completeness data from database"""
         try:
-            cursor = self.db_connection.cursor(dictionary=True)
-            placeholders = ', '.join(['%s'] * len(file_names))
-            
-            cursor.execute(f"""
-                SELECT file_name, mandatory_completeness, total_records, incomplete_records, last_processed
-                FROM file_completeness_summary 
-                WHERE file_name IN ({placeholders})
-            """, file_names)
-            
-            results = cursor.fetchall()
-            cursor.close()
+            with self.db_manager.get_connection(autocommit=True) as connection:
+                cursor = connection.cursor(dictionary=True)
+                placeholders = ', '.join(['%s'] * len(file_names))
+                
+                cursor.execute(f"""
+                    SELECT file_name, mandatory_completeness, total_records, incomplete_records, last_processed
+                    FROM file_completeness_summary 
+                    WHERE file_name IN ({placeholders})
+                """, file_names)
+                
+                results = cursor.fetchall()
+                cursor.close()
             
             # Convert to dictionary
             data = {}
@@ -126,27 +142,28 @@ class PDFQualityReportGenerator:
     def get_error_data(self, file_names: List[str]) -> Dict[str, Dict[str, Any]]:
         """Get error data from database"""
         try:
-            cursor = self.db_connection.cursor(dictionary=True)
-            placeholders = ', '.join(['%s'] * len(file_names))
-            
-            # Get error counts by type
-            cursor.execute(f"""
-                SELECT file_name, validation_type, COUNT(*) as error_count
-                FROM error_logs 
-                WHERE file_name IN ({placeholders})
-                GROUP BY file_name, validation_type
-            """, file_names)
-            error_results = cursor.fetchall()
-            
-            # Get total error counts
-            cursor.execute(f"""
-                SELECT file_name, COUNT(*) as total_errors
-                FROM error_logs 
-                WHERE file_name IN ({placeholders})
-                GROUP BY file_name
-            """, file_names)
-            total_results = cursor.fetchall()
-            cursor.close()
+            with self.db_manager.get_connection(autocommit=True) as connection:
+                cursor = connection.cursor(dictionary=True)
+                placeholders = ', '.join(['%s'] * len(file_names))
+                
+                # Get error counts by type
+                cursor.execute(f"""
+                    SELECT file_name, validation_type, COUNT(*) as error_count
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    GROUP BY file_name, validation_type
+                """, file_names)
+                error_results = cursor.fetchall()
+                
+                # Get total error counts
+                cursor.execute(f"""
+                    SELECT file_name, COUNT(*) as total_errors
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    GROUP BY file_name
+                """, file_names)
+                total_results = cursor.fetchall()
+                cursor.close()
             
             # Build error data structure
             data = {}
@@ -299,6 +316,34 @@ class PDFQualityReportGenerator:
         FIXED: Now uses incomplete_records as fallback when Neo4j mandatory field lookup fails.
         This ensures Quality % is consistent with Mandatory Complete %.
         
+        [MODIFIED: 2025-09-16] Changed quality score calculation method
+        Previous version used a simpler error count based approach:
+        ```python
+        def calculate_quality_scores(self, completeness_data: Dict, error_data: Dict) -> List[FileQualityScore]:
+            # Calculate quality scores using error counts
+            # Quality % = (total_records - total_error_records) / total_records * 100
+            scores = []
+            for file_name in completeness_data.keys():
+                comp = completeness_data[file_name]
+                errors = error_data[file_name]
+                total_records = comp.get('total_records', 0)
+                total_errors = errors.get('total_errors', 0)
+                quality_percentage = 0.0
+                if total_records > 0:
+                    quality_percentage = ((total_records - total_errors) / total_records) * 100
+                quality_percentage = max(0.0, min(100.0, quality_percentage))
+                scores.append(FileQualityScore(
+                    file_name=file_name,
+                    mandatory_fields_complete=comp.get('mandatory_completeness', 0.0),
+                    records_without_errors=round(quality_percentage, 1),
+                    total_records=total_records,
+                    error_count=total_errors
+                ))
+            return sorted(scores, key=lambda x: x.records_without_errors, reverse=True)
+        ```
+        Reason for change: The old method counted all errors equally, while the new method
+        focuses on mandatory field errors for a more accurate quality assessment.
+        
         Args:
             completeness_data: Completeness data for each file
             error_data: Error data for each file
@@ -345,6 +390,35 @@ class PDFQualityReportGenerator:
     
     def create_expandable_table(self, data: List[List[str]], col_widths: List[float]) -> Table:
         """Create table with vertical text expansion instead of truncation"""
+        # [MODIFIED: 2025-09-16] Enhanced table creation for better text handling
+        # Previous version had simpler table creation with text truncation:
+        """
+        def create_table(self, data: List[List[str]], col_widths: List[float]) -> Table:
+            if not data:
+                return None
+                
+            # Simple truncation of long text
+            processed_data = []
+            for row in data:
+                processed_row = []
+                for cell in row:
+                    if len(str(cell)) > 50:  # Truncate long text
+                        processed_row.append(str(cell)[:47] + '...')
+                    else:
+                        processed_row.append(str(cell))
+                processed_data.append(processed_row)
+                
+            table = Table(processed_data, colWidths=col_widths)
+            table.setStyle(TableStyle([
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTSIZE', (0, 0), (-1, -1), 10)
+            ]))
+            return table
+        """
+        # Reason for change: Text truncation was causing loss of important information
+        # New version uses vertical expansion with proper word wrapping
         if not data:
             return None
         
@@ -421,6 +495,45 @@ class PDFQualityReportGenerator:
     
     def generate_report(self, file_names: List[str]) -> str:
         """Generate PDF report"""
+        # [MODIFIED: 2025-09-16] Enhanced report generation with additional sections
+        # Previous simpler version:
+        """
+        def generate_report(self, file_names: List[str]) -> str:
+            try:
+                # Get basic data
+                completeness_data = self.get_completeness_data(file_names)
+                error_data = self.get_error_data(file_names)
+                quality_scores = self.calculate_quality_scores(completeness_data, error_data)
+                
+                # Generate basic PDF
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                pdf_filename = f"data_quality_report_{timestamp}.pdf"
+                pdf_path = os.path.join(self.output_dir, pdf_filename)
+                
+                doc = SimpleDocTemplate(pdf_path, pagesize=A4)
+                story = []
+                styles = getSampleStyleSheet()
+                
+                # Title
+                story.append(Paragraph("Data Quality Report", styles['Title']))
+                story.append(Spacer(1, 12))
+                
+                # Quality scores table
+                self._add_quality_table(story, styles, quality_scores)
+                
+                # Error table
+                self._add_error_table(story, styles, error_data)
+                
+                doc.build(story)
+                return pdf_filename
+                
+            except Exception as e:
+                logger.error(f"Error generating PDF report: {e}")
+                raise
+            finally:
+                self._cleanup()
+        """
+        # Reason for change: Added comprehensive analysis sections and improved formatting
         try:
             logger.info(f"Generating PDF report for {len(file_names)} files")
             
@@ -1179,6 +1292,46 @@ class PDFQualityReportGenerator:
     
     def _add_cross_file_integrity_analysis(self, story, styles, file_names: List[str]):
         """Add comprehensive cross-file integrity analysis using Phase 2 enhanced system"""
+        # [MODIFIED: 2025-09-16] Completely refactored cross-file analysis
+        # Previous version used a simpler approach with direct database queries:
+        """
+        def _add_cross_file_integrity_analysis(self, story, styles, file_names: List[str]):
+            story.append(Paragraph("Cross-File Integrity Analysis", styles['Heading2']))
+            cursor = self.db_connection.cursor(dictionary=True)
+            
+            try:
+                cursor.execute('''
+                    SELECT source_file, target_file, key_field, COUNT(*) as orphaned
+                    FROM cross_file_integrity
+                    WHERE source_file IN (%s)
+                    GROUP BY source_file, target_file, key_field
+                ''' % ','.join(['%s'] * len(file_names)), file_names)
+                
+                results = cursor.fetchall()
+                if not results:
+                    story.append(Paragraph("No cross-file integrity issues found.", styles['Normal']))
+                    return
+                    
+                data = [['Source File', 'Target File', 'Key Field', 'Orphaned Records']]
+                for row in results:
+                    data.append([
+                        row['source_file'],
+                        row['target_file'],
+                        row['key_field'],
+                        str(row['orphaned'])
+                    ])
+                    
+                table = Table(data)
+                story.append(table)
+                
+            except Exception as e:
+                logger.error(f"Error in cross-file analysis: {e}")
+                story.append(Paragraph(f"Error in cross-file analysis: {str(e)}", styles['Normal']))
+            finally:
+                cursor.close()
+        """
+        # Reason for change: Enhanced system uses dedicated orphan trackers and Neo4j
+        # integration for more accurate and comprehensive relationship analysis
         story.append(Paragraph("Cross-File Referential Integrity Analysis", styles['Heading2']))
         story.append(Paragraph(
             "This section analyzes referential integrity between files using dynamic relationship "
@@ -1372,45 +1525,12 @@ class PDFQualityReportGenerator:
             logger.error(f"Error cleaning up: {e}")
 
 
-# Utility functions
-def get_original_file_list_from_db() -> List[str]:
-    """Get original uploaded filenames from database"""
-    try:
-        connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER'),
-            password=os.getenv('MYSQL_PASSWORD'),
-            database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
-            ssl_disabled=True,
-            connect_timeout=30,
-            use_unicode=True
-        )
-        
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT file_name 
-            FROM file_completeness_summary 
-            GROUP BY file_name 
-            ORDER BY MAX(last_processed) DESC
-        """)
-        results = cursor.fetchall()
-        cursor.close()
-        connection.close()
-        
-        filenames = [row[0] for row in results if row[0]]
-        logger.info(f"Found {len(filenames)} files: {filenames}")
-        return filenames
-        
-    except Exception as e:
-        logger.error(f"Error getting file list: {e}")
-        return []
-
-
+# [MODIFIED: 2025-09-17] Updated PDF report handling to ensure single consolidated report
+"""
+Original implementation:
 def auto_generate_after_upload(file_names: List[str], output_dir: str) -> Optional[str]:
-    """Auto-generate PDF report"""
     try:
-        original_files = get_original_file_list_from_db()
+        original_files = get_original_file_list()
         if len(original_files) >= 1:
             generator = PDFQualityReportGenerator(output_dir)
             return generator.generate_report(original_files)
@@ -1418,54 +1538,78 @@ def auto_generate_after_upload(file_names: List[str], output_dir: str) -> Option
         logger.error(f"Error auto-generating PDF: {e}")
     return None
 
+Reason for change: Complete overhaul of PDF report handling to ensure only one consolidated report exists
+"""
 
-def reset_all_data(processed_folder: str) -> Dict[str, Any]:
-    """Reset all data"""
-    results = {'database_cleared': False, 'files_deleted': 0, 'pdf_reports_deleted': 0, 'errors': []}
+def cleanup_old_pdf_reports(output_dir: str) -> None:
+    """
+    Remove all existing PDF reports from the output directory.
     
+    Args:
+        output_dir: Directory containing the PDF reports
+    """
     try:
-        # Clear database
-        connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER'),
-            password=os.getenv('MYSQL_PASSWORD'),
-            database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
-            ssl_disabled=True,
-            autocommit=False,
-            connect_timeout=30,
-            use_unicode=True
-        )
-        
-        cursor = connection.cursor()
-        cursor.execute("TRUNCATE error_logs")
-        cursor.execute("TRUNCATE file_completeness_summary")
-        connection.commit()
-        cursor.close()
-        connection.close()
-        results['database_cleared'] = True
-        
+        if os.path.exists(output_dir):
+            removed_count = 0
+            for filename in os.listdir(output_dir):
+                if filename.endswith('.pdf') and filename.startswith('data_quality_report_'):
+                    filepath = os.path.join(output_dir, filename)
+                    try:
+                        os.remove(filepath)
+                        removed_count += 1
+                    except Exception as e:
+                        logger.error(f"Error removing PDF {filename}: {e}")
+            if removed_count > 0:
+                logger.info(f"Removed {removed_count} old PDF reports")
     except Exception as e:
-        results['errors'].append(f"Database error: {e}")
+        logger.error(f"Error during PDF cleanup: {e}")
+
+def auto_generate_after_upload(file_names: List[str], output_dir: str) -> Optional[str]:
+    """
+    Generate a single consolidated PDF report for all uploaded files.
+    Previous reports are cleaned up to ensure only one report exists.
     
+    Args:
+        file_names: List of uploaded file names (can be empty, will fetch from DB)
+        output_dir: Directory to save the generated report
+        
+    Returns:
+        str: Name of generated PDF file, or None if generation failed
+    """
     try:
-        # Delete files
-        if os.path.exists(processed_folder):
-            files_deleted = pdf_reports_deleted = 0
-            for filename in os.listdir(processed_folder):
-                file_path = os.path.join(processed_folder, filename)
-                if os.path.isfile(file_path):
-                    if filename.endswith('.csv') and (filename.startswith('processed_') or filename.startswith('anomaly_report_')):
-                        os.remove(file_path)
-                        files_deleted += 1
-                    elif filename.endswith('.pdf') and filename.startswith('data_quality_report'):
-                        os.remove(file_path)
-                        pdf_reports_deleted += 1
+        # Get the complete list of original files
+        original_files = get_original_file_list()
+        if len(original_files) >= 1:
+            generator = PDFQualityReportGenerator(output_dir)
+            # Generate single consolidated report
+            pdf_filename = generator.generate_report(original_files)
+            logger.info(f"Generated consolidated PDF report: {pdf_filename}")
             
-            results['files_deleted'] = files_deleted
-            results['pdf_reports_deleted'] = pdf_reports_deleted
+            # Verify we only have one PDF report
+            pdf_count = sum(1 for f in os.listdir(output_dir) 
+                          if f.endswith('.pdf') and f.startswith('data_quality_report_'))
+            if pdf_count > 1:
+                logger.warning(f"Found {pdf_count} PDFs after generation. Cleaning up all except latest.")
+                # Keep only the most recent PDF
+                pdfs = [(f, os.path.getctime(os.path.join(output_dir, f))) 
+                        for f in os.listdir(output_dir)
+                        if f.endswith('.pdf') and f.startswith('data_quality_report_')]
+                pdfs.sort(key=lambda x: x[1], reverse=True)  # Sort by creation time
+                latest_pdf = pdfs[0][0]
+                
+                # Remove all except the latest
+                for pdf_name, _ in pdfs[1:]:
+                    try:
+                        os.remove(os.path.join(output_dir, pdf_name))
+                        logger.info(f"Removed older PDF: {pdf_name}")
+                    except Exception as e:
+                        logger.error(f"Error removing older PDF {pdf_name}: {e}")
+                
+                # Return the name of the latest PDF
+                pdf_filename = latest_pdf
+            
+            return pdf_filename
             
     except Exception as e:
-        results['errors'].append(f"File deletion error: {e}")
-    
-    return results
+        logger.error(f"Error auto-generating PDF: {e}")
+    return None

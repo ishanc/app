@@ -31,7 +31,7 @@ class ErrorCategorizer:
     DB_CONFIG = {
         'host': 'localhost',
         'user': 'error_logger',
-        'password': 'IerpAgents.com1%',
+        'password': 'MySQLserver123',
         'database': 'error_logging',
         'port': 3306
         #should we add ssl_ca and ssl_verify?

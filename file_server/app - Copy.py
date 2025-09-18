@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, send_from_directory, jsonify
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app')))
-from lms_error_analyzer.database.db_utils import DatabaseConnectionManager
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app')))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'lms_error_analyzer', 'database')))
+#import sys
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 #import sys
 from werkzeug.utils import secure_filename
@@ -21,18 +22,6 @@ logging.basicConfig(level=logging.WARNING)
 logging.getLogger('mysql.connector').setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
-# [MODIFIED: 2025-09-17] Previous path management approach was less organized
-"""
-Original implementation:
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer')))
-
-Reason for change: Improved organization and clarity of path management
-"""
-
 # Add the lasVegas app directory to Python path
 LASVEGAS_APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app'))
 sys.path.append(LASVEGAS_APP_DIR)
@@ -41,7 +30,11 @@ sys.path.append(LASVEGAS_APP_DIR)
 LMS_DATABASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
 sys.path.append(LMS_DATABASE_DIR)
 
-from lasVegas.app import sumtotal_transformer_with_neo4j as transformer
+
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lasVegas', 'app')))
+import sumtotal_transformer_with_neo4j as transformer
 
 app = Flask(__name__)
 
@@ -72,24 +65,8 @@ def map_filename_to_database_key(filename):
     """Map filename to the correct database key for mapping rules"""
     # Import here to avoid circular imports
    # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-    from lms_error_analyzer.database.utils.filename_mapper import FilenameMapper
+    from utils.filename_mapper import FilenameMapper
     return FilenameMapper.to_db_key(filename)
-
-# [MODIFIED: 2025-09-17] Previous validation was simpler without detailed checks
-"""
-Original implementation:
-def validate_transformed_data(df, mapping_rules):
-    errors = []
-    for rule in mapping_rules:
-        if rule.get('mandatory') == 'Mandatory' and rule['CSOD Field Name'] not in df.columns:
-            errors.append(f"Mandatory field '{rule['CSOD Field Name']}' is missing")
-    return {
-        'total_errors': len(errors),
-        'errors': errors
-    }
-
-Reason for change: Added more comprehensive validation including empty values and warnings tracking
-"""
 
 def validate_transformed_data(df, mapping_rules):
     """Validate the transformed data against mapping rules"""
@@ -124,22 +101,8 @@ def validate_transformed_data(df, mapping_rules):
         'warnings': []  # Always return empty array for UI
     }
 
-# [MODIFIED: 2025-09-17] Added improved file processing with validation and error checks
-"""
-Original implementation:
 def process_file(filepath):
-    filename = os.path.basename(filepath)
-    file_key = map_filename_to_database_key(filename)
-    mapping_rules = transformer.fetch_mapping_rules_from_neo4j(file_key)
-    input_df = pd.read_excel(filepath)
-    transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key)
-    return transformed_df
-
-Reason for change: Added comprehensive error checking, validation, and improved file handling
-"""
-
-def process_file(filepath):
-    """Process a file using the SumTotal transformer with enhanced validation"""
+    """Process a file using the SumTotal transformer"""
     try:
         # Fetch mapping rules directly from Neo4j database
         filename = os.path.basename(filepath)
@@ -182,25 +145,12 @@ def process_file(filepath):
         transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key, filename) #Pass original filename
         try:
             sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-            from lms_error_analyzer.database.dashboard import Dashboard
-            from lms_error_analyzer.database.report_generator import generate_anomaly_report_csv
-            
-            # [MODIFIED: 2025-09-16] Changed Dashboard initialization to use connection manager
-            """
-            Original implementation:
+            from dashboard import Dashboard
+            from report_generator import generate_anomaly_report_csv
             dashboard = Dashboard()
             completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
             dashboard.store_completeness_metrics(filename, completeness_metrics)
-            dashboard.close_connection()
-
-            Reason for change: Improved connection management using context manager to ensure proper cleanup
-            """
-            with DatabaseConnectionManager() as db_conn:
-                dashboard = Dashboard()  # Dashboard creates its own connection
-                completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
-                dashboard.store_completeness_metrics(filename, completeness_metrics)
-                # Connection will be automatically closed by context manager
-                
+            dashboard.close_connections()
             # Generate MVP anomaly CSV report alongside processed files
             try:
                 report_filename = generate_anomaly_report_csv(filename, app.config['PROCESSED_FOLDER'])
@@ -303,20 +253,16 @@ def upload_file():
             except Exception as cleanup_error:
                 logger.warning(f"Could not clean up original file: {cleanup_error}")
             
-            # Auto-generate consolidated PDF report after successful processing
+            # Auto-generate PDF report after successful processing using original filenames
             try:
-                sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-                from lms_error_analyzer.database.pdf_quality_report import auto_generate_after_upload, cleanup_old_pdf_reports
-                # First cleanup any existing PDFs
-                cleanup_old_pdf_reports(app.config['PROCESSED_FOLDER'])
-                # Generate new consolidated report
+                from pdf_quality_report import auto_generate_after_upload
+                # auto_generate_after_upload now gets original files from database automatically
                 pdf_filename = auto_generate_after_upload([], app.config['PROCESSED_FOLDER'])  # Empty list, function gets files from DB
                 if pdf_filename:
                     processed_results['pdf_report'] = pdf_filename
-                    logger.info(f"Auto-generated consolidated PDF report: {pdf_filename}")
+                    logger.info(f"Auto-generated PDF report: {pdf_filename}")
             except Exception as pdf_error:
                 logger.error(f"Error auto-generating PDF report: {pdf_error}")
-                logger.error(f"PDF error details: {str(pdf_error)}")
                 # Don't fail the upload if PDF generation fails
             
             return jsonify(processed_results)
@@ -380,20 +326,6 @@ def delete_file(filename):
         logger.error(f"Error deleting file {filename}: {e}")
         return jsonify({'error': str(e)}), 500
 
-# [MODIFIED: 2025-09-17] Enhanced reset functionality with better error handling
-"""
-Original implementation:
-@app.route('/reset-all-data', methods=['POST'])
-def reset_all_data_endpoint():
-    try:
-        reset_all_data(app.config['PROCESSED_FOLDER'])
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-Reason for change: Added comprehensive reset with better error tracking and detailed response
-"""
-
 @app.route('/reset-all-data', methods=['POST'])
 def reset_all_data_endpoint():
     """Reset all data for a new batch - clears database and all processed files"""
@@ -435,47 +367,28 @@ def reset_all_data_endpoint():
             'error': f'Failed to reset data: {str(e)}'
         }), 500
 
-# [MODIFIED: 2025-09-17] Enhanced PDF report generation with better error handling
-"""
-Original implementation:
 @app.route('/generate-pdf-report', methods=['POST'])
 def generate_pdf_report():
+    """Manually generate PDF quality report using original filenames from database"""
     try:
-        generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])
-        pdf_filename = generator.generate_report()
-        return jsonify({'success': True, 'pdf_filename': pdf_filename})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-Reason for change: Added support for original filenames from database and improved error handling
-"""
-
-@app.route('/generate-pdf-report', methods=['POST'])
-def generate_pdf_report():
-    """Manually generate consolidated PDF quality report using original filenames from database"""
-    try:
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-        from lms_error_analyzer.database.pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db, cleanup_old_pdf_reports
+        from pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db
         
-        # Clean up any existing PDFs first
-        cleanup_old_pdf_reports(app.config['PROCESSED_FOLDER'])
-        
-        # Get original uploaded filenames from database
-        original_files = get_original_file_list_from_db()  # This manages its own connection
+        # Get original uploaded filenames from database - much cleaner!
+        original_files = get_original_file_list_from_db()
         
         if not original_files:
             return jsonify({'error': 'No uploaded files found in database for report generation'}), 400
         
-        # Generate consolidated PDF report using original filenames
+        # Generate PDF report using original filenames
         generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])
         pdf_filename = generator.generate_report(original_files)
         
-        logger.info(f"Manual consolidated PDF report generated: {pdf_filename}")
+        logger.info(f"Manual PDF report generated: {pdf_filename}")
         
         return jsonify({
             'success': True,
             'pdf_filename': pdf_filename,
-            'message': f'Consolidated PDF report generated successfully',
+            'message': f'PDF report generated successfully',
             'files_analyzed': len(original_files)
         })
         
@@ -488,17 +401,21 @@ def quality_dashboard():
     """Get quality dashboard data for all processed files"""
     try:
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-        from lms_error_analyzer.database.dashboard import Dashboard
+        from dashboard import Dashboard
         
-        with DatabaseConnectionManager() as db_conn:
-            dashboard = Dashboard(connection=db_conn)
+        dashboard = Dashboard()
+        try:
             quality_data = dashboard.generate_quality_dashboard()
+            dashboard.close_connections()
             
             return jsonify({
                 'success': True,
                 'quality_data': quality_data,
                 'total_files': len(quality_data)
             })
+        except Exception as dashboard_error:
+            dashboard.close_connections()
+            raise dashboard_error
             
     except Exception as e:
         logger.error(f"Error getting quality dashboard: {e}")
@@ -512,53 +429,18 @@ print("✅ Debugger attached!")"""
 
 
 
-# [MODIFIED: 2025-09-16] Updated endpoints for better connection management
-"""
-Original implementation:
+# Simple API endpoint to get total records processed on the front end
 @app.route('/api/records_processed')
 def records_processed():
-    connection = establish_database_connection()
-    total = get_total_records_processed(connection)
-    connection.close()
+    total = get_total_records_processed()  # Implement this function
     return jsonify({'total': total})
 
-@app.route('/api/anomalies_count')
+# Simple API endpoint to get total anomalies count on the front end
+'''@app.route('/api/anomalies_count')
 def anomalies_count():
-    connection = establish_database_connection()
-    count = get_total_anomalies(connection)
-    connection.close()
-    return jsonify({'anomalies': count})
-
-Reason for change: Improved connection management by letting functions handle their own connections
-"""
-
-@app.route('/api/records_processed')
-def records_processed():
-    # get_total_records_processed manages its own connection
-    total = get_total_records_processed()
-    return jsonify({'total': total})
-
-@app.route('/api/metrics')
-def metrics():
-    # get_total_records_processed manages its own connection
-    total = get_total_records_processed()
-    return jsonify({
-        'success': True,
-        'metrics': {
-            'total_records_processed': total
-        }
-    })
-
-# [MODIFIED: 2025-09-16] Temporarily disabled anomalies endpoint
-"""
-Original implementation:
-@app.route('/api/anomalies_count')
-def anomalies_count():
+    #from lms_error_analyzer.database.pdf_quality_report import get_total_anomalies
     count = get_total_anomalies()
-    return jsonify({'anomalies': count})
-
-Reason for change: Endpoint temporarily disabled for refactoring
-"""
+    return jsonify({'anomalies': count})'''
 
 if __name__ == '__main__':
     app.run(debug=False, port=5001)

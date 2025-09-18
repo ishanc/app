@@ -23,12 +23,13 @@ from typing import Dict, List, Optional, Tuple, Any, Union
 from dataclasses import dataclass, asdict
 from collections import defaultdict
 
-import mysql.connector
 from neo4j import GraphDatabase
+import sys
 from dotenv import load_dotenv
 
 # Import utilities from existing modules
 from utils.filename_mapper import FilenameMapper
+from db_utils import DatabaseConnectionManager
 
 # Configure logging
 logging.basicConfig(
@@ -45,7 +46,7 @@ MYSQL_CONFIG = {
     'port': int(os.getenv('MYSQL_PORT', 3306)),
     'database': os.getenv('MYSQL_NAME', 'error_logging'),
     'user': os.getenv('MYSQL_USER', 'error_logger'),
-    'password': os.getenv('MYSQL_PASSWORD', 'IerpAgents.com1%')
+    'password': os.getenv('MYSQL_PASSWORD', 'MySQLserver123')
 }
 
 NEO4J_CONFIG = {
@@ -194,16 +195,33 @@ class PerformanceMonitor:
 class MySQLRetrieval:
     """Handles MySQL database queries for raw data and quality signals"""
     
+    # [MODIFIED: 2025-09-16] Original initialization commented for DatabaseConnectionManager integration
+    # def __init__(self, performance_monitor: Optional[PerformanceMonitor] = None):
+    #     self.connection = None
+    #     self.performance_monitor = performance_monitor or PerformanceMonitor()
+    #     self._connect()
+    
     def __init__(self, performance_monitor: Optional[PerformanceMonitor] = None):
+        self.db_manager = DatabaseConnectionManager()
         self.connection = None
         self.performance_monitor = performance_monitor or PerformanceMonitor()
         self._connect()
     
+    # [MODIFIED: 2025-09-16] Original connection method commented for DatabaseConnectionManager integration
+    # def _connect(self):
+    #     """Establish MySQL connection"""
+    #     try:
+    #         self.connection = mysql.connector.connect(**MYSQL_CONFIG)
+    #         logger.info("✅ Connected to MySQL")
+    #     except Exception as e:
+    #         logger.error(f"❌ MySQL connection failed: {e}")
+    #         raise
+    
     def _connect(self):
-        """Establish MySQL connection"""
+        """Establish MySQL connection using DatabaseConnectionManager"""
         try:
-            self.connection = mysql.connector.connect(**MYSQL_CONFIG)
-            logger.info("✅ Connected to MySQL")
+            self.connection = self.db_manager.get_connection()
+            logger.info("✅ Connected to MySQL using DatabaseConnectionManager")
         except Exception as e:
             logger.error(f"❌ MySQL connection failed: {e}")
             raise
@@ -499,29 +517,39 @@ class MySQLRetrieval:
                 'processing_time_ms': 0
             }
     
+    # [MODIFIED: 2025-09-16] Original close method commented for DatabaseConnectionManager integration
+    # def close(self):
+    #     """Close MySQL connection"""
+    #     if self.connection:
+    #         self.connection.close()
+    #         logger.info("🔌 Disconnected from MySQL")
+    
     def close(self):
-        """Close MySQL connection"""
-        if self.connection:
-            self.connection.close()
-            logger.info("🔌 Disconnected from MySQL")
+        """Close MySQL connection using DatabaseConnectionManager"""
+        try:
+            if self.connection:
+                self.db_manager.release_connection(self.connection)
+                self.connection = None
+                logger.info("🔌 Released MySQL connection back to pool")
+        except Exception as e:
+            logger.error(f"Error closing MySQL connection: {e}")
+            raise
 
 
 class Neo4jRetrieval:
     """Handles Neo4j queries for mapping rules and constraints"""
     
     def __init__(self, performance_monitor: Optional[PerformanceMonitor] = None):
+        self.db_manager = DatabaseConnectionManager()
         self.driver = None
         self.performance_monitor = performance_monitor or PerformanceMonitor()
         self._connect()
     
     def _connect(self):
-        """Establish Neo4j connection"""
+        """Establish Neo4j connection using DatabaseConnectionManager"""
         try:
-            self.driver = GraphDatabase.driver(
-                NEO4J_CONFIG['uri'], 
-                auth=(NEO4J_CONFIG['user'], NEO4J_CONFIG['password'])
-            )
-            logger.info("✅ Connected to Neo4j")
+            self.driver = self.db_manager.get_neo4j_connection()
+            logger.info("✅ Connected to Neo4j using DatabaseConnectionManager")
         except Exception as e:
             logger.error(f"❌ Neo4j connection failed: {e}")
             raise
@@ -728,10 +756,15 @@ class Neo4jRetrieval:
         ]
     
     def close(self):
-        """Close Neo4j connection"""
-        if self.driver:
-            self.driver.close()
-            logger.info("🔌 Disconnected from Neo4j")
+        """Close Neo4j connection using DatabaseConnectionManager"""
+        try:
+            if self.driver:
+                self.db_manager.release_neo4j_connection(self.driver)
+                self.driver = None
+                logger.info("🔌 Released Neo4j connection")
+        except Exception as e:
+            logger.error(f"Error closing Neo4j connection: {e}")
+            raise
 
 
 class CrossFileAnalyzer:
@@ -906,42 +939,44 @@ class CrossFileAnalyzer:
             return
         
         try:
-            cursor = self.mysql_retrieval.connection.cursor()
-            
-            insert_query = """
-            INSERT INTO cross_file_integrity_summary (
-                analysis_run_id, relationship_name, source_file_pattern, target_file_pattern,
-                key_field, total_source_records, total_target_records, orphaned_source_records,
-                orphaned_target_records, integrity_percentage, processing_time_ms,
-                relationship_type, business_priority, discovered_from_neo4j
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            
-            for rel in relationships:
-                cursor.execute(insert_query, (
-                    rel.analysis_run_id,
-                    rel.relationship_name,
-                    rel.primary_file,
-                    rel.dependent_file,
-                    rel.key_field,
-                    rel.total_source_records,
-                    rel.total_dependent_records,
-                    rel.orphaned_records,
-                    0,  # orphaned_target_records (not calculated in current implementation)
-                    rel.integrity_percentage,
-                    rel.processing_time_ms,
-                    'REFERENCE',  # Default relationship type
-                    rel.severity,
-                    True  # Assume discovered from Neo4j for now
-                ))
-            
-            self.mysql_retrieval.connection.commit()
-            cursor.close()
-            
-            logger.info(f"💾 Persisted {len(relationships)} relationship analysis results to database")
+            with DatabaseConnectionManager() as db_conn:
+                cursor = db_conn.cursor()
+                
+                insert_query = """
+                INSERT INTO cross_file_integrity_summary (
+                    analysis_run_id, relationship_name, source_file_pattern, target_file_pattern,
+                    key_field, total_source_records, total_target_records, orphaned_source_records,
+                    orphaned_target_records, integrity_percentage, processing_time_ms,
+                    relationship_type, business_priority, discovered_from_neo4j
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                
+                for rel in relationships:
+                    cursor.execute(insert_query, (
+                        rel.analysis_run_id,
+                        rel.relationship_name,
+                        rel.primary_file,
+                        rel.dependent_file,
+                        rel.key_field,
+                        rel.total_source_records,
+                        rel.total_dependent_records,
+                        rel.orphaned_records,
+                        0,  # orphaned_target_records (not calculated in current implementation)
+                        rel.integrity_percentage,
+                        rel.processing_time_ms,
+                        'REFERENCE',  # Default relationship type
+                        rel.severity,
+                        True  # Assume discovered from Neo4j for now
+                    ))
+                
+                db_conn.commit()
+                cursor.close()
+                
+                logger.info(f"💾 Persisted {len(relationships)} relationship analysis results to database")
             
         except Exception as e:
             logger.error(f"❌ Failed to persist analysis results: {e}")
+            raise
     
     def _passes_validation_rules(self, analysis: Dict[str, Any], validation_rules: List[str]) -> bool:
         """Check if relationship analysis passes validation rules"""
@@ -1242,8 +1277,27 @@ class RetrievalFramework:
     
     def __init__(self):
         self.performance_monitor = PerformanceMonitor()
-        self.mysql_retrieval = MySQLRetrieval(self.performance_monitor)
-        self.neo4j_retrieval = Neo4jRetrieval(self.performance_monitor)
+        self.mysql_retrieval = None
+        self.neo4j_retrieval = None
+        self.initialize_connections()
+    
+    def initialize_connections(self):
+        """Initialize database connections"""
+        try:
+            self.mysql_retrieval = MySQLRetrieval(self.performance_monitor)
+            self.neo4j_retrieval = Neo4jRetrieval(self.performance_monitor)
+        except Exception as e:
+            logger.error(f"Error initializing database connections: {e}")
+            self.close()
+            raise
+    
+    def __enter__(self):
+        """Context manager entry"""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit"""
+        self.close()
     
     def build_analysis_context(self, file_name: str, 
                              save_bundle: bool = False,
@@ -1474,8 +1528,15 @@ class RetrievalFramework:
     
     def close(self):
         """Close all database connections"""
-        self.mysql_retrieval.close()
-        self.neo4j_retrieval.close()
+        try:
+            if self.mysql_retrieval:
+                self.mysql_retrieval.close()
+            if self.neo4j_retrieval:
+                self.neo4j_retrieval.close()
+            logger.info("✅ All database connections closed")
+        except Exception as e:
+            logger.error(f"Error closing database connections: {e}")
+            raise
 
 
 # CLI interface for testing
@@ -1491,40 +1552,42 @@ def main():
     
     args = parser.parse_args()
     
-    # Initialize framework
-    framework = RetrievalFramework()
-    
     try:
-        # Build context
-        bundle = framework.build_analysis_context(
-            args.file_name, 
-            save_bundle=args.save,
-            output_dir=args.output_dir
-        )
-        
-        if args.summary_only:
-            # Print summary
-            summary = framework.get_bundle_summary(bundle)
-            print("\n" + "="*60)
-            print("SUMTOTAL ANALYSIS CONTEXT SUMMARY")
-            print("="*60)
-            print(json.dumps(summary, indent=2))
-        else:
-            # Print detailed field profiles
-            print(f"\n📊 FIELD PROFILES ({len(bundle.field_profiles)} total)")
-            print("-" * 60)
+        # Use framework as a context manager for proper cleanup
+        with RetrievalFramework() as framework:
+            # Build context
+            bundle = framework.build_analysis_context(
+                args.file_name, 
+                save_bundle=args.save,
+                output_dir=args.output_dir
+            )
             
-            for i, profile in enumerate(bundle.field_profiles[:10], 1):  # Top 10
-                print(f"\n{i}. {profile.sumtotal_field_name} ({profile.severity})")
-                if profile.violations:
-                    for violation in profile.violations:
-                        print(f"   ⚠️  {violation}")
-                if profile.metrics:
-                    print(f"   📈 Rows: {profile.metrics.total_rows:,}, Nulls: {profile.metrics.null_count}, Max Length: {profile.metrics.max_length}")
-                print(f"   🎯 Maps to {len(profile.csod_constraints)} CSOD field(s)")
-    
-    finally:
-        framework.close()
+            if args.summary_only:
+                # Print summary
+                summary = framework.get_bundle_summary(bundle)
+                print("\n" + "="*60)
+                print("SUMTOTAL ANALYSIS CONTEXT SUMMARY")
+                print("="*60)
+                print(json.dumps(summary, indent=2))
+            else:
+                # Print detailed field profiles
+                print(f"\n📊 FIELD PROFILES ({len(bundle.field_profiles)} total)")
+                print("-" * 60)
+                
+                for i, profile in enumerate(bundle.field_profiles[:10], 1):  # Top 10
+                    print(f"\n{i}. {profile.sumtotal_field_name} ({profile.severity})")
+                    if profile.violations:
+                        for violation in profile.violations:
+                            print(f"   ⚠️  {violation}")
+                    if profile.metrics:
+                        print(f"   📈 Rows: {profile.metrics.total_rows:,}, Nulls: {profile.metrics.null_count}, Max Length: {profile.metrics.max_length}")
+                    print(f"   🎯 Maps to {len(profile.csod_constraints)} CSOD field(s)")
+                    
+    except Exception as e:
+        logger.error(f"❌ Error during analysis: {e}")
+        import traceback
+        logger.error(f"Stack trace: {traceback.format_exc()}")
+        sys.exit(1)  # Exit with error code
 
 
 if __name__ == "__main__":

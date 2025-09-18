@@ -51,7 +51,7 @@ DB_CONFIG = {
     'port': 3306,
     'database': 'error_logging',
     'user': 'error_logger',
-    'password': 'IerpAgents.com1%'
+    'password': 'MySQLserver123'
 }
 
 

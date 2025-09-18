@@ -542,3 +542,44 @@ def reset_all_data(processed_folder: str) -> Dict[str, Any]:
         results['errors'].append(f"File deletion error: {e}")
     
     return results
+
+# New function to get total anomalies in the frontend
+def get_total_anomalies():
+    # Adjust output_dir and file_names as needed for your setup
+    generator = PDFQualityReportGenerator(output_dir="your_output_dir")
+    file_names = [...]  # List of files to check, or logic to get them
+    error_data = generator.get_error_data(file_names)
+    total = sum(file_info['total_errors'] for file_info in error_data.values())
+    return total
+'''
+# New function to get total records processed in the frontend
+def get_total_records_processed():
+    connection = mysql.connector.connect(
+        host=os.getenv('MYSQL_HOST', 'localhost'),
+        user=os.getenv('MYSQL_USER'),
+        password=os.getenv('MYSQL_PASSWORD'),
+        database=os.getenv('MYSQL_NAME'),
+        port=int(os.getenv('MYSQL_PORT', 3306)),
+        ssl_disabled=True,
+        connect_timeout=30,
+        use_unicode=True
+    )
+    cursor = connection.cursor(dictionary=True)
+    # Find the latest last_processed timestamp
+    cursor.execute("SELECT MAX(last_processed) as latest FROM file_completeness_summary")
+    result = cursor.fetchone()
+    latest = result['latest']
+    if not latest:
+        cursor.close()
+        connection.close()
+        return 0
+    # Get total_records for files in the latest session
+    cursor.execute("""
+        SELECT SUM(total_records) as total
+        FROM file_completeness_summary
+        WHERE last_processed = %s
+    """, (latest,))
+    result = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return result['total'] or 0'''

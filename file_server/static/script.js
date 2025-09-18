@@ -241,10 +241,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleFiles(files) {
         const uploadQueue = document.getElementById('upload-queue');
+        
+        // Determine which section we're in
+        const analyserUpload = !document.querySelector('#transformation-dashboard').classList.contains('hidden');
+        const source = analyserUpload ? 'analyser' : 'transformer';
+        
         Array.from(files).forEach(file => {
             const queueItem = createQueueItem(file);
             uploadQueue.appendChild(queueItem);
-            uploadFile(file, queueItem);
+            uploadFile(file, queueItem, source);
         });
     }
 
@@ -276,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function uploadFile(file, queueItem) {
+    function uploadFile(file, queueItem, source) {
         const formData = new FormData();
         formData.append('file', file);
         
@@ -320,8 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateQueueItem(queueItem, 'completed', 'File processed successfully!');
                 }
                 
-                // Refresh the file list to show new processed files
-                setTimeout(() => loadFiles(), 500);
+                // Refresh the file list to show new processed files and update metrics
+                setTimeout(() => {
+                    loadFiles();
+                    updateDashboardMetrics(source);
+                }, 500);
                 
             } else {
                 updateQueueItem(queueItem, 'error', `Error: ${data.error}`, true);
@@ -450,6 +458,30 @@ function resetAllData() {
     });
 }
 
+// [MODIFIED: 2025-09-16] Original section handling was simpler without dashboard integration
+/*
+// Basic section visibility handling
+window.showSection = function(sectionId) {
+    // Simply toggle visibility
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    const section = document.getElementById(sectionId);
+    if (section) section.style.display = 'block';
+};
+*/
+
+// Enhanced section visibility handling with proper class management
+window.showSection = function(sectionId) {
+    // Hide all sections first
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.add('hidden'));
+    
+    // Show the requested section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.remove('hidden');
+    }
+};
+
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function() {
     const generatePDFBtn = document.getElementById('generatePDFBtn');
@@ -460,5 +492,80 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (resetAllBtn) {
         resetAllBtn.addEventListener('click', resetAllData);
+    }
+    
+    // Set up navigation event listeners
+    const navLinks = document.querySelectorAll('[data-section]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            showSection(sectionId);
+        });
+    });
+    
+    // [MODIFIED: 2025-09-16] Original records count update was basic without error handling
+    /*
+    // Basic records count update
+    function updateRecordsProcessed() {
+        fetch('/api/records_processed')
+            .then(response => response.json())
+            .then(data => {
+                const el = document.getElementById('records-processed');
+                if (el) el.textContent = data.total;
+            });
+    }
+    */
+
+    // Enhanced dashboard record count with error handling and auto-refresh
+    let recordsUpdateInterval;
+    
+    function updateRecordsProcessed() {
+        fetch('/api/records_processed')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch records count');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const el = document.getElementById('records-processed');
+                if (el) {
+                    el.textContent = data.total.toLocaleString(); // Format number with commas
+                    el.title = `Last updated: ${new Date().toLocaleTimeString()}`; // Show last update time on hover
+                }
+            })
+            .catch(error => {
+                console.error('Error updating records count:', error);
+                const el = document.getElementById('records-processed');
+                if (el) {
+                    el.textContent = 'Error';
+                    el.title = error.message;
+                }
+            });
+    }
+
+    // Enhanced section visibility handling with records count update
+    const origShowSection = window.showSection;
+    window.showSection = function(sectionId) {
+        origShowSection(sectionId);
+        
+        // Clear any existing update interval
+        if (recordsUpdateInterval) {
+            clearInterval(recordsUpdateInterval);
+            recordsUpdateInterval = null;
+        }
+        
+        // If showing dashboard, update records and start auto-refresh
+        if (sectionId === 'dashboard') {
+            updateRecordsProcessed();
+            // Update every 30 seconds while dashboard is visible
+            recordsUpdateInterval = setInterval(updateRecordsProcessed, 30000);
+        }
+    };
+
+    // If dashboard is visible on load, update immediately
+    if (document.getElementById('dashboard') && !document.getElementById('dashboard').classList.contains('hidden')) {
+        updateRecordsProcessed();
     }
 });

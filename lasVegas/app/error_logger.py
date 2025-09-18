@@ -16,17 +16,18 @@ class ErrorLogger:
     # Database configuration- this needs to be corrected when pushed to AWS/ production. 
     
     DB_CONFIG = {
-        'host': 'localhost',
-        'user': 'error_logger',
-        'password': 'IerpAgents.com1%',
-        'database': 'error_logging',
-        'port': 3306,
-        'ssl_disabled': True,
-        'autocommit': False,
-        'connect_timeout': 30,
-        'use_unicode': True
-    }
-    
+    'host': 'localhost',
+    'user': 'error_logger',
+    'password': 'MySQLserver123',
+    'database': 'error_logging',
+    'port': 3306,
+    'ssl_disabled': True,
+    'autocommit': True,
+    'connect_timeout': 180,
+    'use_unicode': True,
+    'pool_name': 'error_logger_pool',
+    'pool_size': 5
+    }    
     # Error categories
     ERROR_CATEGORIES = {
         'VALIDATION': 'Data validation errors',
@@ -75,15 +76,46 @@ class ErrorLogger:
     
     @classmethod
     def _get_db_connection(cls):
-        """Get or create database connection"""
-        try:
-            if cls._db_connection is None or not cls._db_connection.is_connected():
-                cls._db_connection = mysql.connector.connect(**cls.DB_CONFIG)
-                # cls._get_logger().info("Successfully connected to MySQL error logging database")  # Reduced logging
-            return cls._db_connection
-        except mysql.connector.Error as e:
-            cls._get_logger().error(f"Failed to connect to MySQL error logging database: {str(e)}")
-            return None
+        """Get or create database connection with retry logic"""
+        max_retries = 3
+        retry_delay = 2  # seconds
+        
+        for attempt in range(max_retries):
+            try:
+                # Check if connection exists and is alive
+                if cls._db_connection and cls._db_connection.is_connected():
+                    try:
+                        # Test connection with a simple query
+                        cursor = cls._db_connection.cursor()
+                        cursor.execute("SELECT 1")
+                        cursor.fetchone()
+                        cursor.close()
+                        return cls._db_connection
+                    except mysql.connector.Error:
+                        # Connection is stale, close it
+                        cls._db_connection.close()
+                        cls._db_connection = None
+                
+                # Create new connection
+                if cls._db_connection is None:
+                    cls._db_connection = mysql.connector.connect(**cls.DB_CONFIG)
+                    return cls._db_connection
+                    
+            except mysql.connector.Error as e:
+                cls._get_logger().warning(f"Database connection attempt {attempt + 1} failed: {str(e)}")
+                if attempt < max_retries - 1:
+                    import time
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    cls._get_logger().error(f"All database connection attempts failed: {str(e)}")
+                    return None
+            
+            except Exception as e:
+                cls._get_logger().error(f"Unexpected error establishing database connection: {str(e)}")
+                return None
+                
+        return None
     
     @classmethod
     def _create_error_table(cls):
