@@ -106,7 +106,10 @@ def process_file(filepath):
         file_key = map_filename_to_database_key(filename)
         
         logger.info(f"Processing file: {filename} -> {file_key}")
+        neo4j_start = time.time()
         mapping_rules = transformer.fetch_mapping_rules_from_neo4j(file_key)
+        neo4j_time = time.time() - neo4j_start
+        logger.info(f"Neo4j mapping rules fetch took {neo4j_time:.2f} seconds")
         
         # If no rules found in database, log error and stop processing
         if not mapping_rules:
@@ -115,6 +118,7 @@ def process_file(filepath):
             raise ValueError(error_msg)
         
         # Read the Excel file with empty strings instead of NaN
+        file_read_start = time.time()
         file_extension = os.path.splitext(filename)[1].lower()
         if file_extension in ['.xlsx', '.xls']:
             input_df = pd.read_excel(filepath, keep_default_na=False, na_values=[''])
@@ -122,6 +126,9 @@ def process_file(filepath):
             input_df = pd.read_csv(filepath, keep_default_na=False, na_values=[''])
         else:
             raise ValueError(f"Unsupported file type: {file_extension}")
+        
+        file_read_time = time.time() - file_read_start
+        logger.info(f"File reading took {file_read_time:.2f} seconds")
         
         # Debug: Check for issues with the DataFrame
         logger.info(f"Loaded DataFrame shape: {input_df.shape}")
@@ -139,23 +146,47 @@ def process_file(filepath):
             raise ValueError("Uploaded file contains duplicate column names")
         
         # Transform the data
+        start_time = time.time()
         transformed_df = transformer.transform_sumtotal_file(input_df, mapping_rules, file_key, filename) #Pass original filename
-        try:
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-            from dashboard import Dashboard
-            from report_generator import generate_anomaly_report_csv
-            dashboard = Dashboard()
-            completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
-            dashboard.store_completeness_metrics(filename, completeness_metrics)
-            dashboard.close_connections()
-            # Generate MVP anomaly CSV report alongside processed files
+        transform_time = time.time() - start_time
+        logger.info(f"Data transformation took {transform_time:.2f} seconds")
+        
+        # Store input row count for metrics
+        input_row_count = len(input_df)
+        logger.info(f"Input file contains {input_row_count} records")
+        
+        # Optional: Calculate file completeness metrics for PDF generation
+        ENABLE_DASHBOARD_METRICS = os.getenv('ENABLE_DASHBOARD_METRICS', 'true').lower() == 'true'
+        if ENABLE_DASHBOARD_METRICS:
             try:
+                dashboard_start = time.time()
+                sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+                from dashboard import Dashboard
+                dashboard = Dashboard()
+                completeness_metrics = dashboard.calculate_file_completeness(filename, input_df)
+                dashboard.store_completeness_metrics(filename, completeness_metrics)
+                dashboard.close_connections()
+                dashboard_time = time.time() - dashboard_start
+                logger.info(f"Dashboard completeness metrics took {dashboard_time:.2f} seconds")
+            except Exception as e:
+                logger.error(f"Error calculating dashboard metrics for {filename}: {e}")
+        else:
+            logger.info("Dashboard metrics calculation disabled for faster processing")
+        
+        # Optional: Anomaly report generation (can be disabled for faster processing)
+        ENABLE_ANOMALY_REPORTS = os.getenv('ENABLE_ANOMALY_REPORTS', 'false').lower() == 'true'
+        if ENABLE_ANOMALY_REPORTS:
+            try:
+                report_start = time.time()
+                from report_generator import generate_anomaly_report_csv
                 report_filename = generate_anomaly_report_csv(filename, app.config['PROCESSED_FOLDER'])
+                report_time = time.time() - report_start
+                logger.info(f"Anomaly report generation took {report_time:.2f} seconds")
                 logger.info(f"Saved anomaly report (not added to processed list): {report_filename}")
             except Exception as re:
                 logger.error(f"Error generating anomaly report for {filename}: {re}")
-        except Exception as e:
-            logger.error(f"Error calculating completeness for {filename}: {e}")
+        else:
+            logger.info("Anomaly report generation disabled for faster processing")
         
         
         
@@ -233,6 +264,7 @@ def upload_file():
             file.save(filepath)
             
             logger.info(f"Processing file: {filename}")
+            upload_start_time = time.time()
             
             # Initialize session if needed - ensure we have active session for file tracking
             if not session_manager.current_session:
@@ -245,6 +277,33 @@ def upload_file():
                     pass
             else:
                 logger.info(f"📋 Using existing session: {session_manager.current_session.session_id}")
+                
+                        
+            # STEP 1: Schema Migration - Ensure DB schema matches uploaded data structure
+            ENABLE_SCHEMA_MIGRATION = os.getenv('ENABLE_SCHEMA_MIGRATION', 'true').lower() == 'true'
+            if ENABLE_SCHEMA_MIGRATION:
+                try:
+                    migration_start = time.time()
+                    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+                    from migrate_uploaded import GenericTabularMigrator
+                    
+                    logger.info(f"🔄 Running schema migration for: {filename}")
+                    migrator = GenericTabularMigrator(filepath)
+                    migration_success = migrator.run()
+                    migration_time = time.time() - migration_start
+                    
+                    if migration_success:
+                        logger.info(f"✅ Schema migration completed in {migration_time:.2f} seconds")
+                    else:
+                        logger.warning(f"⚠️ Schema migration had issues but continuing ({migration_time:.2f}s)")
+                        
+                except Exception as migration_error:
+                    logger.error(f"❌ Schema migration error: {migration_error}")
+                    # Continue with transformation - don't fail upload due to migration issues
+            else:
+                logger.info("📋 Schema migration disabled - using existing schema")
+            
+            # STEP 2: Process the file using the transformer
             
             # Process the file using the transformer
             try:
@@ -306,6 +365,23 @@ def upload_file():
             except Exception as cleanup_error:
                 logger.warning(f"Could not clean up original file: {cleanup_error}")
             
+            # Optional: Run orphan detection analysis for uploaded file
+            ENABLE_ORPHAN_DETECTION = os.getenv('ENABLE_ORPHAN_DETECTION', 'true').lower() == 'true'
+            if ENABLE_ORPHAN_DETECTION:
+                try:
+                    orphan_start = time.time()
+                    sys.path.append(LMS_DATABASE_DIR)
+                    from pdf_quality_report import _run_orphan_detection_for_uploaded_files
+                    logger.info(f"Running orphan detection analysis for: {filename}")
+                    _run_orphan_detection_for_uploaded_files([filename])
+                    orphan_time = time.time() - orphan_start
+                    logger.info(f"Orphan detection analysis took {orphan_time:.2f} seconds")
+                except Exception as orphan_error:
+                    logger.error(f"Error running orphan detection for {filename}: {orphan_error}")
+                    # Don't fail the upload if orphan detection fails
+            else:
+                logger.info("Orphan detection analysis disabled for faster processing")
+
             # Auto-generate PDF report after successful processing using original filenames
             try:
                 # Ensure proper import path for PDF generation
@@ -320,6 +396,9 @@ def upload_file():
                 logger.error(f"Error auto-generating PDF report: {pdf_error}")
                 # Don't fail the upload if PDF generation fails
             
+            total_processing_time = time.time() - upload_start_time
+            logger.info(f"🏁 TOTAL processing time: {total_processing_time:.2f} seconds")
+            processed_results['processing_time'] = round(total_processing_time, 2)
             return jsonify(processed_results)
             
         except Exception as e:
@@ -380,6 +459,62 @@ def delete_file(filename):
     except Exception as e:
         logger.error(f"Error deleting file {filename}: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/delete-all', methods=['DELETE'])
+def delete_all_files():
+    """Delete all processed files (simple file deletion without database cleanup)"""
+    try:
+        deleted_files = []
+        errors = []
+        
+        # Get list of files to delete
+        if os.path.exists(app.config['PROCESSED_FOLDER']):
+            files = os.listdir(app.config['PROCESSED_FOLDER'])
+            
+            for filename in files:
+                try:
+                    file_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                        deleted_files.append(filename)
+                        logger.info(f"Deleted file: {filename}")
+                except Exception as e:
+                    error_msg = f"Error deleting {filename}: {str(e)}"
+                    errors.append(error_msg)
+                    logger.error(error_msg)
+        
+        # Also clean upload folder if it exists
+        if os.path.exists(app.config['UPLOAD_FOLDER']):
+            upload_files = os.listdir(app.config['UPLOAD_FOLDER'])
+            for filename in upload_files:
+                try:
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                        deleted_files.append(f"upload/{filename}")
+                        logger.info(f"Deleted upload file: {filename}")
+                except Exception as e:
+                    error_msg = f"Error deleting upload/{filename}: {str(e)}"
+                    errors.append(error_msg)
+                    logger.error(error_msg)
+        
+        if errors:
+            return jsonify({
+                'success': False, 
+                'message': f'Deleted {len(deleted_files)} files with {len(errors)} errors',
+                'deleted_files': deleted_files,
+                'errors': errors
+            }), 207  # Multi-status
+        else:
+            return jsonify({
+                'success': True, 
+                'message': f'Successfully deleted {len(deleted_files)} files',
+                'deleted_files': deleted_files
+            })
+            
+    except Exception as e:
+        logger.error(f"Error in delete_all_files: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/reset-all-data', methods=['POST'])
 def reset_all_data_endpoint():
@@ -479,30 +614,6 @@ def generate_pdf_report():
         logger.error(f"Error generating manual PDF report: {e}")
         return jsonify({'error': f'Failed to generate PDF report: {str(e)}'}), 500
 
-@app.route('/quality-dashboard')
-def quality_dashboard():
-    """Get quality dashboard data for all processed files"""
-    try:
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
-        from dashboard import Dashboard
-        
-        dashboard = Dashboard()
-        try:
-            quality_data = dashboard.generate_quality_dashboard()
-            dashboard.close_connections()
-            
-            return jsonify({
-                'success': True,
-                'quality_data': quality_data,
-                'total_files': len(quality_data)
-            })
-        except Exception as dashboard_error:
-            dashboard.close_connections()
-            raise dashboard_error
-            
-    except Exception as e:
-        logger.error(f"Error getting quality dashboard: {e}")
-        return jsonify({'error': f'Failed to get quality dashboard: {str(e)}'}), 500
 
 """
 debugpy.listen(("localhost", 5679))  # Listen on all interfaces

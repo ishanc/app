@@ -60,23 +60,62 @@ class SessionConfig:
             }
         if self.front_end_name_to_table is None:
             self.front_end_name_to_table = {
+                # Activity mappings
                 "Activities - Curriculum": "activity_curriculum",
-                "Activities - ILT Class": "activity_ilt_class", 
-                 "Activities - ILT Sessions": "activity_ilt_sessions",
-                 "Activities - ILT Course": "activity_ilt_course",
+                "Activities - Quick Assessment": "activity_test",
+                "Activities - ILT Sessions": "activity_sessionparts",
+                "Activities - ILT Class": "activity_sessions", 
+                "Activities - ILT Course": "activity_events",
+                "Activities - Online Course": "activity_onlinecourse",
+                "Activities - Document": "activity_material",
+                
+                # Transcript mappings
+                "Employees - Transcript Curriculum": "transcript_curriculumtranscript",
+                "Employees - Transcript Document": "transcript_materialtranscript",
+                "Employees - Transcript ILT Class": "transcript_sessiontranscript",
+                "Employees - Transcript Online Course": "transcript_onlinecourse",
+                "Employees - Transcript Quick Assessment": "transcript_testtranscript",
+                
+                # Core employee mappings
                 "Employees - Core": "core_employee",
-                "Employees - Transcript Curriculum": "transcript_curriculum",
                 "Employees - Prerequisites Instructor": "prerequisites_instructor",
-                "Organizations - Orgs": "core_organization",
-                "Organizations - Domains": "core_domain"
+                
+                # Core mappings
+                "Core - Audience": "core_groupsou",
+                "Core - Jobs": "core_positionou",
+                
+                # Organization mappings
+                "Organizations - Orgs": "core_costcenterou",
+                "Organizations - Domains": "core_divisionou",
+                
+                # Prerequisites mappings
+                "Prerequisites - Facility": "prerequisites_facility",
+                "Prerequisites - Provider": "prerequisites_provider",
+                "Prerequisites - Question": "prerequisites_questions",
+                "Prerequisites - Question Banks": "prerequisites_questionscategories",
+                "Prerequisites - Subject": "prerequisites_subject"
             }
         if self.uploaded_files is None:
             self.uploaded_files = []
         if self.active_tables is None:
             self.active_tables = {
-                "activities": ["activity_curriculum", "activity_ilt_class", "activity_ilt_sessions", "activity_ilt_course"],
-                "employees": ["core_employee", "transcript_curriculum", "prerequisites_instructor"],
-                "orgs": ["core_organization", "core_domain"]
+                "activities": [
+                    "activity_curriculum", "activity_test", "activity_sessionparts", 
+                    "activity_sessions", "activity_events", "activity_onlinecourse", 
+                    "activity_material"
+                ],
+                "employees": [
+                    "core_employee", "prerequisites_instructor", 
+                    "transcript_curriculumtranscript", "transcript_materialtranscript",
+                    "transcript_sessiontranscript", "transcript_onlinecourse", 
+                    "transcript_testtranscript"
+                ],
+                "orgs": [
+                    "core_costcenterou", "core_divisionou", "core_groupsou", 
+                    "core_positionou", "prerequisites_facility", "prerequisites_provider",
+                    "prerequisites_questions", "prerequisites_questionscategories", 
+                    "prerequisites_subject"
+                ]
             }
 
 class SessionManager:

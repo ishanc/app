@@ -1,3 +1,4 @@
+import os
 import mysql.connector
 import logging
 import traceback
@@ -5,7 +6,11 @@ from datetime import datetime
 from typing import Optional
 import sys
 import pandas as pd
+from dotenv import load_dotenv
 from column_meta_data import ColumnMetaData
+
+# Load environment variables
+load_dotenv()
 
 class ErrorLogger:
     """
@@ -13,14 +18,14 @@ class ErrorLogger:
     Follows industry best practices for error logging and categorization.
     """
     
-    # Database configuration- this needs to be corrected when pushed to AWS/ production. 
+    # Database configuration using environment variables for production compatibility
     
     DB_CONFIG = {
-        'host': 'localhost',
-        'user': 'error_logger',
-        'password': 'IerpAgents.com1%',
-        'database': 'error_logging',
-        'port': 3306,
+        'host': os.getenv('MYSQL_HOST', 'localhost'),
+        'user': os.getenv('MYSQL_USER', 'error_logger'),
+        'password': os.getenv('MYSQL_PASSWORD', 'IerpAgents.com1%'),
+        'database': os.getenv('MYSQL_NAME', 'error_logging'),
+        'port': int(os.getenv('MYSQL_PORT', 3306)),
         'ssl_disabled': True,
         'autocommit': False,
         'connect_timeout': 30,

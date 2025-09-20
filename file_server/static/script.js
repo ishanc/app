@@ -50,8 +50,20 @@ function downloadAllFiles() {
         .then(response => response.json())
         .then(data => {
             if (data.files && data.files.length > 0) {
-                // Trigger the download
-                window.location.href = '/download-all';
+                // Download each file individually since /download-all endpoint doesn't exist
+                data.files.forEach((filename, index) => {
+                    setTimeout(() => {
+                        window.location.href = `/download/${encodeURIComponent(filename)}`;
+                    }, index * 500); // Stagger downloads to avoid browser blocking
+                });
+                
+                const messageEl = document.getElementById('delete-message');
+                messageEl.textContent = `Downloading ${data.files.length} files...`;
+                messageEl.classList.add('success');
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('success');
+                }, 3000);
             } else {
                 const messageEl = document.getElementById('delete-message');
                 messageEl.textContent = 'No files available to download';
@@ -73,7 +85,51 @@ function downloadAllFiles() {
         });
 }
 
-// Make loadFiles function globally accessible
+// Handle Download Anomaly Reports functionality
+function downloadAnomalyReports() {
+    fetch('/files')
+        .then(response => response.json())
+        .then(data => {
+            // Filter for anomaly reports only
+            const anomalyFiles = data.files.filter(f => f.startsWith('anomaly_report_') && f.endsWith('.csv'));
+            
+            if (anomalyFiles.length > 0) {
+                // Download each anomaly file individually
+                anomalyFiles.forEach((filename, index) => {
+                    setTimeout(() => {
+                        window.location.href = `/download/${encodeURIComponent(filename)}`;
+                    }, index * 500); // Stagger downloads to avoid browser blocking
+                });
+                
+                const messageEl = document.getElementById('delete-message');
+                messageEl.textContent = `Downloading ${anomalyFiles.length} anomaly reports...`;
+                messageEl.classList.add('success');
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('success');
+                }, 3000);
+            } else {
+                const messageEl = document.getElementById('delete-message');
+                messageEl.textContent = 'No anomaly reports available to download';
+                messageEl.classList.add('error');
+                setTimeout(() => {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('error');
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            const messageEl = document.getElementById('delete-message');
+            messageEl.textContent = `Error: ${error.message || 'Failed to check anomaly files'}`;
+            messageEl.classList.add('error');
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.classList.remove('error');
+            }, 3000);
+        });
+}
+
+// Make functions globally accessible
 window.loadFiles = function() {
     fetch('/files')
         .then(response => {
@@ -127,7 +183,7 @@ window.loadFiles = function() {
         });
 };
 
-// Make deleteFile function globally accessible
+// Make deleteFile and downloadAnomalyReports functions globally accessible
 window.deleteFile = function(filename) {
     if (!confirm(`Are you sure you want to delete ${filename}?`)) {
         return;
@@ -177,6 +233,9 @@ window.deleteFile = function(filename) {
     });
 };
 
+// Make downloadAnomalyReports function globally accessible
+window.downloadAnomalyReports = downloadAnomalyReports;
+
 document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
@@ -218,12 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle dropped files
-    dropZone.addEventListener('drop', handleDrop, false);
+    //dropZone.addEventListener('drop', handleDrop, false);
     
     // Handle selected files
-    fileInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
-    });
+    //fileInput.addEventListener('change', (e) => {
+       // handleFiles(e.target.files);
+    //});
 
     // Initialize files list
     loadFiles();

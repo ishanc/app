@@ -1400,7 +1400,7 @@ class PDFQualityReportGenerator:
 
 # Utility functions
 def get_original_file_list_from_db() -> List[str]:
-    """Get original uploaded filenames from database"""
+    """Get original uploaded filenames from database - fallback to session data if completeness table is empty"""
     try:
         connection = mysql.connector.connect(
             host=os.getenv('MYSQL_HOST', 'localhost'),
@@ -1414,6 +1414,8 @@ def get_original_file_list_from_db() -> List[str]:
         )
         
         cursor = connection.cursor()
+        
+        # Primary: Try file_completeness_summary table
         cursor.execute("""
             SELECT file_name 
             FROM file_completeness_summary 
@@ -1421,6 +1423,22 @@ def get_original_file_list_from_db() -> List[str]:
             ORDER BY MAX(last_processed) DESC
         """)
         results = cursor.fetchall()
+        
+        if results:
+            filenames = [row[0] for row in results if row[0]]
+            logger.info(f"Found {len(filenames)} files from completeness table: {filenames}")
+        else:
+            # Fallback: Use session tracking data when completeness table is empty (metrics disabled)
+            logger.info("Completeness table empty, falling back to session data...")
+            cursor.execute("""
+                SELECT DISTINCT original_file_name 
+                FROM file_ingest_log_session 
+                ORDER BY uploaded_at DESC
+            """)
+            results = cursor.fetchall()
+            filenames = [row[0] for row in results if row[0]]
+            logger.info(f"Found {len(filenames)} files from session data: {filenames}")
+        
         cursor.close()
         connection.close()
         

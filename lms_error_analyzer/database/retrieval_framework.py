@@ -28,7 +28,7 @@ from neo4j import GraphDatabase
 from dotenv import load_dotenv
 
 # Import utilities from existing modules
-from utils.filename_mapper import FilenameMapper
+from .utils.filename_mapper import FilenameMapper
 
 # Configure logging
 logging.basicConfig(
@@ -101,6 +101,9 @@ class QualitySignals:
     error_logs: List[Dict[str, Any]]
     completeness_summary: Dict[str, Any]
     error_summary: Dict[str, int]
+    error_prone_records: int = 0
+    clean_records: int = 0  
+    quality_percentage: float = 0.0
 
 
 @dataclass
@@ -332,6 +335,58 @@ class MySQLRetrieval:
                 type_violations=0
             )
     
+    def _extract_field_name_from_message(self, message: str) -> Optional[str]:
+        """Extract field name from error message"""
+        import re
+        patterns = [
+            r"Field '([^']+)'", r"field '([^']+)'",  
+            r"Field \"([^\"]+)\"", r"field \"([^\"]+)\""
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, message)
+            if match:
+                return match.group(1).strip()
+        return None
+    
+    def _get_mandatory_fields_from_errors(self, file_name: str) -> List[str]:
+        """Get mandatory fields from error_logs - much simpler than Neo4j"""
+        cursor = self.connection.cursor()
+        cursor.execute("""
+            SELECT DISTINCT message FROM error_logs 
+            WHERE file_name = %s AND validation_type = 'MANDATORY_EMPTY'
+            LIMIT 50
+        """, (file_name,))
+        
+        mandatory_fields = set()
+        for (message,) in cursor.fetchall():
+            field_name = self._extract_field_name_from_message(message)
+            if field_name:
+                mandatory_fields.add(field_name)
+        cursor.close()
+        return list(mandatory_fields)
+    
+    def _calculate_quality_metrics(self, file_name: str, error_logs: List[Dict], total_records: int) -> tuple[int, int, float]:
+        """Calculate error_prone_records, clean_records, quality_percentage - MySQL only"""
+        if total_records == 0:
+            return 0, 0, 0.0
+            
+        # Get mandatory fields from error logs (MySQL only)
+        mandatory_fields = self._get_mandatory_fields_from_errors(file_name)
+        if not mandatory_fields:
+            return 0, total_records, 100.0
+            
+        # Count unique line numbers with mandatory field errors
+        error_prone_lines = set()
+        for error in error_logs:
+            if error.get('validation_type') == 'MANDATORY_EMPTY' and error.get('line_number'):
+                error_prone_lines.add(error['line_number'])
+        
+        error_prone_records = len(error_prone_lines)
+        clean_records = total_records - error_prone_records
+        quality_percentage = (clean_records / total_records) * 100 if total_records > 0 else 0.0
+        
+        return error_prone_records, clean_records, round(quality_percentage, 1)
+
     def get_quality_signals(self, file_name: str) -> QualitySignals:
         """Retrieve error logs and completeness data for a file"""
         try:
@@ -375,12 +430,20 @@ class MySQLRetrieval:
             """, (file_name,))
             error_summary = {row['validation_type']: row['count'] for row in cursor.fetchall()}
             
+            # Calculate error_prone_records, clean_records, and quality_percentage
+            total_records = completeness.get('total_records', 0)
+            error_prone_records, clean_records, quality_percentage = self._calculate_quality_metrics(
+                file_name, error_logs, total_records)
+            
             cursor.close()
             
             return QualitySignals(
                 error_logs=error_logs,
                 completeness_summary=completeness,
-                error_summary=error_summary
+                error_summary=error_summary,
+                error_prone_records=error_prone_records,
+                clean_records=clean_records,
+                quality_percentage=quality_percentage
             )
             
         except Exception as e:
@@ -388,7 +451,10 @@ class MySQLRetrieval:
             return QualitySignals(
                 error_logs=[],
                 completeness_summary={},
-                error_summary={}
+                error_summary={},
+                error_prone_records=0,
+                clean_records=0,
+                quality_percentage=0.0
             )
     
     def get_orphaned_records_analysis(self, primary_table: str, dependent_table: str, key_field: str, 
