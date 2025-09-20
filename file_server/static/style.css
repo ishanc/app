@@ -331,6 +331,47 @@ h1 {
     margin-bottom: 2rem;
 }
 
+/* AI Analysis Panel Styles */
+.ai-analysis-panel {
+    margin-top: 1.5rem;
+    background: linear-gradient(to right, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+}
+
+.panel-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.panel-content {
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+}
+
+.analysis-text {
+    color: #334155;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    padding: 1rem;
+    min-height: 100px;
+    white-space: pre-line;
+}
+
 /* Section header with buttons */
 .section-header {
     display: flex;

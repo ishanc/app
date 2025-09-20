@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# [MODIFIED: 2025-09-19] Reorganized file structure and cleaned up documentation
 """
 Database Utilities Module
 
@@ -6,7 +7,7 @@ This module provides centralized database connection management and utility func
 for database operations used by both frontend and backend components.
 
 Key Features:
-- Database connection management
+- Database connection management 
 - Frontend statistics retrieval
 - Common database queries
 - Connection pooling (future enhancement)
@@ -24,22 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-# [MODIFIED: 2025-09-16] Added context manager support to DatabaseConnectionManager
-"""
-Original implementation:
-
-class DatabaseConnectionManager:
-    # Basic database connection manager without context manager support
-    def __init__(self):
-        self.db_config = {
-            'host': os.getenv('MYSQL_HOST', 'localhost'),
-            'user': os.getenv('MYSQL_USER'),
-            'password': os.getenv('MYSQL_PASSWORD'),
-            'database': os.getenv('MYSQL_NAME'),
-            'port': int(os.getenv('MYSQL_PORT', 3306))
-        }
-"""
-
+# [MODIFIED: 2025-09-19] Enhanced class documentation and cleaned up structure
 class DatabaseConnectionManager:
     """
     Manages database connections and provides common database operations.
@@ -170,28 +156,82 @@ class DatabaseConnectionManager:
             finally:
                 cursor.close()
 
-# [MODIFIED: 2025-09-17] Updated to sum records from all files in recent batch
-"""
-Original implementation:
-def get_total_records_processed() -> int:
+def get_total_clean_records() -> int:
+    """
+    Get total number of clean records (records with no errors) across all files.
+    These are records that are ready for transformation after data analysis.
+    
+    Returns:
+        int: Total number of clean records across all files
+    """
     db = DatabaseConnectionManager()
     try:
+        # Get latest processing timestamp
         latest_result = db.execute_query(
-            "SELECT MAX(last_processed) as latest FROM file_completeness_summary",
+            """
+            SELECT MAX(last_processed) as latest_batch
+            FROM file_completeness_summary
+            """,
             dictionary=True
         )
-        if not latest_result or not latest_result[0]['latest']:
+        
+        if not latest_result or not latest_result[0]['latest_batch']:
             return 0
-        latest = latest_result[0]['latest']
-        total_result = db.execute_query(
-            "SELECT SUM(total_records) as total FROM file_completeness_summary WHERE last_processed = %s",
-            (latest,),
+            
+        latest_batch = latest_result[0]['latest_batch']
+        
+        # Get the batch start time (truncate to minute to group related files)
+        batch_result = db.execute_query(
+            """
+            SELECT DATE_FORMAT(MIN(last_processed), '%Y-%m-%d %H:%i:00') as batch_start
+            FROM file_completeness_summary
+            WHERE last_processed >= DATE_SUB(%s, INTERVAL 5 MINUTE)
+            """,
+            (latest_batch,),
             dictionary=True
         )
-        return total_result[0]['total'] or 0
-
-Reason for change: Now includes records from all files in the recent batch
-"""
+        
+        if not batch_result or not batch_result[0]['batch_start']:
+            return 0
+            
+        batch_start = batch_result[0]['batch_start']
+        
+        # Calculate clean records (total records minus records with any type of error)
+        clean_result = db.execute_query(
+            """
+            WITH FileErrorCounts AS (
+                -- Get count of distinct records with errors for each file
+                SELECT 
+                    fcs.file_name,
+                    fcs.total_records,
+                    fcs.incomplete_records,
+                    COUNT(DISTINCT el.line_number) as validation_error_records
+                FROM file_completeness_summary fcs
+                LEFT JOIN error_logs el ON fcs.file_name = el.file_name
+                WHERE fcs.last_processed >= %s
+                GROUP BY fcs.file_name, fcs.total_records, fcs.incomplete_records
+            )
+            SELECT 
+                SUM(
+                    total_records - GREATEST(
+                        incomplete_records,
+                        validation_error_records,
+                        LEAST(incomplete_records + validation_error_records, total_records)
+                    )
+                ) as total_clean_records
+            FROM FileErrorCounts
+            """,
+            (batch_start,),
+            dictionary=True
+        )
+        
+        total_clean = clean_result[0]['total_clean_records'] or 0
+        logger.info(f"Total clean records in batch since {batch_start}: {total_clean}")
+        return total_clean
+        
+    except Exception as e:
+        logger.error(f"Error getting total clean records: {e}")
+        return 0
 
 def get_total_records_processed() -> int:
     """
@@ -249,6 +289,158 @@ def get_total_records_processed() -> int:
         
     except Exception as e:
         logger.error(f"Error getting total records processed: {e}")
+        return 0
+
+# [MODIFIED: 2025-09-19] Fixed duplicate implementation and proper function placement
+# [MODIFIED: 2025-09-19] Enhanced error handling for connection issues
+def get_total_error_prone_records() -> int:
+    """
+    Get total number of error-prone records across all files.
+    An error-prone record is one that has one or more errors or is incomplete.
+    
+    Returns:
+        int: Total number of error-prone records
+    """
+    db_manager = DatabaseConnectionManager()
+    
+    try:
+        with db_manager.get_connection(autocommit=True) as connection:
+            cursor = connection.cursor(dictionary=True)
+            
+            # Get latest processing timestamp
+            latest_result = db_manager.execute_query(
+                """
+                SELECT MAX(last_processed) as latest_batch
+                FROM file_completeness_summary
+                """,
+                dictionary=True
+            )
+            
+            if not latest_result or not latest_result[0]['latest_batch']:
+                logger.warning("No processed files found")
+                return 0
+                
+            latest_batch = latest_result[0]['latest_batch']
+            
+            # Get the batch start time (truncate to minute to group related files)
+            batch_result = db_manager.execute_query(
+                """
+                SELECT DATE_FORMAT(MIN(last_processed), '%Y-%m-%d %H:%i:00') as batch_start
+                FROM file_completeness_summary
+                WHERE last_processed >= DATE_SUB(%s, INTERVAL 5 MINUTE)
+                """,
+                (latest_batch,),
+                dictionary=True
+            )
+            
+            if not batch_result or not batch_result[0]['batch_start']:
+                logger.warning("Could not determine batch start time")
+                return 0
+                
+            batch_start = batch_result[0]['batch_start']
+            
+            # Get incomplete records count first
+            incomplete_result = db_manager.execute_query(
+                """
+                SELECT file_name, incomplete_records
+                FROM file_completeness_summary
+                WHERE last_processed >= %s
+                """,
+                (batch_start,),
+                dictionary=True
+            )
+            
+            # Strategy for counting records with anomalies:
+            # 1. For each file, we need to:
+            #    - Count incomplete records (missing mandatory fields)
+            #    - Count validation errors (invalid data)
+            #    - Ensure rows with both types of errors are counted only once
+            # 2. We use a single query to:
+            #    - Get incomplete records count from file_completeness_summary
+            #    - Get validation errors from error_logs
+            #    - Join them to see overlap
+            # 3. For each file we'll identify:
+            #    - Rows that are just incomplete
+            #    - Rows that just have validation errors
+            #    - Rows that have both issues (to avoid double-counting)
+            
+            # Get both incomplete records and validation errors in a single query
+            anomaly_result = db_manager.execute_query(
+                """
+                WITH ValidationErrors AS (
+                    -- Get rows with validation errors
+                    SELECT DISTINCT 
+                        file_name,
+                        line_number
+                    FROM error_logs
+                    WHERE file_name IN (
+                        SELECT file_name 
+                        FROM file_completeness_summary 
+                        WHERE last_processed >= %s
+                    )
+                    AND line_number IS NOT NULL
+                )
+                SELECT 
+                    fcs.file_name,
+                    fcs.incomplete_records,
+                    COUNT(DISTINCT ve.line_number) as validation_error_count,
+                    -- Count rows in error_logs to get validation errors
+                    -- These might overlap with incomplete records, so we track separately
+                    COUNT(DISTINCT CASE 
+                        WHEN ve.line_number IS NOT NULL THEN ve.line_number 
+                        END) as pure_validation_errors,
+                    -- Total problematic rows is the higher of:
+                    -- 1. Number of incomplete records (they might include validation errors)
+                    -- 2. Number of distinct rows with validation errors
+                    CASE 
+                        WHEN COUNT(DISTINCT ve.line_number) > fcs.incomplete_records 
+                        THEN COUNT(DISTINCT ve.line_number)
+                        ELSE fcs.incomplete_records
+                    END as total_problematic_rows
+                FROM file_completeness_summary fcs
+                LEFT JOIN ValidationErrors ve ON fcs.file_name = ve.file_name
+                WHERE fcs.last_processed >= %s
+                GROUP BY fcs.file_name, fcs.incomplete_records
+                """,
+                (batch_start, batch_start),
+                dictionary=True
+            )
+            
+            total_anomalies = 0
+            
+            # Process each file's results
+            for file in anomaly_result:
+                file_name = file['file_name']
+                incomplete_count = file['incomplete_records']
+                validation_count = file['validation_error_count']
+                pure_validation_errors = file['pure_validation_errors']
+                problematic_rows = file['total_problematic_rows']
+                
+                # Detailed logging for this file's anomalies
+                if incomplete_count > 0 or validation_count > 0:
+                    logger.info(f"\nAnalysis for {file_name}:")
+                    
+                    if incomplete_count > 0:
+                        logger.info(f"  ├── {incomplete_count} records with incomplete/missing mandatory fields")
+                    
+                    if validation_count > 0:
+                        logger.info(f"  ├── {validation_count} records with validation errors")
+                        
+                    if incomplete_count > 0 and validation_count > 0:
+                        overlap = max(0, incomplete_count + validation_count - problematic_rows)
+                        logger.info(f"  ├── {overlap} records have both incomplete fields AND validation errors")
+                        logger.info(f"  └── {problematic_rows} unique problematic records (after removing double-counting)")
+                    else:
+                        logger.info(f"  └── {problematic_rows} total problematic records")
+                
+                # Add the problematic rows count (avoiding double-counting)
+                total_anomalies += problematic_rows
+            
+            logger.info(f"Total anomalies (unique rows with any type of error): {total_anomalies}")
+            return total_anomalies
+            
+    except Exception as e:
+        logger.error(f"Error getting error-prone records: {e}", exc_info=True)
         return 0
 
 def get_original_file_list() -> List[str]:

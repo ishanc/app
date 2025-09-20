@@ -228,6 +228,14 @@ class DataValidator:
         errors = []
         warnings = []
         
+        # Build field mapping dictionary
+        field_mapping = {}
+        for rule in mapping_rules:
+            csod_field = rule.get('CSOD Field Name', '')
+            st_field = rule.get('SumTotal Field Name', '')
+            if st_field and csod_field:
+                field_mapping[st_field] = csod_field
+        
         for rule in mapping_rules:
             csod_field = rule.get('CSOD Field Name', '')
             st_field = rule.get('SumTotal Field Name', '')
@@ -235,8 +243,15 @@ class DataValidator:
             char_length = rule.get('char_length', '')
             accepted_values = rule.get('accepted_values', [])
             
-            # Skip if no SumTotal field mapping
-            if not st_field or st_field not in df.columns:
+            # For each CSOD field, check its mapped SumTotal field
+            if st_field and st_field in df.columns:
+                # Validate using source field values
+                if mandatory:
+                    empty_count = (df[st_field].isna() | (df[st_field].astype(str).str.strip() == '')).sum()
+                    if empty_count > 0:
+                        errors.append(f"Mandatory field '{st_field}' mapped to '{csod_field}' has {empty_count} empty values")
+            else:
+                # Field is missing but required
                 if mandatory:
                     warnings.append(f"Mandatory field '{csod_field}' has no SumTotal mapping")
                 continue

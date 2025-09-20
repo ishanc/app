@@ -664,8 +664,15 @@
             <!-- Dashboard Section -->
             <div id="dashboard" class="section">
                 <div class="header">
-                    <h1>Data Analyser Dashboard</h1>
-                    <p>Overview of your legacy LMS data analysis in preparation for migration</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Data Analyser Dashboard</h1>
+                            <p>Overview of your legacy LMS data analysis in preparation for migration</p>
+                        </div>
+                        <button id="analyzeButton" class="button" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                            🔍 Analyze Data
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="dashboard-cards">
@@ -682,15 +689,15 @@
                             <div class="card-title">Total Records With Anomalies</div>
                             <div class="status-indicator status-warning"></div>
                         </div>
-                        <div class="card-value">1,455</div>
+                        <div class="card-value" id="total-records-with-anomalies">0</div>
                     </div>
                     
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Total Cleaned Records</div>
+                            <div class="card-title">Total Clean Records</div>
                             <div class="status-indicator status-success"></div>
                         </div>
-                        <div class="card-value">25.8M</div>
+                        <div class="card-value" id="total-clean-records">0</div>
                     </div>
                     
                     <div class="card">
@@ -711,6 +718,21 @@
                     <div class="card">
                         <div class="card-title" style="margin-bottom: 1rem;">Daily Processing Progress</div>
                         <div class="chart-placeholder">📈 Line Chart</div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Panel -->
+                <div class="card ai-analysis-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🤖 AI Analysis</span>
+                        <button id="refreshAnalysis" class="button-secondary" style="padding: 0.5rem 1rem;">
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div id="aiAnalysisText" class="analysis-text">
+                            Click the Analyze Data button to begin analysis of your LMS data.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1213,6 +1235,35 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ LMS Migration Agent UI loaded');
             
+            // Wire up Analyze button
+            const analyzeButton = document.getElementById('analyzeButton');
+            if (analyzeButton) {
+                analyzeButton.addEventListener('click', () => {
+                    // Show loading state
+                    analyzeButton.innerHTML = '⏳ Analyzing...';
+                    analyzeButton.disabled = true;
+
+                    // Make API call to trigger analysis
+                    fetch('/api/analyze', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Analysis started:', data);
+                            // Update dashboard metrics after analysis
+                            updateDashboardMetrics();
+                            // Reset button state
+                            analyzeButton.innerHTML = '🔍 Analyze Data';
+                            analyzeButton.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error starting analysis:', error);
+                            // Reset button state
+                            analyzeButton.innerHTML = '🔍 Analyze Data';
+                            analyzeButton.disabled = false;
+                        });
+                });
+                console.log('✅ Analyze button wired up');
+            }
+            
             // Wire up Reset All Data button
             const resetAllBtn = document.getElementById('resetAllBtn');
             if (resetAllBtn) {
@@ -1350,6 +1401,41 @@
                     updateDashboardMetrics();
                 }
             }, 5000);
+
+            // Initialize AI Analysis Panel functionality
+            const aiAnalysisText = document.getElementById('aiAnalysisText');
+            const refreshAnalysis = document.getElementById('refreshAnalysis');
+            const analyzeButton = document.getElementById('analyzeButton');
+
+            // Update analysis when analyze button is clicked
+            if (analyzeButton) {
+                analyzeButton.addEventListener('click', () => {
+                    updateAIAnalysis();
+                });
+            }
+
+            // Refresh analysis
+            if (refreshAnalysis) {
+                refreshAnalysis.addEventListener('click', () => {
+                    updateAIAnalysis();
+                });
+            }
+
+            function updateAIAnalysis() {
+                aiAnalysisText.textContent = 'Analyzing data...';
+                
+                fetch('/api/analyze-data', {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    aiAnalysisText.textContent = data.analysis || 'Analysis complete. Check the metrics above for details.';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    aiAnalysisText.textContent = 'Unable to complete analysis. Please try again.';
+                });
+            }
         });
     </script>
 </body>

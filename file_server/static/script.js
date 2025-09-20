@@ -15,7 +15,7 @@ function deleteAllFiles() {
     })
     .then(data => {
         if (data.success) {
-            // Clear the files list immediately
+        // Clear the files list immediately
             const filesList = document.getElementById('files-list');
             if (filesList) {
                 filesList.innerHTML = '';
@@ -458,18 +458,7 @@ function resetAllData() {
     });
 }
 
-// [MODIFIED: 2025-09-16] Original section handling was simpler without dashboard integration
-/*
-// Basic section visibility handling
-window.showSection = function(sectionId) {
-    // Simply toggle visibility
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    const section = document.getElementById(sectionId);
-    if (section) section.style.display = 'block';
-};
-*/
-
-// Enhanced section visibility handling with proper class management
+// [MODIFIED: 2025-09-16] Enhanced section visibility with dashboard integration
 window.showSection = function(sectionId) {
     // Hide all sections first
     const sections = document.querySelectorAll('.section');
@@ -479,6 +468,11 @@ window.showSection = function(sectionId) {
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.classList.remove('hidden');
+    }
+
+    // Update metrics immediately when showing dashboard
+    if (sectionId === 'dashboard') {
+        updateDashboardMetrics();
     }
 };
 
@@ -503,6 +497,17 @@ document.addEventListener('DOMContentLoaded', function() {
             showSection(sectionId);
         });
     });
+
+    // Reset dashboard metrics function
+    function resetDashboardMetrics() {
+        const elements = ['total-objects-processed', 'total-records-with-anomalies', 'total-clean-records'];
+        elements.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = '0';
+            }
+        });
+    }
     
     // [MODIFIED: 2025-09-16] Original records count update was basic without error handling
     /*
@@ -520,32 +525,57 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced dashboard record count with error handling and auto-refresh
     let recordsUpdateInterval;
     
-    function updateRecordsProcessed() {
-        fetch('/api/records_processed')
+    // [MODIFIED: 2025-09-19] Updated to include total clean records and anomalies
+    function updateDashboardMetrics() {
+        console.log('DEBUG: Fetching metrics from /api/metrics');
+        fetch('/api/metrics')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch records count');
+                    throw new Error('Failed to fetch dashboard metrics');
                 }
                 return response.json();
             })
             .then(data => {
-                const el = document.getElementById('records-processed');
-                if (el) {
-                    el.textContent = data.total.toLocaleString(); // Format number with commas
-                    el.title = `Last updated: ${new Date().toLocaleTimeString()}`; // Show last update time on hover
+                console.log('DEBUG: Metrics response:', data);
+                if (data.success && data.metrics) {
+                    // Update total records processed
+                    const totalEl = document.getElementById('total-objects-processed');
+                    if (totalEl) {
+                        totalEl.textContent = (data.metrics.total_records_processed || 0).toLocaleString();
+                        totalEl.title = `Last updated: ${new Date().toLocaleTimeString()}`;
+                    }
+
+                    // Update records with anomalies
+                    const anomalyEl = document.getElementById('total-records-with-anomalies');
+                    if (anomalyEl) {
+                        const total = data.metrics.total_records_with_anomalies || 0;
+                        anomalyEl.textContent = total.toLocaleString();
+                        anomalyEl.title = `Last updated: ${new Date().toLocaleTimeString()}\nRecords with validation errors: ${total}`;
+                    }
+
+                    // Update clean records count
+                    const cleanRecordsEl = document.getElementById('total-clean-records');
+                    if (cleanRecordsEl) {
+                        const cleanTotal = data.metrics.total_clean_records || 0;
+                        cleanRecordsEl.textContent = cleanTotal.toLocaleString();
+                        cleanRecordsEl.title = `Last updated: ${new Date().toLocaleTimeString()}\nRecords with no errors or anomalies: ${cleanTotal}`;
+                    }
                 }
             })
             .catch(error => {
-                console.error('Error updating records count:', error);
-                const el = document.getElementById('records-processed');
-                if (el) {
-                    el.textContent = 'Error';
-                    el.title = error.message;
-                }
+                console.error('Error updating dashboard metrics:', error);
+                const elements = ['total-objects-processed', 'total-records-with-anomalies', 'total-clean-records'];
+                elements.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.textContent = 'Error';
+                        el.title = error.message;
+                    }
+                });
             });
     }
 
-    // Enhanced section visibility handling with records count update
+    // [MODIFIED: 2025-09-19] Enhanced section visibility with full metrics update
     const origShowSection = window.showSection;
     window.showSection = function(sectionId) {
         origShowSection(sectionId);
@@ -556,16 +586,22 @@ document.addEventListener('DOMContentLoaded', function() {
             recordsUpdateInterval = null;
         }
         
-        // If showing dashboard, update records and start auto-refresh
+        // If showing dashboard, update metrics and start auto-refresh
         if (sectionId === 'dashboard') {
-            updateRecordsProcessed();
+            updateDashboardMetrics();
             // Update every 30 seconds while dashboard is visible
-            recordsUpdateInterval = setInterval(updateRecordsProcessed, 30000);
+            recordsUpdateInterval = setInterval(updateDashboardMetrics, 30000);
         }
     };
 
-    // If dashboard is visible on load, update immediately
-    if (document.getElementById('dashboard') && !document.getElementById('dashboard').classList.contains('hidden')) {
-        updateRecordsProcessed();
-    }
+    // Update metrics on page load and periodically
+    updateDashboardMetrics();
+    
+    // Update every 5 seconds when dashboard is visible
+    setInterval(() => {
+        const dashboardSection = document.getElementById('dashboard');
+        if (dashboardSection && !dashboardSection.classList.contains('hidden')) {
+            updateDashboardMetrics();
+        }
+    }, 5000);
 });

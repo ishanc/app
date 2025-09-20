@@ -70,8 +70,12 @@ def index():
 
 def map_filename_to_database_key(filename):
     """Map filename to the correct database key for mapping rules"""
-    # Import here to avoid circular imports
-   # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))
+    # Implement direct mapping for Core files to maintain consistent keys
+    if filename.startswith('Core_'):
+        base_name = os.path.splitext(filename)[0]
+        return base_name  # Keep the full Core_ prefix for consistency
+        
+    # For other files, use the FilenameMapper
     from lms_error_analyzer.database.utils.filename_mapper import FilenameMapper
     return FilenameMapper.to_db_key(filename)
 
@@ -96,22 +100,33 @@ def validate_transformed_data(df, mapping_rules):
     errors = []
     warnings = []  # Keep for internal logging only
     
+    # Build field mapping dictionary
+    field_mapping = {}
+    reverse_mapping = {}
+    for rule in mapping_rules:
+        csod_field = rule.get('CSOD Field Name', '')
+        st_field = rule.get('SumTotal Field Name', '')
+        if st_field and csod_field:
+            field_mapping[st_field] = csod_field
+            reverse_mapping[csod_field] = st_field
+    
     for rule in mapping_rules:
         csod_field = rule['CSOD Field Name']
+        st_field = reverse_mapping.get(csod_field)
         mandatory = rule.get('mandatory', '') == 'Mandatory'
         
-        if csod_field in df.columns:
-            # Check for mandatory fields that are empty
+        if st_field and st_field in df.columns:
+            # Check mandatory fields using source field values
             if mandatory:
-                empty_count = (df[csod_field].isna() | (df[csod_field].astype(str).str.strip() == '')).sum()
+                empty_count = (df[st_field].isna() | (df[st_field].astype(str).str.strip() == '')).sum()
                 if empty_count > 0:
-                    warnings.append(f"Mandatory field '{csod_field}' has {empty_count} empty values")
+                    warnings.append(f"Mandatory field '{st_field}' mapped to '{csod_field}' has {empty_count} empty values")
         else:
-            # Field is missing from output
+            # Field is missing from input
             if mandatory:
-                errors.append(f"Mandatory field '{csod_field}' is missing from output")
+                errors.append(f"Mandatory field '{st_field}' mapped to '{csod_field}' is missing from input")
             else:
-                warnings.append(f"Optional field '{csod_field}' is missing from output")
+                warnings.append(f"Optional field '{st_field}' mapped to '{csod_field}' is missing from input")
     
     # Log warnings internally but don't return them to UI
     if warnings:
@@ -536,18 +551,62 @@ Reason for change: Improved connection management by letting functions handle th
 def records_processed():
     # get_total_records_processed manages its own connection
     total = get_total_records_processed()
-    return jsonify({'total': total})
+    formatted_total = "{:,}".format(total) if total is not None else "0"
+    return jsonify({'total': formatted_total})
 
-@app.route('/api/metrics')
+@app.route('/api/metrics', methods=['GET'])
 def metrics():
-    # get_total_records_processed manages its own connection
-    total = get_total_records_processed()
-    return jsonify({
-        'success': True,
-        'metrics': {
-            'total_records_processed': total
+    """Get dashboard metrics including total records and anomalies."""
+    try:
+        # Get total records processed
+        total = get_total_records_processed()
+        logger.info(f"Total records processed: {total}")
+        
+        # Get error-prone records count (records with either incomplete fields or validation errors)
+        error_prone = 0
+        try:
+            from lms_error_analyzer.database.db_utils import get_total_error_prone_records, get_total_clean_records
+            error_prone = get_total_error_prone_records()
+            logger.info(f"Retrieved error-prone records count: {error_prone}")
+            
+            # Get clean records (records with no errors of any kind)
+            clean_records = get_total_clean_records()
+            logger.info(f"Retrieved clean records count: {clean_records}")
+        except Exception as e:
+            logger.error(f"Error getting error-prone/clean records: {e}")
+            error_prone = 0
+            clean_records = 0
+
+        # error_prone now contains records with any type of error
+        total_anomalies = error_prone  # Records that have any type of error
+        logger.info(f"Total anomalies: {total_anomalies} (records with errors)")
+            
+        # Format numbers with commas for consistency
+        def format_number(n):
+            return "{:,}".format(n) if n is not None else "0"
+
+        response = {
+            'success': True,
+            'metrics': {
+                'total_records_processed': format_number(total),
+                'total_records_with_anomalies': format_number(total_anomalies),
+                'total_clean_records': format_number(clean_records),
+                'total_validation_errors': format_number(error_prone)
+            }
         }
-    })
+        logger.info(f"Sending metrics response: {response}")
+        return jsonify(response)
+        
+    except Exception as e:
+        logger.error(f"Error in metrics endpoint: {e}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'metrics': {
+                'total_records_processed': 0,
+                'total_records_with_anomalies': 0
+            }
+        }), 500
 
 # [MODIFIED: 2025-09-16] Temporarily disabled anomalies endpoint
 """
