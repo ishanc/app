@@ -9,11 +9,7 @@ function initializeLMSUploadManager() {
     // Properly cleanup old instance before creating new one
     if (lmsUploadManager) {
         console.log('Destroying existing FileUploadManager to prevent event listener stacking');
-        lmsUploadManager./* The `destroy` method in the code snippet is used to clean up and remove the
-        existing instance of the `FileUploadManager` before creating a new one.
-        This is important to prevent event listener stacking and potential memory
-        leaks. */
-        destroy();
+        lmsUploadManager.destroy();
         lmsUploadManager = null;
     }
     

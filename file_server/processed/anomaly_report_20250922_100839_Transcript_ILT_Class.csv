@@ -1,0 +1,3 @@
+file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
+Transcript_ILT_Class.xlsx,summary,mandatory_completeness,,100.00,,
+Transcript_ILT_Class.xlsx,summary,total_errors,,1479,,

@@ -23,7 +23,9 @@ class FileManager {
             })
             .then(data => {
                 // Categorize files (same logic as existing script.js)
-                const pdfFiles = data.files.filter(f => f.startsWith('data_quality_report') && f.endsWith('.pdf'));
+                // COMMENTED OUT: Auto PDF file display
+                // Reason: PDFs should only show when user clicks "Generate PDF Report" button
+                // const pdfFiles = data.files.filter(f => f.startsWith('data_quality_report') && f.endsWith('.pdf'));
                 const processedFiles = data.files.filter(f => f.startsWith('processed_') && f.endsWith('.csv'));
                 const anomalyFiles = data.files.filter(f => f.startsWith('anomaly_report_') && f.endsWith('.csv'));
                 
@@ -32,13 +34,15 @@ class FileManager {
                 const filesList = document.getElementById('files-list');
                 const anomalyFilesList = document.getElementById('anomaly-files-list');
                 
-                if (pdfFilesList) {
-                    pdfFilesList.innerHTML = '';
-                    pdfFiles.forEach(filename => {
-                        const fileItem = this.createFileItem(filename, 'pdf');
-                        pdfFilesList.appendChild(fileItem);
-                    });
-                }
+                // COMMENTED OUT: Auto PDF file display
+                // Reason: PDFs should only populate when user explicitly requests them
+                // if (pdfFilesList) {
+                //     pdfFilesList.innerHTML = '';
+                //     pdfFiles.forEach(filename => {
+                //         const fileItem = this.createFileItem(filename, 'pdf');
+                //         pdfFilesList.appendChild(fileItem);
+                //     });
+                // }
                 
                 if (filesList) {
                     filesList.innerHTML = '';
@@ -182,22 +186,28 @@ class FileManager {
             });
     }
 
-    // Generate PDF report - extracted from existing script.js
+    // Generate PDF report - gets latest existing or generates new one
     generatePDFReport() {
-        fetch('/generate-pdf-report', {
-            method: 'POST'
+        fetch('/get-latest-pdf', {
+            method: 'GET'
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                this.showMessage(`PDF report generated: ${data.pdf_filename}`, 'success');
+                if (data.action === 'found_existing') {
+                    this.showMessage(`Latest PDF report ready: ${data.pdf_filename}`, 'success');
+                    // Automatically download the latest report
+                    window.location.href = `/download/${encodeURIComponent(data.pdf_filename)}`;
+                } else {
+                    this.showMessage(`PDF report generated: ${data.pdf_filename}`, 'success');
+                }
                 this.loadFiles();
             } else {
                 this.showMessage(`Error: ${data.error}`, 'error');
             }
         })
         .catch(error => {
-            this.showMessage(`Error generating PDF: ${error.message}`, 'error');
+            this.showMessage(`Error getting PDF: ${error.message}`, 'error');
         });
     }
 

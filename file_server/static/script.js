@@ -140,17 +140,21 @@ window.loadFiles = function() {
         })
         .then(data => {
             // Categorize files
-            const pdfFiles = data.files.filter(f => f.startsWith('data_quality_report') && f.endsWith('.pdf'));
+            // COMMENTED OUT: Auto PDF file display
+            // Reason: PDFs should only show when user clicks "Generate PDF Report" button
+            // const pdfFiles = data.files.filter(f => f.startsWith('data_quality_report') && f.endsWith('.pdf'));
             const processedFiles = data.files.filter(f => f.startsWith('processed_') && f.endsWith('.csv'));
             const anomalyFiles = data.files.filter(f => f.startsWith('anomaly_report_') && f.endsWith('.csv'));
             
-            // Display PDF files
-            const pdfFilesList = document.getElementById('pdf-files-list');
-            pdfFilesList.innerHTML = '';
-            pdfFiles.forEach(filename => {
-                const fileItem = createFileItem(filename, 'pdf');
-                pdfFilesList.appendChild(fileItem);
-            });
+            // COMMENTED OUT: Auto PDF file display  
+            // Reason: PDFs should only populate when user explicitly requests them
+            // // Display PDF files
+            // const pdfFilesList = document.getElementById('pdf-files-list');
+            // pdfFilesList.innerHTML = '';
+            // pdfFiles.forEach(filename => {
+            //     const fileItem = createFileItem(filename, 'pdf');
+            //     pdfFilesList.appendChild(fileItem);
+            // });
             
             // Display processed files
             const filesList = document.getElementById('files-list');
@@ -449,37 +453,10 @@ function createFileItem(filename, type) {
     return fileItem;
 }
 
-// Generate PDF Report
-function generatePDFReport() {
-    fetch('/generate-pdf-report', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        const messageEl = document.getElementById('delete-message');
-        if (data.success) {
-            messageEl.textContent = `PDF report generated: ${data.pdf_filename}`;
-            messageEl.classList.add('success');
-            loadFiles(); // Refresh to show new PDF
-        } else {
-            messageEl.textContent = `Error: ${data.error}`;
-            messageEl.classList.add('error');
-        }
-        setTimeout(() => {
-            messageEl.textContent = '';
-            messageEl.classList.remove('success', 'error');
-        }, 5000);
-    })
-    .catch(error => {
-        const messageEl = document.getElementById('delete-message');
-        messageEl.textContent = `Error generating PDF: ${error.message}`;
-        messageEl.classList.add('error');
-        setTimeout(() => {
-            messageEl.textContent = '';
-            messageEl.classList.remove('error');
-        }, 5000);
-    });
-}
+// Generate PDF Report - now gets latest existing or generates new one - there was an existing function we deleted it for having filemanager do it. 
+// REMOVED: generatePDFReport function
+// Reason: Using FileManager.js implementation via file_manager_integration.js
+// The global generatePDFReport function is now handled by FileManager class
 
 // Reset All Data
 function resetAllData() {

@@ -176,12 +176,72 @@
             color: #64748b;
         }
         
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
         .card {
             background: white;
             border-radius: 0.75rem;
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border: 1px solid #e2e8f0;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+        
+        .status-success { background-color: #10b981; }
+        .status-warning { background-color: #f59e0b; }
+        .status-error { background-color: #ef4444; }
+        
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 500;
         }
         
         /* Table Styles */
@@ -513,9 +573,10 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1 class="app-title">LMS Migration Agent</h1>
+                <img src="/static/fulllogo.png" alt="NeuraLERP.AI Logo" class="app-logo" style="width: 220px; height: auto; margin-bottom: 1.5rem; filter: brightness(0) invert(1);">
+                <h1 class="app-title">LMS Data Migration Agent</h1>
                 <p class="app-version">v1.0.0</p>
-                <p class="app-description">Data migration tool for LMS to CSOD transformation</p>
+                <p class="app-description">Intelligent Data migration for SumTotal LMS to CSOD LMS</p>
             </div>
             
             <div class="nav-menu">
@@ -527,11 +588,11 @@
                         <span class="dropdown-arrow">▼</span>
                     </div>
                     <div class="nav-children" id="data-analyser">
-                        <div class="nav-child" data-section="dashboard">
+                        <div class="nav-child active" data-section="dashboard">
                             <span class="child-icon">📊</span>
-                            <span>Dashboard</span>
+                            <span>Data Analyser Dashboard</span>
                         </div>
-                        <div class="nav-child active" data-section="upload">
+                        <div class="nav-child" data-section="upload">
                             <span class="child-icon">🔍</span>
                             <span>Analyse Files</span>
                         </div>
@@ -550,6 +611,10 @@
                         <span class="dropdown-arrow">▼</span>
                     </div>
                     <div class="nav-children" id="data-transformation">
+                        <div class="nav-child" data-section="transformation-dashboard">
+                            <span class="child-icon">📊</span>
+                            <span>Data Transformation Dashboard</span>
+                        </div>
                         <div class="nav-child" data-section="transformation">
                             <span class="child-icon">🔧</span>
                             <span>Transformation Rules</span>
@@ -596,18 +661,24 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-
             <!-- Dashboard Section -->
             <div id="dashboard" class="section">
                 <div class="header">
-                    <h1>Migration Dashboard</h1>
-                    <p>Real-time overview of your LMS migration progress</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Data Analyser Dashboard</h1>
+                            <p>Overview of your legacy LMS data analysis in preparation for migration</p>
+                        </div>
+                        <button id="analyzeButton" class="button" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                            🔍 Analyze Data
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="dashboard-cards">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Total Objects Processed</div>
+                            <div class="card-title">Total Records Processed</div>
                             <div class="status-indicator status-success"></div>
                         </div>
                         <div class="card-value" id="total-objects-processed">0</div>
@@ -615,26 +686,107 @@
                     
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Anomalies Detected</div>
+                            <div class="card-title">Total Records With Anomalies</div>
                             <div class="status-indicator status-warning"></div>
                         </div>
-                        <div class="card-value" id="anomalies-detected">0</div>
+                        <div class="card-value" id="total-records-with-anomalies">0</div>
                     </div>
                     
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Files Processed</div>
-                            <div class="status-indicator status-info"></div>
-                        </div>
-                        <div class="card-value" id="files-processed">0</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Success Rate</div>
+                            <div class="card-title">Total Clean Records</div>
                             <div class="status-indicator status-success"></div>
                         </div>
-                        <div class="card-value" id="success-rate">100%</div>
+                        <div class="card-value" id="total-clean-records">0</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Records Ready for Upload</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value">95,095</div>
+                    </div>
+                </div>
+                
+                <div class="charts-section">
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Record Types by Volume</div>
+                        <div class="chart-placeholder">📊 Pie Chart</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Daily Processing Progress</div>
+                        <div class="chart-placeholder">📈 Line Chart</div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Panel -->
+                <div class="card ai-analysis-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🤖 AI Analysis</span>
+                        <button id="refreshAnalysis" class="button-secondary" style="padding: 0.5rem 1rem;">
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div id="aiAnalysisText" class="analysis-text">
+                            Click the Analyze Data button to begin analysis of your LMS data.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transformation Dashboard Section -->
+            <div id="transformation-dashboard" class="section hidden">
+                <div class="header">
+                    <h1>Data Transformation Dashboard</h1>
+                    <p>Overview of data transformation progress and metrics</p>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Files Transformed</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value">1,247</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Active Rules</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value">23</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Records Processed</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value">32.7M</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">CSOD Files Ready</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value">184</div>
+                    </div>
+                </div>
+                
+                <div class="charts-section">
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Transformation Success Rate</div>
+                        <div class="chart-placeholder">📈 Success Rate Chart</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Rules Performance</div>
+                        <div class="chart-placeholder">📊 Rules Chart</div>
                     </div>
                 </div>
             </div>
@@ -868,7 +1020,7 @@
 
             <div id="reports" class="section hidden">
                 <div class="header">
-                    <h1>Export Reports</h1>
+                    <h1>Data Analyser Reports (Export)</h1>
                     <p>Generate and download migration reports and manage processed files</p>
                 </div>
                 
@@ -876,9 +1028,9 @@
                 <div class="table-container">
                     <!-- PDF Reports Section -->
                     <div class="table-header">
-                        <div class="table-title">📄 Quality Reports (PDF)</div>
+                        <div class="table-title">📄Data Analyser Quality Reports (PDF)</div>
                         <div class="table-controls">
-                            <button id="generatePDFBtn" class="button">📊 Get Latest PDF Report</button>
+                            <button id="generatePDFBtn" class="button">📊 Generate PDF Report</button>
                             <button onclick="downloadAllFiles()" class="button-secondary">⬇ Download All PDFs</button>
                         </div>
                     </div>
@@ -887,10 +1039,25 @@
                     </div>
                 </div>
 
+
+
+                <div class="table-container">
+                    <!-- Anomaly Reports Section -->
+                    <div class="table-header">
+                        <div class="table-title">⚠️Data Analyser Anomaly Reports</div>
+                        <div class="table-controls">
+                            <button onclick="downloadAllFiles()" class="button-secondary">⬇ Download Anomaly Reports</button>
+                        </div>
+                    </div>
+                    <div class="files-list" id="anomaly-files-list">
+                        <!-- Anomaly reports will be dynamically loaded here -->
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <!-- Processed Files Section -->
                     <div class="table-header">
-                        <div class="table-title">📊 Processed Data Files</div>
+                        <div class="table-title">📊Data Analyser Processed Files</div>
                         <div class="table-controls">
                             <button onclick="downloadAllFiles()" class="button-secondary">⬇ Download All CSV</button>
                             <button onclick="deleteAllFiles()" class="button-danger">🗑 Delete All Files</button>
@@ -898,19 +1065,6 @@
                     </div>
                     <div class="files-list" id="files-list">
                         <!-- Processed CSV files will be dynamically loaded here -->
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <!-- Anomaly Reports Section -->
-                    <div class="table-header">
-                        <div class="table-title">⚠️ Anomaly Reports</div>
-                        <div class="table-controls">
-                            <button onclick="downloadAnomalyReports()" class="button-secondary">⬇ Download Anomaly Reports</button>
-                        </div>
-                    </div>
-                    <div class="files-list" id="anomaly-files-list">
-                        <!-- Anomaly reports will be dynamically loaded here -->
                     </div>
                 </div>
 
@@ -935,9 +1089,9 @@
                 initializeNavigation();
                 initializeDropdowns();
                 
-                // Set default active state - expand Data Analyser dropdown and show upload
+                // Set default active state - expand Data Analyser dropdown and show dashboard
                 const defaultParent = document.querySelector('.nav-parent[data-target="data-analyser"]');
-                const defaultChild = document.querySelector('.nav-child[data-section="upload"]');
+                const defaultChild = document.querySelector('.nav-child[data-section="dashboard"]');
                 if (defaultParent && defaultChild) {
                     defaultParent.classList.add('expanded');
                     document.getElementById('data-analyser').classList.add('expanded');
@@ -1035,6 +1189,12 @@
                 }, 200);
             }
             
+            // Update metrics when switching to dashboards
+            if (sectionId === 'dashboard') {
+                updateDashboardMetrics('analyser');
+            } else if (sectionId === 'transformation-dashboard') {
+                updateDashboardMetrics('transformer');
+            }
             
             if (sectionId === 'reports') {
                 if (!window.fileManager) {
@@ -1075,14 +1235,45 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ LMS Migration Agent UI loaded');
             
+            // Wire up Analyze button
+            const analyzeButton = document.getElementById('analyzeButton');
+            if (analyzeButton) {
+                analyzeButton.addEventListener('click', () => {
+                    // Show loading state
+                    analyzeButton.innerHTML = '⏳ Analyzing...';
+                    analyzeButton.disabled = true;
+
+                    // Make API call to trigger analysis
+                    fetch('/api/analyze', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Analysis started:', data);
+                            // Update dashboard metrics after analysis
+                            updateDashboardMetrics();
+                            // Reset button state
+                            analyzeButton.innerHTML = '🔍 Analyze Data';
+                            analyzeButton.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error starting analysis:', error);
+                            // Reset button state
+                            analyzeButton.innerHTML = '🔍 Analyze Data';
+                            analyzeButton.disabled = false;
+                        });
+                });
+                console.log('✅ Analyze button wired up');
+            }
+            
             // Wire up Reset All Data button
             const resetAllBtn = document.getElementById('resetAllBtn');
             if (resetAllBtn) {
                 resetAllBtn.addEventListener('click', () => {
                     if (typeof resetAllData === 'function') {
                         resetAllData();
+                        resetDashboardMetrics(); // Reset metrics after successful reset
                     } else if (typeof deleteAllFiles === 'function') {
                         deleteAllFiles(); // Fallback to deleteAllFiles if resetAllData not available
+                        resetDashboardMetrics(); // Reset metrics after successful delete
                     } else {
                         console.error('resetAllData/deleteAllFiles function not available');
                     }
@@ -1154,18 +1345,36 @@
     <!-- Global metrics functions - outside DOMContentLoaded for upload integration access -->
     <script>
         // Dashboard metrics functionality - global scope
-        function updateDashboardMetrics() {
+        function updateDashboardMetrics(source) {
             console.log('DEBUG: Fetching metrics from /api/metrics');
             fetch('/api/metrics')
                 .then(response => response.json())
                 .then(data => {
                     console.log('DEBUG: Metrics response:', data);
                     if (data.success && data.metrics) {
-                        const totalElement = document.getElementById('total-objects-processed');
-                        if (totalElement) {
-                            const count = data.metrics.total_records_processed || 0;
-                            console.log(`DEBUG: Updating dashboard with count: ${count}`);
-                            totalElement.textContent = count.toLocaleString();
+                        const count = data.metrics.total_records_processed || 0;
+                        console.log(`DEBUG: Updating dashboard with count: ${count}`);
+                        
+                        // Update based on upload source
+                        if (source === 'analyser' || !source) {
+                            const analyserTotal = document.getElementById('total-objects-processed');
+                            if (analyserTotal) {
+                                analyserTotal.textContent = count.toLocaleString();
+                            }
+                        }
+                        if (source === 'transformer' || !source) {
+                            // Find the Records Processed card in transformation dashboard
+                            const cards = document.querySelectorAll('#transformation-dashboard .card');
+                            for (const card of cards) {
+                                const title = card.querySelector('.card-title');
+                                if (title && title.textContent === 'Records Processed') {
+                                    const valueElement = card.querySelector('.card-value');
+                                    if (valueElement) {
+                                        valueElement.textContent = count.toLocaleString();
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 })
@@ -1192,6 +1401,41 @@
                     updateDashboardMetrics();
                 }
             }, 5000);
+
+            // Initialize AI Analysis Panel functionality
+            const aiAnalysisText = document.getElementById('aiAnalysisText');
+            const refreshAnalysis = document.getElementById('refreshAnalysis');
+            const analyzeButton = document.getElementById('analyzeButton');
+
+            // Update analysis when analyze button is clicked
+            if (analyzeButton) {
+                analyzeButton.addEventListener('click', () => {
+                    updateAIAnalysis();
+                });
+            }
+
+            // Refresh analysis
+            if (refreshAnalysis) {
+                refreshAnalysis.addEventListener('click', () => {
+                    updateAIAnalysis();
+                });
+            }
+
+            function updateAIAnalysis() {
+                aiAnalysisText.textContent = 'Analyzing data...';
+                
+                fetch('/api/analyze-data', {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    aiAnalysisText.textContent = data.analysis || 'Analysis complete. Check the metrics above for details.';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    aiAnalysisText.textContent = 'Unable to complete analysis. Please try again.';
+                });
+            }
         });
     </script>
 </body>
