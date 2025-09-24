@@ -499,4 +499,256 @@ function resetAllData() {
     });
 }
 
+// Enhanced dashboard metrics functionality - matches script_dashboard.js
+
+// Helper function to safely update dashboard elements
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (!el) {
+        console.warn('Missing dashboard element:', id);
+        return;
+    }
+    el.textContent = (typeof value === 'number') ? value.toLocaleString() : String(value);
+    el.title = `Last updated: ${new Date().toLocaleTimeString()}`;
+}
+
+function updateDashboardMetrics() {
+    console.log('DEBUG: Fetching metrics from /api/metrics');
+    fetch('/api/metrics')
+        .then(r => {
+            if (!r.ok) throw new Error('Failed to fetch dashboard metrics');
+            return r.json();
+        })
+        .then(data => {
+            console.log('DEBUG: Metrics response:', data);
+            const m = (data && data.metrics) ? data.metrics : {};
+            setText('total-objects-processed', m.total_records_processed ?? '0');
+            setText('total-records-with-anomalies', m.total_records_with_anomalies ?? '0');
+            setText('total-clean-records', m.total_clean_records ?? '0');
+        })
+        .catch(err => {
+            console.error('metrics error:', err);
+            ['total-objects-processed','total-records-with-anomalies','total-clean-records']
+                .forEach(id => setText(id, 'Error'));
+        });
+}
+
+// Reset dashboard metrics function
+function resetDashboardMetrics() {
+    const elements = ['total-objects-processed', 'total-records-with-anomalies', 'total-clean-records'];
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = '0';
+        }
+    });
+}
+
+// Update metrics on page load and periodically
+document.addEventListener('DOMContentLoaded', () => {
+    updateDashboardMetrics();
+    
+    // Update every 5 seconds when dashboard is visible
+    setInterval(() => {
+        const dashboardSection = document.getElementById('dashboard');
+        if (dashboardSection && !dashboardSection.classList.contains('hidden')) {
+            updateDashboardMetrics();
+        }
+    }, 5000);
+});
+
 // Event listeners are already added in the main DOMContentLoaded listener above
+
+// File Upload Tracking Functionality
+class FileUploadTracker {
+    constructor() {
+        this.requiredFiles = [
+            'Prerequisites_Provider',
+            'Prerequisites_QuestionBanks', 
+            'Core_Domain',
+            'Activity_ILTSessions',
+            'Activity_ILTCourse',
+            'Activity_QuickAssessment',
+            'Activity_ILTClass',
+            'Core_Audience',
+            'Activity_Document',
+            'Prerequisites_Subject',
+            'Core_Organization',
+            'Prerequisites_Instructor',
+            'Prerequisites_Question',
+            'Core_Jobs',
+            'Activity_Online_Course',
+            'Activity_Curriculum',
+            'Core_Employee',
+            'Transcript_ILT_Class',
+            'Prerequisites_Facility',
+            'Transcript_Curriculum',
+            'Transcript_Document',
+            'Transcript_Online_Course',
+            'Transcript_QuickAssessment'
+        ];
+        
+        this.uploadedFiles = new Set();
+        this.initializeTable();
+    }
+    
+    initializeTable() {
+        const tbody = document.getElementById('file-tracking-tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        this.requiredFiles.forEach((fileName, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="font-weight: 500;">${fileName}.xlsx/.csv</td>
+                <td>
+                    <div class="file-status not-uploaded" id="status-${index}">
+                        <svg class="status-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        Not Uploaded
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        this.updateSummary();
+    }
+    
+    updateFromFileList(uploadedFilenames) {
+        this.uploadedFiles.clear();
+        
+        uploadedFilenames.forEach(filename => {
+            if (!filename) return;
+            
+            const baseFilename = filename.replace(/\.(xlsx|csv)$/i, '');
+            
+            const matchedIndex = this.requiredFiles.findIndex(requiredFile => {
+                if (baseFilename === requiredFile) return true;
+                
+                const normalizedBase = baseFilename.replace(/[-_\s]/g, '').toLowerCase();
+                const normalizedRequired = requiredFile.replace(/[-_\s]/g, '').toLowerCase();
+                return normalizedBase === normalizedRequired;
+            });
+            
+            if (matchedIndex !== -1) {
+                this.uploadedFiles.add(this.requiredFiles[matchedIndex]);
+                this.updateFileStatus(matchedIndex, true);
+            }
+        });
+        
+        this.updateSummary();
+    }
+    
+    updateFileStatus(index, isUploaded) {
+        const statusElement = document.getElementById(`status-${index}`);
+        if (!statusElement) return;
+        
+        if (isUploaded) {
+            statusElement.className = 'file-status uploaded';
+            statusElement.innerHTML = `
+                <svg class="status-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                Uploaded
+            `;
+        } else {
+            statusElement.className = 'file-status not-uploaded';
+            statusElement.innerHTML = `
+                <svg class="status-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                Not Uploaded
+            `;
+        }
+    }
+    
+    updateSummary() {
+        const uploadedCount = this.uploadedFiles.size;
+        const totalFiles = this.requiredFiles.length;
+        
+        const countElement = document.getElementById('files-uploaded-count');
+        const summaryElement = document.getElementById('upload-progress-summary');
+        
+        if (countElement) {
+            countElement.textContent = uploadedCount;
+        }
+        
+        if (summaryElement) {
+            if (uploadedCount === totalFiles) {
+                summaryElement.classList.add('complete');
+            } else {
+                summaryElement.classList.remove('complete');
+            }
+        }
+        
+        this.updateCompletionStatus(uploadedCount, totalFiles);
+    }
+    
+    updateCompletionStatus(uploadedCount, totalFiles) {
+        const statusDiv = document.getElementById('completion-status');
+        const messageDiv = document.getElementById('completion-message');
+        
+        if (!statusDiv || !messageDiv) return;
+        
+        if (uploadedCount === totalFiles) {
+            statusDiv.className = 'completion-success';
+            statusDiv.style.display = 'block';
+            messageDiv.innerHTML = `
+                <strong>✅ All Required Files Uploaded!</strong><br>
+                You can now generate the complete PDF report with full cross-file relationship analysis.
+            `;
+        } else if (uploadedCount > 0) {
+            statusDiv.className = 'completion-incomplete';
+            statusDiv.style.display = 'block';
+            messageDiv.innerHTML = `
+                <strong>⚠️ ${totalFiles - uploadedCount} files still needed</strong><br>
+                Upload all required files to enable complete cross-file analysis in the PDF report.
+            `;
+        } else {
+            statusDiv.style.display = 'none';
+        }
+    }
+}
+
+// Initialize file upload tracker
+let fileUploadTracker = null;
+
+// Modified loadFiles function to integrate with tracking
+const originalLoadFiles = window.loadFiles;
+window.loadFiles = function() {
+    // Call original loadFiles function
+    if (typeof originalLoadFiles === 'function') {
+        originalLoadFiles();
+    }
+    
+    // Update file tracking after files are loaded
+    setTimeout(() => {
+        if (fileUploadTracker) {
+            fetch('/files')
+                .then(response => response.json())
+                .then(data => {
+                    const uploadedFilenames = [];
+                    if (data.uploads && Array.isArray(data.uploads)) {
+                        data.uploads.forEach(file => {
+                            const filename = file.name || file.filename || file;
+                            uploadedFilenames.push(filename);
+                        });
+                    }
+                    fileUploadTracker.updateFromFileList(uploadedFilenames);
+                })
+                .catch(error => console.error('Error updating file tracker:', error));
+        }
+    }, 500);
+};
+
+// Initialize tracker when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('file-tracking-table')) {
+        fileUploadTracker = new FileUploadTracker();
+        window.fileUploadTracker = fileUploadTracker;
+        console.log('✅ File Upload Tracker initialized in script.js');
+    }
+});

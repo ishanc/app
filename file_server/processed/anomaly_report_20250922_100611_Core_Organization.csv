@@ -1,3 +1,0 @@
-file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
-Core_Organization.xlsx,summary,mandatory_completeness,,100.00,,
-Core_Organization.xlsx,summary,total_errors,,179,,

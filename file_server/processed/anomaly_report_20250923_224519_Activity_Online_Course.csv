@@ -1,0 +1,6 @@
+file_name,section,field,severity,anomaly,anomaly_rate,remediation_recommendation
+Activity_Online_Course.xlsx,summary,mandatory_completeness,,100.00,,
+Activity_Online_Course.xlsx,summary,total_errors,,96742,,
+Activity_Online_Course.xlsx,field,CourseName,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,44%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."
+Activity_Online_Course.xlsx,field,CourseCode,High,Potential truncation risk: value exceeds target length,0%,"At Source, field value exceeds character length limit. Remediate by adjusting target field length or truncating source data with approval."
+Activity_Online_Course.xlsx,field,CourseCode,High,Encoding/invalid character issue; validate charset; validate nvarchar→char conversion and normalize Unicode,0%,"At Source, field value contains invalid characters. Requires source file correction or character encoding fix at source level."

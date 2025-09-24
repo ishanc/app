@@ -412,3 +412,83 @@ h1 {
 .validation-warning {
     color: #f57c00;
 }
+
+/* File Upload Tracking Table Styles */
+.file-tracking-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+}
+
+.file-tracking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.file-tracking-table thead {
+    background-color: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.file-tracking-table th,
+.file-tracking-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.file-tracking-table th {
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.file-tracking-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.file-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.file-status.uploaded {
+    color: #059669;
+}
+
+.file-status.not-uploaded {
+    color: #dc2626;
+}
+
+.status-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.completion-success {
+    background-color: #d1fae5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.completion-incomplete {
+    background-color: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+}
+
+/* Progress summary styling */
+#upload-progress-summary {
+    font-weight: 500;
+}
+
+#upload-progress-summary.complete {
+    color: #059669;
+}

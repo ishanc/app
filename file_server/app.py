@@ -72,8 +72,14 @@ def validate_transformed_data(df, mapping_rules):
     
     for rule in mapping_rules:
         csod_field = rule['CSOD Field Name']
+        st_field = rule.get('SumTotal Field Name', '')  # Get SumTotal mapping
         mandatory = rule.get('mandatory', '') == 'Mandatory'
         
+        # Only validate fields that have SumTotal source mappings
+        if not st_field or st_field.strip() == '':
+            # Skip validation for fields with no SumTotal mapping (default-only fields)
+            continue
+            
         if csod_field in df.columns:
             # Check for mandatory fields that are empty
             if mandatory:
@@ -651,51 +657,186 @@ def generate_new_pdf_report():
         return jsonify({'error': f'Failed to generate PDF report: {str(e)}'}), 500
 
 
-@app.route('/api/metrics')
-def get_metrics():
-    """Get dashboard metrics for the UI"""
+@app.route('/api/records_processed')
+def records_processed():
+    """Get total records processed with formatting"""
     try:
-        # Get basic file counts
-        processed_files = []
-        if os.path.exists(app.config['PROCESSED_FOLDER']):
-            processed_files = [f for f in os.listdir(app.config['PROCESSED_FOLDER']) 
-                             if f.endswith(('.xlsx', '.csv'))]
+        # Lazy import with proper path setup
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+        from lms_error_analyzer.database.utils.db_utils import get_total_records_processed
         
-        # Try to get database metrics if available
-        try:
-            sys.path.append(LMS_DATABASE_DIR)
-            from dashboard import Dashboard
-            dashboard = Dashboard()
-            quality_data = dashboard.generate_quality_dashboard()
-            dashboard.close_connections()
-            
-            total_records = sum(item.get('total_records', 0) for item in quality_data)
-            anomalies = sum(item.get('anomaly_count', 0) for item in quality_data)
-            
-            return jsonify({
-                'success': True,
-                'metrics': {
-                    'total_objects_processed': total_records,
-                    'anomalies_detected': anomalies,
-                    'files_processed': len(processed_files),
-                    'success_rate': '98.5%'
-                }
-            })
-        except Exception as db_error:
-            # Fallback to basic metrics if database is unavailable
-            return jsonify({
-                'success': True,
-                'metrics': {
-                    'total_objects_processed': len(processed_files) * 1000,  # Estimate
-                    'anomalies_detected': 0,
-                    'files_processed': len(processed_files),
-                    'success_rate': '100%'
-                }
-            })
-            
+        total = get_total_records_processed()
+        formatted_total = "{:,}".format(total) if total is not None else "0"
+        return jsonify({'total': formatted_total})
     except Exception as e:
-        logger.error(f"Error getting metrics: {e}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Error getting records processed: {e}")
+        return jsonify({'total': '0'})
+
+@app.route('/api/metrics', methods=['GET'])
+def get_metrics():
+    """Get dashboard metrics using the EXACT same proven functions as accurate reports."""
+    try:
+        # Import the proven functions that already work correctly
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+        from lms_error_analyzer.database.pdf_quality_report import PDFQualityReportGenerator
+        from lms_error_analyzer.database.report_generator import _fetch_completeness_for_file, _get_db_connection
+        from lms_error_analyzer.database.dashboard import Dashboard
+        
+        # Get list of files from latest batch (minimal query)
+        from lms_error_analyzer.database.utils.db_utils import DatabaseConnectionManager
+        db_manager = DatabaseConnectionManager()
+        
+        files_result = db_manager.execute_query(
+            """
+            SELECT DISTINCT file_name, total_records, incomplete_records
+            FROM file_completeness_summary 
+            WHERE last_processed >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
+            """,
+            dictionary=True
+        )
+        
+        if not files_result:
+            return jsonify({
+                'success': True,
+                'metrics': {
+                    'total_records_processed': '0',
+                    'total_records_with_anomalies': '0',
+                    'total_clean_records': '0'
+                }
+            })
+        
+        # Initialize PDF generator to reuse its proven calculation methods
+        pdf_generator = PDFQualityReportGenerator(output_dir="/tmp")  # temp dir, won't be used
+        
+        total_records = 0
+        total_error_prone = 0
+        
+        # Use the PROVEN calculation logic for each file
+        for file_record in files_result:
+            file_name = file_record['file_name']
+            file_total_records = file_record['total_records']
+            file_incomplete_records = file_record['incomplete_records']
+            
+            total_records += file_total_records
+            
+            # Use the EXACT same proven function as PDF reports (line 221-296)
+            file_error_prone = pdf_generator._calculate_error_prone_records(
+                file_name, file_total_records, file_incomplete_records
+            )
+            
+            total_error_prone += file_error_prone
+            
+            logger.info(f"File {file_name}: {file_error_prone}/{file_total_records} error-prone records")
+        
+        # Close connections
+        pdf_generator.db_connection.close()
+        
+        # Simple calculation
+        total_clean = max(0, total_records - total_error_prone)
+        
+        logger.info(f"PROVEN CALCULATION RESULTS: total={total_records}, error_prone={total_error_prone}, clean={total_clean}")
+        
+        # Format numbers with commas
+        def format_number(n):
+            return "{:,}".format(n) if n is not None else "0"
+
+        response = {
+            'success': True,
+            'metrics': {
+                'total_records_processed': format_number(total_records),
+                'total_records_with_anomalies': format_number(total_error_prone),
+                'total_clean_records': format_number(total_clean)
+            }
+        }
+        
+        return jsonify(response)
+        
+    except Exception as e:
+        logger.error(f"Error in metrics endpoint: {e}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'metrics': {
+                'total_records_processed': '0',
+                'total_records_with_anomalies': '0',
+                'total_clean_records': '0'
+            }
+        }), 500
+
+@app.route('/api/executive-summary', methods=['GET'])
+def get_executive_summary():
+    """Get executive summary text that matches what's in the PDF report."""
+    try:
+        # Import the proven functions that already work correctly
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+        from lms_error_analyzer.database.pdf_quality_report import PDFQualityReportGenerator
+        from lms_error_analyzer.database.utils.db_utils import DatabaseConnectionManager
+        
+        # Get list of files from latest batch (same logic as metrics endpoint)
+        db_manager = DatabaseConnectionManager()
+        
+        files_result = db_manager.execute_query(
+            """
+            SELECT DISTINCT file_name, total_records, incomplete_records
+            FROM file_completeness_summary 
+            WHERE last_processed >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
+            """,
+            dictionary=True
+        )
+        
+        if not files_result:
+            return jsonify({
+                'success': True,
+                'summary': 'No recent analysis data available. Please upload and process files first.'
+            })
+        
+        # Initialize PDF generator to reuse its proven calculation methods
+        pdf_generator = PDFQualityReportGenerator(output_dir="/tmp")  # temp dir, won't be used
+        
+        total_files = len(files_result)
+        total_records = 0
+        total_errors = 0
+        
+        # Use the EXACT same proven calculation logic as PDF reports
+        for file_record in files_result:
+            file_name = file_record['file_name']
+            file_total_records = file_record['total_records']
+            file_incomplete_records = file_record['incomplete_records']
+            
+            total_records += file_total_records
+            
+            # Use the EXACT same proven function as PDF reports
+            file_error_prone = pdf_generator._calculate_error_prone_records(
+                file_name, file_total_records, file_incomplete_records
+            )
+            
+            total_errors += file_error_prone
+        
+        # Close connections
+        pdf_generator.db_connection.close()
+        
+        # Create executive summary using EXACT same format as PDF report
+        summary = f"""This report analyzes data quality across {total_files} files containing {total_records:,} total records. The analysis identified {total_errors:,} validation errors.
+
+Key Recommendations:
+• Address mandatory field completeness issues at the source
+• Implement data validation workflows before processing
+• Review critical validation errors for immediate remediation"""
+        
+        logger.info(f"Executive summary generated: {total_files} files, {total_records} records, {total_errors} errors")
+        
+        return jsonify({
+            'success': True,
+            'summary': summary
+        })
+        
+    except Exception as e:
+        logger.error(f"Error generating executive summary: {e}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'summary': 'Error generating executive summary. Please try again.'
+        })
 
 
 """

@@ -58,6 +58,14 @@
             line-height: 1.4;
         }
         
+        /* Logo styling */
+        .app-logo {
+            width: 220px;
+            height: auto;
+            margin-bottom: 1rem;
+            /*filter: brightness(0) invert(1);  Makes logo white for dark sidebar */
+        }
+        
         /* Navigation Menu */
         .nav-menu {
             flex: 1;
@@ -182,6 +190,35 @@
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border: 1px solid #e2e8f0;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
         }
         
         /* Table Styles */
@@ -506,6 +543,123 @@
             color: #991b1b;
             border: 1px solid #fecaca;
         }
+        
+        /* Status Indicators */
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+        
+        .status-success { background-color: #10b981; }
+        .status-warning { background-color: #f59e0b; }
+        .status-error { background-color: #ef4444; }
+        .status-info { background-color: #3b82f6; }
+        
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .validation-warning {
+            color: #f57c00;
+        }
+
+        /* File Upload Tracking Table Styles */
+        .file-tracking-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+
+        .file-tracking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .file-tracking-table thead {
+            background-color: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .file-tracking-table th,
+        .file-tracking-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .file-tracking-table th {
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .file-tracking-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .file-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .file-status.uploaded {
+            color: #059669;
+        }
+
+        .file-status.not-uploaded {
+            color: #dc2626;
+        }
+
+        .status-icon {
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+        }
+
+        .completion-success {
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .completion-incomplete {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+        }
+
+        /* Progress summary styling */
+        #upload-progress-summary {
+            font-weight: 500;
+        }
+
+        #upload-progress-summary.complete {
+            color: #059669;
+        }
     </style>
 </head>
 <body>
@@ -513,9 +667,9 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1 class="app-title">LMS Migration Agent</h1>
+                <img src="/static/static_logo/fulllogo.png" alt="NeuraLERP.AI Logo" class="app-logo">
+                <h1 class="app-title">Intelligent Data migration for SumTotal LMS to CSOD LMS</h1>
                 <p class="app-version">v1.0.0</p>
-                <p class="app-description">Data migration tool for LMS to CSOD transformation</p>
             </div>
             
             <div class="nav-menu">
@@ -600,14 +754,14 @@
             <!-- Dashboard Section -->
             <div id="dashboard" class="section">
                 <div class="header">
-                    <h1>Migration Dashboard</h1>
-                    <p>Real-time overview of your LMS migration progress</p>
+                    <h1>Data Analyser Dashboard</h1>
+                    <p>Overview of your legacy LMS data analysis results</p>
                 </div>
                 
                 <div class="dashboard-cards">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Total Objects Processed</div>
+                            <div class="card-title">Total Records Processed</div>
                             <div class="status-indicator status-success"></div>
                         </div>
                         <div class="card-value" id="total-objects-processed">0</div>
@@ -615,26 +769,38 @@
                     
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Anomalies Detected</div>
+                            <div class="card-title">Total Records With Anomalies</div>
                             <div class="status-indicator status-warning"></div>
                         </div>
-                        <div class="card-value" id="anomalies-detected">0</div>
+                        <div class="card-value" id="total-records-with-anomalies">0</div>
                     </div>
                     
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Files Processed</div>
-                            <div class="status-indicator status-info"></div>
-                        </div>
-                        <div class="card-value" id="files-processed">0</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Success Rate</div>
+                            <div class="card-title">Total Clean Records</div>
                             <div class="status-indicator status-success"></div>
                         </div>
-                        <div class="card-value" id="success-rate">100%</div>
+                        <div class="card-value" id="total-clean-records">0</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">% Records Ready</div>
+                            <div class="status-indicator status-success"></div>
+                        </div>
+                        <div class="card-value" id="percentage-records-ready">0%</div>
+                    </div>
+                </div>
+                
+                <div class="charts-section">
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Record Types by Volume</div>
+                        <div class="chart-placeholder">📊 Pie Chart</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Daily Processing Progress</div>
+                        <div class="chart-placeholder">📈 Line Chart</div>
                     </div>
                 </div>
             </div>
@@ -846,6 +1012,8 @@
                     <h1>Upload Files</h1>
                     <p>Submit files for processing and report generation</p>
                 </div>
+                
+                <!-- Upload Card -->
                 <div class="card">
                    <div class="upload-box" id="drop-zone">
                         <input type="file" id="file-input" class="file-input" multiple />
@@ -859,12 +1027,76 @@
                               </div>
                             </label>
                     </div>
-                <div id="upload-queue"></div>
-                <div class="progress-bar" id="progress-bar">
-                    <div class="progress" id="progress"></div>
+                    <div id="upload-queue"></div>
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                </div>  <!-- Close the upload card here -->
+                
+                <!-- File Upload Tracking Table -->
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.125rem; font-weight: 600; color: #374151; margin: 0;">
+                            📋 Required Files Status
+                        </h3>
+                        <div id="upload-progress-summary" style="font-size: 0.875rem; color: #6b7280;">
+                            <span id="files-uploaded-count">0</span>/21 files uploaded
+                        </div>
+                    </div>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                        All 21 files must be uploaded before generating the PDF report for complete cross-file relationship analysis.
+                    </p>
+                    
+                    <div class="file-tracking-table-container">
+                        <table class="file-tracking-table" id="file-tracking-table">
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Upload Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="file-tracking-tbody">
+                                <!-- Rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="completion-status" style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.375rem; display: none;">
+                        <div id="completion-message"></div>
+                    </div>
                 </div>
-            </div>
-        </div>
+                
+                <!-- Analysis Section - OUTSIDE the card -->
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button id="analyzeFilesBtn" class="button" style="padding: 0.75rem 2rem; font-size: 1rem; margin-right: 1rem;">
+                        📊 Analyze Uploaded Files
+                    </button>
+                    <button id="generatePDFBtnUpload" class="button" style="padding: 0.75rem 2rem; font-size: 1rem;">
+                        📄 Generate PDF Report
+                    </button>
+                </div>
+                
+                <!-- Analysis Results Display - OUTSIDE the card -->
+                <div id="analysis-results" style="margin-top: 1.5rem; display: none;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">
+                        📋 Executive Summary
+                    </h3>
+                    <div id="analysis-output" style="
+                        background: #f8fafc; 
+                        border: 1px solid #e2e8f0; 
+                        border-radius: 0.5rem; 
+                        padding: 1.5rem; 
+                        color: #374151; 
+                        line-height: 1.6;
+                        white-space: pre-line;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        min-height: 100px;
+                    ">
+                        Click "Analyze Uploaded Files" to generate an executive summary of your data quality analysis.
+                    </div>
+                </div>
+                
+            </div>  <!-- Close the upload section -->
 
             <div id="reports" class="section hidden">
                 <div class="header">
@@ -887,7 +1119,7 @@
                     </div>
                 </div>
 
-                <div class="table-container">
+                <div class="table-container" style="display: none;">
                     <!-- Processed Files Section -->
                     <div class="table-header">
                         <div class="table-title">📊 Processed Data Files</div>
@@ -1114,6 +1346,80 @@
                 console.log('✅ Generate PDF button wired up');
             }
             
+            // Wire up Analyze Files button
+            const analyzeFilesBtn = document.getElementById('analyzeFilesBtn');
+            if (analyzeFilesBtn) {
+                analyzeFilesBtn.addEventListener('click', () => {
+                    // Show loading state
+                    analyzeFilesBtn.innerHTML = '⏳ Analyzing...';
+                    analyzeFilesBtn.disabled = true;
+                    
+                    // Show results area
+                    const analysisResults = document.getElementById('analysis-results');
+                    const analysisOutput = document.getElementById('analysis-output');
+                    analysisResults.style.display = 'block';
+                    analysisOutput.textContent = 'Generating executive summary...';
+                    
+                    // Make API call to get executive summary
+                    fetch('/api/executive-summary', { method: 'GET' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.summary) {
+                                analysisOutput.textContent = data.summary;
+                            } else {
+                                analysisOutput.textContent = 'No analysis data available. Please upload and process files first.';
+                            }
+                            
+                            // Reset button state
+                            analyzeFilesBtn.innerHTML = '📊 Analyze Uploaded Files';
+                            analyzeFilesBtn.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching executive summary:', error);
+                            analysisOutput.textContent = 'Error generating executive summary. Please try again.';
+                            
+                            // Reset button state
+                            analyzeFilesBtn.innerHTML = '📊 Analyze Uploaded Files';
+                            analyzeFilesBtn.disabled = false;
+                        });
+                });
+                console.log('✅ Analyze Files button wired up');
+            }
+            
+                // Wire up Generate PDF button in Upload section
+            const generatePDFBtnUpload = document.getElementById('generatePDFBtnUpload');
+            if (generatePDFBtnUpload) {
+                generatePDFBtnUpload.addEventListener('click', () => {
+                    // Show loading state
+                    generatePDFBtnUpload.innerHTML = '⏳ Generating PDF...';
+                    generatePDFBtnUpload.disabled = true;
+                    
+                    // Direct API call - don't depend on FileManager
+                    fetch('/generate-pdf-report', { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('PDF generation started:', data);
+                            if (data.success) {
+                                alert('✅ PDF report generated successfully! Check the Reports section to download.');
+                            } else {
+                                alert('❌ Error: ' + (data.error || 'PDF generation failed'));
+                            }
+                            
+                            // Reset button state
+                            generatePDFBtnUpload.innerHTML = '📄 Generate PDF Report';
+                            generatePDFBtnUpload.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error generating PDF:', error);
+                            alert('❌ Error generating PDF report. Please try again.');
+                            
+                            // Reset button state
+                            generatePDFBtnUpload.innerHTML = '📄 Generate PDF Report';
+                            generatePDFBtnUpload.disabled = false;
+                        });
+                });
+                console.log('✅ Generate PDF button (Upload section) wired up');
+            }
             // Initialize file lists on page load
             setTimeout(() => {
                 if (typeof loadFiles === 'function') {
@@ -1151,7 +1457,7 @@
         }
     </script>
     
-    <!-- Global metrics functions - outside DOMContentLoaded for upload integration access -->
+    <!-- Metrics initialization and polling -->
     <script>
         // Dashboard metrics functionality - global scope
         function updateDashboardMetrics() {
@@ -1161,11 +1467,35 @@
                 .then(data => {
                     console.log('DEBUG: Metrics response:', data);
                     if (data.success && data.metrics) {
-                        const totalElement = document.getElementById('total-objects-processed');
-                        if (totalElement) {
-                            const count = data.metrics.total_records_processed || 0;
-                            console.log(`DEBUG: Updating dashboard with count: ${count}`);
-                            totalElement.textContent = count.toLocaleString();
+                        // Update all 3 cards
+                        const totalEl = document.getElementById('total-objects-processed');
+                        if (totalEl) {
+                            totalEl.textContent = data.metrics.total_records_processed || '0';
+                        }
+                        
+                        const anomalyEl = document.getElementById('total-records-with-anomalies');
+                        if (anomalyEl) {
+                            anomalyEl.textContent = data.metrics.total_records_with_anomalies || '0';
+                        }
+                        
+                        const cleanEl = document.getElementById('total-clean-records');
+                        if (cleanEl) {
+                            cleanEl.textContent = data.metrics.total_clean_records || '0';
+                        }
+                        
+                        // Calculate and update percentage
+                        const percentageEl = document.getElementById('percentage-records-ready');
+                        if (percentageEl) {
+                            const totalStr = data.metrics.total_records_processed || '0';
+                            const cleanStr = data.metrics.total_clean_records || '0';
+                            
+                            // Parse numbers (remove commas)
+                            const total = parseInt(totalStr.replace(/,/g, '')) || 0;
+                            const clean = parseInt(cleanStr.replace(/,/g, '')) || 0;
+                            
+                            // Calculate percentage
+                            const percentage = total > 0 ? Math.round((clean / total) * 100) : 0;
+                            percentageEl.textContent = `${percentage}%`;
                         }
                     }
                 })
@@ -1173,22 +1503,22 @@
         }
         
         function resetDashboardMetrics() {
-            const totalElement = document.getElementById('total-objects-processed');
-            if (totalElement) {
-                totalElement.textContent = '0';
-            }
+            ['total-objects-processed', 'total-records-with-anomalies', 'total-clean-records'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '0';
+            });
+            const percentageEl = document.getElementById('percentage-records-ready');
+            if (percentageEl) percentageEl.textContent = '0%';
         }
-    </script>
-    
-    <!-- Metrics initialization and polling -->
-    <script>
+
         // Update metrics on page load and periodically
         document.addEventListener('DOMContentLoaded', () => {
             updateDashboardMetrics();
-            // Update every 5 seconds when on dashboard
+            // Update every 5 seconds when on dashboard AND page is visible
             setInterval(() => {
                 const dashboardSection = document.getElementById('dashboard');
-                if (dashboardSection && !dashboardSection.classList.contains('hidden')) {
+                if (dashboardSection && !dashboardSection.classList.contains('hidden') && 
+                    document.visibilityState === 'visible') {
                     updateDashboardMetrics();
                 }
             }, 5000);
