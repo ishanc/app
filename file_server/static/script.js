@@ -590,6 +590,97 @@ class FileUploadTracker {
         
         this.uploadedFiles = new Set();
         this.initializeTable();
+        this.loadExistingFiles(); // One-time load on initialization
+        this.setupUploadListener(); // Hook into upload events
+    }
+    
+    // Hook into upload events for immediate updates
+    setupUploadListener() {
+        // Hook into FileUploadManager when available
+        const hookManager = () => {
+            if (window.lmsUploadManager) {
+                window.lmsUploadManager.on('uploadComplete', (data) => {
+                    const filename = data?.file?.name || data?.filename;
+                    console.log('FileUploadTracker: Upload completed:', filename);
+                    if (filename) {
+                        this.checkAndUpdateFile(filename);
+                    }
+                });
+                console.log('FileUploadTracker: Hooked into upload manager');
+                return true;
+            }
+            return false;
+        };
+        
+        // Try immediate hook, or wait for manager to be available
+        if (!hookManager()) {
+            const checkInterval = setInterval(() => {
+                if (hookManager()) {
+                    clearInterval(checkInterval);
+                }
+            }, 500);
+            setTimeout(() => clearInterval(checkInterval), 5000); // Stop after 5 seconds
+        }
+    }
+    
+    // Efficient local matching - no API calls
+    checkAndUpdateFile(filename) {
+        if (!filename) return false;
+        
+        const baseFilename = filename.replace(/\.(xlsx|csv)$/i, '');
+        
+        const matchedIndex = this.requiredFiles.findIndex(requiredFile => {
+            // Direct match
+            if (baseFilename === requiredFile) return true;
+            
+            // Normalized match (remove spaces, underscores, hyphens, case insensitive)
+            const normalizedBase = baseFilename.replace(/[-_\s]/g, '').toLowerCase();
+            const normalizedRequired = requiredFile.replace(/[-_\s]/g, '').toLowerCase();
+            return normalizedBase === normalizedRequired;
+        });
+        
+        if (matchedIndex !== -1) {
+            const requiredFile = this.requiredFiles[matchedIndex];
+            
+            // Only update if this is a new file
+            if (!this.uploadedFiles.has(requiredFile)) {
+                this.uploadedFiles.add(requiredFile);
+                this.updateFileStatus(matchedIndex, true);
+                this.updateSummary();
+                
+                console.log(`FileUploadTracker: ✅ Matched "${filename}" → "${requiredFile}" (${this.uploadedFiles.size}/${this.requiredFiles.length})`);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    // One-time load of existing files (only called on page load)
+    async loadExistingFiles() {
+        try {
+            const response = await fetch('/files');
+            if (response.ok) {
+                const data = await response.json();
+                const uploadedFilenames = [];
+                
+                if (data.uploads && Array.isArray(data.uploads)) {
+                    data.uploads.forEach(file => {
+                        const filename = file.name || file.filename || file;
+                        uploadedFilenames.push(filename);
+                    });
+                }
+                
+                console.log('FileUploadTracker: Loading existing files:', uploadedFilenames);
+                
+                // Process existing files
+                uploadedFilenames.forEach(filename => {
+                    this.checkAndUpdateFile(filename);
+                });
+            }
+        } catch (error) {
+            console.error('FileUploadTracker: Error loading existing files:', error);
+        }
     }
     
     initializeTable() {
@@ -617,31 +708,6 @@ class FileUploadTracker {
         this.updateSummary();
     }
     
-    updateFromFileList(uploadedFilenames) {
-        this.uploadedFiles.clear();
-        
-        uploadedFilenames.forEach(filename => {
-            if (!filename) return;
-            
-            const baseFilename = filename.replace(/\.(xlsx|csv)$/i, '');
-            
-            const matchedIndex = this.requiredFiles.findIndex(requiredFile => {
-                if (baseFilename === requiredFile) return true;
-                
-                const normalizedBase = baseFilename.replace(/[-_\s]/g, '').toLowerCase();
-                const normalizedRequired = requiredFile.replace(/[-_\s]/g, '').toLowerCase();
-                return normalizedBase === normalizedRequired;
-            });
-            
-            if (matchedIndex !== -1) {
-                this.uploadedFiles.add(this.requiredFiles[matchedIndex]);
-                this.updateFileStatus(matchedIndex, true);
-            }
-        });
-        
-        this.updateSummary();
-    }
-    
     updateFileStatus(index, isUploaded) {
         const statusElement = document.getElementById(`status-${index}`);
         if (!statusElement) return;
@@ -654,14 +720,6 @@ class FileUploadTracker {
                 </svg>
                 Uploaded
             `;
-        } else {
-            statusElement.className = 'file-status not-uploaded';
-            statusElement.innerHTML = `
-                <svg class="status-icon" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                </svg>
-                Not Uploaded
-            `;
         }
     }
     
@@ -669,6 +727,7 @@ class FileUploadTracker {
         const uploadedCount = this.uploadedFiles.size;
         const totalFiles = this.requiredFiles.length;
         
+        // Update counter
         const countElement = document.getElementById('files-uploaded-count');
         const summaryElement = document.getElementById('upload-progress-summary');
         
@@ -684,6 +743,7 @@ class FileUploadTracker {
             }
         }
         
+        // Update completion status
         this.updateCompletionStatus(uploadedCount, totalFiles);
     }
     
@@ -713,42 +773,11 @@ class FileUploadTracker {
     }
 }
 
-// Initialize file upload tracker
-let fileUploadTracker = null;
-
-// Modified loadFiles function to integrate with tracking
-const originalLoadFiles = window.loadFiles;
-window.loadFiles = function() {
-    // Call original loadFiles function
-    if (typeof originalLoadFiles === 'function') {
-        originalLoadFiles();
-    }
-    
-    // Update file tracking after files are loaded
-    setTimeout(() => {
-        if (fileUploadTracker) {
-            fetch('/files')
-                .then(response => response.json())
-                .then(data => {
-                    const uploadedFilenames = [];
-                    if (data.uploads && Array.isArray(data.uploads)) {
-                        data.uploads.forEach(file => {
-                            const filename = file.name || file.filename || file;
-                            uploadedFilenames.push(filename);
-                        });
-                    }
-                    fileUploadTracker.updateFromFileList(uploadedFilenames);
-                })
-                .catch(error => console.error('Error updating file tracker:', error));
-        }
-    }, 500);
-};
-
 // Initialize tracker when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('file-tracking-table')) {
         fileUploadTracker = new FileUploadTracker();
         window.fileUploadTracker = fileUploadTracker;
-        console.log('✅ File Upload Tracker initialized in script.js');
+        console.log('✅ FileUploadTracker initialized with event-based updates');
     }
 });

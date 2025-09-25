@@ -41,17 +41,17 @@ load_dotenv()
 
 # Database configurations
 MYSQL_CONFIG = {
-    'host': os.getenv('MYSQL_HOST', 'localhost'),
-    'port': int(os.getenv('MYSQL_PORT', 3306)),
-    'database': os.getenv('MYSQL_NAME', 'error_logging'),
-    'user': os.getenv('MYSQL_USER', 'error_logger'),
-    'password': os.getenv('MYSQL_PASSWORD', 'IerpAgents.com1%')
+    'host': os.getenv('MYSQL_HOST'),
+    'port': int(os.getenv('MYSQL_PORT')),
+    'database': os.getenv('MYSQL_NAME'),
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD')
 }
 
 NEO4J_CONFIG = {
-    'uri': os.getenv('NEO4J_URI', 'bolt://localhost:7687'),
-    'user': os.getenv('NEO4J_USER', 'neo4j'),
-    'password': os.getenv('NEO4J_PASSWORD', '')
+    'uri': os.getenv('NEO4J_URI'),
+    'user': os.getenv('NEO4J_USER'),
+    'password': os.getenv('NEO4J_PASSWORD')
 }
 
 

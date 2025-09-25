@@ -21,11 +21,11 @@ class ErrorLogger:
     # Database configuration using environment variables for production compatibility
     
     DB_CONFIG = {
-        'host': os.getenv('MYSQL_HOST', 'localhost'),
-        'user': os.getenv('MYSQL_USER', 'error_logger'),
-        'password': os.getenv('MYSQL_PASSWORD', 'IerpAgents.com1%'),
-        'database': os.getenv('MYSQL_NAME', 'error_logging'),
-        'port': int(os.getenv('MYSQL_PORT', 3306)),
+        'host': os.getenv('MYSQL_HOST'),
+        'user': os.getenv('MYSQL_USER'),
+        'password': os.getenv('MYSQL_PASSWORD'),
+        'database': os.getenv('MYSQL_NAME'),
+        'port': int(os.getenv('MYSQL_PORT')),
         'ssl_disabled': True,
         'autocommit': False,
         'connect_timeout': 30,
@@ -361,7 +361,18 @@ class ErrorLogger:
         error_type = error_details['error_type']
         field_name = error_details['field_name']  # This is now the display_field_name (SumTotal name)
         row_number = error_details['row_number']
-        value = error_details['value']
+        
+        # Safe value conversion to handle corrupted data
+        try:
+            value = error_details['value']
+            if isinstance(value, (bytes, bytearray)):
+                value = str(value)[:100] + "..." if len(str(value)) > 100 else str(value)
+            elif value is None:
+                value = "NULL"
+            else:
+                value = str(value)[:100] + "..." if len(str(value)) > 100 else str(value)
+        except Exception:
+            value = "<corrupted_data>"
         
         if error_type == 'TRUNCATION':
             max_length = error_details.get('max_length', 'unknown')

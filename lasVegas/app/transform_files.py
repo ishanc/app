@@ -19,8 +19,8 @@ def main():
     logger.info("Environment variables loaded")
     
     # Get and validate Neo4j credentials
-    neo4j_uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
-    neo4j_user = os.getenv('NEO4J_USER', 'neo4j')
+    neo4j_uri = os.getenv('NEO4J_URI')
+    neo4j_user = os.getenv('NEO4J_USER')
     neo4j_password = os.getenv('NEO4J_PASSWORD')
     
     logger.info(f"Using Neo4j URI: {neo4j_uri}")

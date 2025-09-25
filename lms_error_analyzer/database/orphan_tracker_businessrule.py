@@ -46,14 +46,14 @@ def _db_conn() -> mysql.connector.MySQLConnection:
     """Create MySQL connection using environment variables"""
     try:
         connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
+            host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
             autocommit=False,
             charset='utf8mb4',
             collation='utf8mb4_unicode_ci',
-            port=int(os.getenv('MYSQL_PORT', 3306))
+            port=int(os.getenv('MYSQL_PORT'))
         )
         logger.debug("✅ MySQL connection established")
         return connection

@@ -1,12 +1,16 @@
+import os
 from mysql_connector import MySQLConnector
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
 
 connector = MySQLConnector()
 
 try:
     query = "SELECT DISTINCT validation_type FROM error_logs"
     #execute query
-    results = connector.execute_query("error_logging", query)
+    results = connector.execute_query(os.getenv('MYSQL_NAME'), query)
 
 #convert results to list
     validation_types = results['validation_type'].tolist()

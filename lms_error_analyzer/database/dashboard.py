@@ -10,11 +10,11 @@ load_dotenv()
 class Dashboard:
     def __init__(self):
         self.connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
+            host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
-            port=os.getenv('MYSQL_PORT', 3306),
+            port=int(os.getenv('MYSQL_PORT')),
             ssl_disabled=True,
             autocommit=False,
             connect_timeout=30,
@@ -169,6 +169,7 @@ class Dashboard:
             "Transcript_Curriculum": "transcript_curriculum",
             "Transcript_Document": "transcript_document",
             "Transcript_ILTClass": "transcript_ilt_class",
+            "Transcript_ILT_Class": "transcript_ilt_class",  # Add missing mapping
             "Transcript_Online Course": "transcript_online_course",
             "Transcript_Online_Course": "transcript_online_course",
             "Transcript_QuickAssessment": "transcript_quick_assessment"
@@ -277,33 +278,45 @@ class Dashboard:
         return mandatory_fields
     
     def get_sumtotal_file_key(self, filename):
-        """
-        A4: Map filename to SumTotal File.name in Neo4j (SumTotal-only, no CSOD mapping)
-        
-        Args:
-            filename: Original filename or SumTotal file name
-            
-        Returns:
-            str: SumTotal file key for Neo4j File.name lookup
-        """
         # Clean filename (remove extensions)
         clean_filename = filename.replace('.xlsx', '').replace('.csv', '')
         
-        # SumTotal file name variations (handle space/underscore differences)
+        # Copy the COMPLETE mappings from filename_mapper.py (lines 22-57)
         sumtotal_file_mappings = {
-            # Handle space/underscore variants
-            "Activity_Online Course": "Activity_ILTCourse",  # Map to Neo4j File.name
-            "Activity_Online_Course": "Activity_ILTCourse",
-            "Transcript_Online Course": "Transcript_ILTCourse", 
-            "Transcript_Online_Course": "Transcript_ILTCourse",
-            "Transcript_ILT Class": "Transcript_ILTClass",
-            "Transcript_ILT_Class": "Transcript_ILTClass",
+            # Activity mappings
+            "Activity_Curriculum": "Activity_Curriculum",
+            "Activity_QuickAssessment": "Activity_Test",
+            "Activity_ILTSessions": "Activity_SessionParts",
+            "Activity_ILTClass": "Activity_Sessions", 
+            "Activity_ILTCourse": "Activity_Events",
+            "Activity_OnlineCourse": "Activity_OnlineCourse",
+            "Activity_Online Course": "Activity_OnlineCourse",  # Original with space
+            "Activity_Online_Course": "Activity_OnlineCourse",  # Flask converts space to underscore
+            "Activity_Document": "Activity_Material",
             
-            # Employee files need -CHR suffix in Neo4j
-            "Core_Employee": "Core_Employee-CHR",
+            # Transcript mappings
+            "Transcript_Curriculum": "Transcript_CurriculumTranscript",
+            "Transcript_Document": "Transcript_MaterialTranscript", 
+            "Transcript_ILT Class": "Transcript_SessionTranscript",
+            "Transcript_ILT_Class": "Transcript_SessionTranscript",
+            "Transcript_Online Course": "Transcript_OnlineCourse",
+            "Transcript_Online_Course": "Transcript_OnlineCourse",
+            "Transcript_QuickAssessment": "Transcript_TestTranscript",
             
-            # For most files, the clean filename IS the SumTotal File.name
-            # Examples: Activity_Curriculum, Activity_ILTClass, Core_Audience, etc.
+            # Core mappings
+            "Core_Audience": "Core_GroupsOU",
+            "Core_Domain": "Core_DivisionOU",
+            "Core_Employee": "Core_Employee-CHR", 
+            "Core_Jobs": "Core_PositionOU",
+            "Core_Organization": "Core_CostCenterOU",
+            
+            # Prerequisites mappings
+            "Prerequisites_Facility": "Prerequisites_Facility",
+            "Prerequisites_Instructor": "Prerequisites_Instructor",
+            "Prerequisites_Provider": "Prerequisites_Provider",
+            "Prerequisites_Question": "Prerequisites_Questions",
+            "Prerequisites_QuestionBanks": "Prerequisites_QuestionsCategories",
+            "Prerequisites_Subject": "Prerequisites_Subject"
         }
         
         # Return mapped name or original clean name for direct SumTotal files
@@ -319,8 +332,11 @@ class Dashboard:
         - total_records = total number of data rows
         - incomplete_records = number of records missing mandatory fields
         """
-        # Get mandatory fields from Neo4j
-        mandatory_fields = self.get_mandatory_fields_from_neo4j(file_name)
+        # Get mandatory fields from Neo4j using mapped filename
+        from utils.filename_mapper import FilenameMapper
+        mapped_file_name = FilenameMapper.to_db_key(file_name)
+        print(f"DEBUG: Mapping {file_name} -> {mapped_file_name} for Neo4j lookup")
+        mandatory_fields = self.get_mandatory_fields_from_neo4j(mapped_file_name)
 
         total_records = len(input_df) if input_df is not None else 0
         print(f"DEBUG: Found {len(mandatory_fields)} mandatory fields: {mandatory_fields}")

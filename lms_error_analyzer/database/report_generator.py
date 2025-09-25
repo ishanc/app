@@ -14,11 +14,11 @@ from dashboard import Dashboard
 def _get_db_connection():
     load_dotenv()
     return mysql.connector.connect(
-        host=os.getenv('MYSQL_HOST', 'localhost'),
+        host=os.getenv('MYSQL_HOST'),
         user=os.getenv('MYSQL_USER'),
         password=os.getenv('MYSQL_PASSWORD'),
         database=os.getenv('MYSQL_NAME'),
-        port=int(os.getenv('MYSQL_PORT', 3306)),
+        port=int(os.getenv('MYSQL_PORT')),
         ssl_disabled=True,
         connect_timeout=30,
         use_unicode=True

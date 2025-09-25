@@ -70,11 +70,11 @@ class PDFQualityReportGenerator:
     def __init__(self, output_dir: str):
         self.output_dir = output_dir
         self.db_connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
+            host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
+            port=int(os.getenv('MYSQL_PORT')),
             ssl_disabled=True,
             autocommit=False,
             connect_timeout=30,
@@ -129,22 +129,64 @@ class PDFQualityReportGenerator:
             cursor = self.db_connection.cursor(dictionary=True)
             placeholders = ', '.join(['%s'] * len(file_names))
             
-            # Get error counts by type
+            # First, get completeness data to determine which files have legitimate mandatory issues
             cursor.execute(f"""
-                SELECT file_name, validation_type, COUNT(*) as error_count
-                FROM error_logs 
+                SELECT file_name, incomplete_records
+                FROM file_completeness_summary 
                 WHERE file_name IN ({placeholders})
-                GROUP BY file_name, validation_type
             """, file_names)
+            completeness_results = cursor.fetchall()
+            
+            # Build set of files that actually have incomplete records
+            files_with_incomplete_records = set()
+            for row in completeness_results:
+                if row.get('incomplete_records', 0) > 0:
+                    files_with_incomplete_records.add(row['file_name'])
+            
+            # Get error counts by type - exclude MANDATORY_EMPTY for files with 0 incomplete records
+            if files_with_incomplete_records:
+                # Some files have legitimate mandatory issues - include MANDATORY_EMPTY for those files only
+                files_with_incomplete = ', '.join(['%s'] * len(files_with_incomplete_records))
+                cursor.execute(f"""
+                    SELECT file_name, validation_type, COUNT(*) as error_count
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    AND (validation_type != 'MANDATORY_EMPTY' 
+                         OR (validation_type = 'MANDATORY_EMPTY' AND file_name IN ({files_with_incomplete})))
+                    GROUP BY file_name, validation_type
+                """, file_names + list(files_with_incomplete_records))
+            else:
+                # No files have incomplete records - exclude all MANDATORY_EMPTY errors
+                cursor.execute(f"""
+                    SELECT file_name, validation_type, COUNT(*) as error_count
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    AND validation_type != 'MANDATORY_EMPTY'
+                    GROUP BY file_name, validation_type
+                """, file_names)
+            
             error_results = cursor.fetchall()
             
-            # Get total error counts
-            cursor.execute(f"""
-                SELECT file_name, COUNT(*) as total_errors
-                FROM error_logs 
-                WHERE file_name IN ({placeholders})
-                GROUP BY file_name
-            """, file_names)
+            # Get total error counts (also excluding bogus MANDATORY_EMPTY)
+            if files_with_incomplete_records:
+                files_with_incomplete = ', '.join(['%s'] * len(files_with_incomplete_records))
+                cursor.execute(f"""
+                    SELECT file_name, COUNT(*) as total_errors
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    AND (validation_type != 'MANDATORY_EMPTY' 
+                         OR (validation_type = 'MANDATORY_EMPTY' AND file_name IN ({files_with_incomplete})))
+                    GROUP BY file_name
+                """, file_names + list(files_with_incomplete_records))
+            else:
+                cursor.execute(f"""
+                    SELECT file_name, COUNT(*) as total_errors
+                    FROM error_logs 
+                    WHERE file_name IN ({placeholders})
+                    AND validation_type != 'MANDATORY_EMPTY'
+                    GROUP BY file_name
+                """, file_names)
+                
             total_results = cursor.fetchall()
             cursor.close()
             
@@ -221,16 +263,6 @@ class PDFQualityReportGenerator:
     def _calculate_error_prone_records(self, file_name: str, total_records: int, incomplete_records: int) -> int:
         """
         Calculate the number of error-prone records for a file.
-        
-        An error-prone record is one that has one or more errors in mandatory fields.
-        
-        Args:
-            file_name: Name of the file
-            total_records: Total number of records in the file
-            incomplete_records: Number of records with incomplete mandatory fields
-            
-        Returns:
-            Number of error-prone records
         """
         if total_records == 0:
             return 0
@@ -241,52 +273,48 @@ class PDFQualityReportGenerator:
             # Get mandatory fields for this file
             mandatory_fields = self._get_mandatory_fields_for_file(file_name)
             if not mandatory_fields:
-                logger.warning(f"No mandatory fields found for {file_name}, falling back to incomplete_records: {incomplete_records}")
-                # Fallback: If we can't determine mandatory fields, use incomplete_records as proxy
-                # This ensures consistency with mandatory completeness calculation
                 return incomplete_records
             
-            # Build SQL to get errors in mandatory fields
-            # We need to extract field names from error messages and match against mandatory fields
-            cursor.execute("""
-                SELECT DISTINCT line_number, message
+            # Build error type list - exclude MANDATORY_EMPTY if file_completeness_summary shows 0 incomplete records  
+            error_types = ['TRUNCATION', 'ENCODING_ISSUE', 'HETEROGENEOUS_TYPE',
+                          'TYPE_COMPATIBILITY', 'DATE_FORMAT', 'LEADING_SPACES', 'TRAILING_SPACES',
+                          'OUTLIER_VALUE', 'LEADING_ZEROS', 'BOOLEAN_CONVERSION']
+            
+            # Only include MANDATORY_EMPTY if file_completeness_summary confirms incomplete records
+            if incomplete_records > 0:
+                error_types.append('MANDATORY_EMPTY')
+                logger.info(f"File {file_name}: Including MANDATORY_EMPTY errors (completeness shows {incomplete_records} incomplete records)")
+            else:
+                logger.info(f"File {file_name}: Excluding MANDATORY_EMPTY errors (completeness shows 0 incomplete records)")
+            
+            # Get validation errors (excluding bogus MANDATORY_EMPTY when appropriate)
+            placeholders = ', '.join(['%s'] * len(error_types))
+            cursor.execute(f"""
+                SELECT DISTINCT line_number, message, validation_type
                 FROM error_logs 
                 WHERE file_name = %s 
                 AND line_number IS NOT NULL
-            """, (file_name,))
+                AND validation_type IN ({placeholders})
+            """, [file_name] + error_types)
             
             error_results = cursor.fetchall()
             cursor.close()
             
-            # Track which line numbers (records) have errors in mandatory fields
+            # Count unique error-prone records
             error_prone_lines = set()
-            
             for error_row in error_results:
                 line_number = error_row['line_number']
                 message = error_row['message']
+                validation_type = error_row['validation_type']
                 
-                # Extract field name from error message
                 field_name = self._extract_field_name_from_error_message(message)
-                
-                # Check if this field is mandatory
                 if field_name and field_name in mandatory_fields:
                     error_prone_lines.add(line_number)
-                    logger.debug(f"Found error in mandatory field '{field_name}' at line {line_number}")
             
-            error_prone_count = len(error_prone_lines)
-            logger.info(f"File {file_name}: {error_prone_count} out of {total_records} records are error-prone (detailed analysis)")
-            
-            # Sanity check: If detailed analysis gives 0 but we have incomplete_records, use incomplete_records
-            if error_prone_count == 0 and incomplete_records > 0:
-                logger.warning(f"File {file_name}: Detailed analysis found 0 error-prone records but incomplete_records={incomplete_records}. Using incomplete_records as fallback.")
-                return incomplete_records
-            
-            return error_prone_count
+            return len(error_prone_lines)
             
         except Exception as e:
             logger.error(f"Error calculating error-prone records for {file_name}: {e}")
-            # If detailed analysis fails, fall back to incomplete_records
-            logger.info(f"Using incomplete_records ({incomplete_records}) as fallback for {file_name}")
             return incomplete_records
     
     def calculate_quality_scores(self, completeness_data: Dict, error_data: Dict) -> List[FileQualityScore]:
@@ -1403,11 +1431,11 @@ def get_original_file_list_from_db() -> List[str]:
     """Get original uploaded filenames from database - fallback to session data if completeness table is empty"""
     try:
         connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
+            host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
+            port=int(os.getenv('MYSQL_PORT')),
             ssl_disabled=True,
             connect_timeout=30,
             use_unicode=True
@@ -1576,11 +1604,11 @@ def reset_all_data(processed_folder: str) -> Dict[str, Any]:
     try:
         # Clear database
         connection = mysql.connector.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
+            host=os.getenv('MYSQL_HOST'),
             user=os.getenv('MYSQL_USER'),
             password=os.getenv('MYSQL_PASSWORD'),
             database=os.getenv('MYSQL_NAME'),
-            port=int(os.getenv('MYSQL_PORT', 3306)),
+            port=int(os.getenv('MYSQL_PORT')),
             ssl_disabled=True,
             autocommit=False,
             connect_timeout=30,

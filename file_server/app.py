@@ -49,6 +49,55 @@ ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/health')
+@app.route('/ready') 
+def health_check():
+    """Health check endpoint for Docker and ECS"""
+    try:
+        health_status = {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'services': {}
+        }
+        
+        # Test MySQL connection
+        try:
+            sys.path.append(LMS_DATABASE_DIR)
+            from utils.db_utils import DatabaseConnectionManager
+            db_manager = DatabaseConnectionManager()
+            with db_manager.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT 1")
+                cursor.fetchone()
+            health_status['services']['mysql'] = 'connected'
+        except Exception as e:
+            health_status['services']['mysql'] = f'error: {str(e)}'
+            health_status['status'] = 'unhealthy'
+        
+        # Test Neo4j connection
+        try:
+            with driver.session() as session:
+                session.run("RETURN 1")
+            health_status['services']['neo4j'] = 'connected'
+        except Exception as e:
+            health_status['services']['neo4j'] = f'error: {str(e)}'
+            health_status['status'] = 'unhealthy'
+        
+        status_code = 200 if health_status['status'] == 'healthy' else 503
+        return jsonify(health_status), status_code
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 503
+
+@app.route('/live')
+def liveness():
+    """Simple liveness check"""
+    return jsonify({'status': 'alive'}), 200
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -56,7 +105,7 @@ def index():
 @app.route('/lms')
 def lms_ui():
     """Serve the new LMS Migration Agent UI"""
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(BASE_DIR, 'index.html')
 
 def map_filename_to_database_key(filename):
     """Map filename to the correct database key for mapping rules"""

@@ -1,7 +1,7 @@
 services:
   file-server:
     build: .
-    image: file-server-app
+    image: lms-app
     container_name: app-file-server
     ports:
       - "5001:8000"

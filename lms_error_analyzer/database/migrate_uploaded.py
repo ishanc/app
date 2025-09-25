@@ -14,7 +14,7 @@ python migrate_uploaded.py --file lms_error_analyzer/csvInput/Activity_Curriculu
 python migrate_uploaded.py --dir lms_error_analyzer/csvInput
 
 Notes:
-- Keeps current hardcoded MySQL config (error_logging) per request
+- Uses MySQL config from environment variables (.env)
 - Assumes target tables already exist and are named to match the files
 """
 
@@ -27,6 +27,10 @@ from typing import List, Optional, Tuple
 
 import pandas as pd
 import mysql.connector
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -45,13 +49,13 @@ for handler in logging.getLogger().handlers:
 
 logger = logging.getLogger(__name__)
 
-# Database configuration (kept as-is for now)
+# Database configuration from environment variables
 DB_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'database': 'error_logging',
-    'user': 'error_logger',
-    'password': 'IerpAgents.com1%'
+    'host': os.getenv('MYSQL_HOST'),
+    'port': int(os.getenv('MYSQL_PORT')),
+    'database': os.getenv('MYSQL_NAME'), 
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD')
 }
 
 
@@ -183,11 +187,14 @@ class GenericTabularMigrator:
                 logger.warning(f"⚠️ File appears to be empty: {self.file_path}")
                 return False
                 
-            # Check for unnamed/empty columns
+            # Check for unnamed/empty columns - preserve for migration integrity
             empty_cols = [col for col in self.df.columns if col == '' or col.startswith('Unnamed:')]
             if empty_cols:
-                logger.warning(f"⚠️ Found {len(empty_cols)} empty/unnamed columns, dropping them")
-                self.df = self.df.drop(columns=empty_cols)
+                logger.warning(f"⚠️ Found {len(empty_cols)} empty/unnamed columns, preserving for migration integrity")
+                # Rename unnamed columns to preserve structure
+                for i, col in enumerate(self.df.columns):
+                    if col == '' or col.startswith('Unnamed:'):
+                        self.df.rename(columns={col: f"Empty_Column_{i}"}, inplace=True)
             
             logger.info(f"✅ Loaded {len(self.df)} rows | Columns: {list(self.df.columns)}")
             return True
@@ -195,13 +202,70 @@ class GenericTabularMigrator:
             logger.error(f"❌ Failed to read file: {e}")
             return False
 
+    def _clear_existing_data(self, table_name: str):
+        """Clear all existing data from the target table before inserting new data."""
+        try:
+            truncate_sql = f"TRUNCATE TABLE {quote_identifier(table_name)}"
+            self.cursor.execute(truncate_sql)
+            self.conn.commit()
+            logger.info(f"🗑️ Cleared existing data from {table_name}")
+        except Exception as e:
+            logger.error(f"❌ Failed to clear table {table_name}: {e}")
+            raise
+
+    def _disable_unique_constraints(self, table_name: str):
+        """Temporarily disable unique constraints during migration to preserve exact data"""
+        try:
+            # Get all unique indexes for this table
+            self.cursor.execute(f"""
+                SELECT DISTINCT index_name 
+                FROM information_schema.statistics 
+                WHERE table_schema = %s AND table_name = %s AND non_unique = 0 AND index_name != 'PRIMARY'
+            """, (self.table_schema, table_name))
+            
+            unique_indexes = [row[0] for row in self.cursor.fetchall()]
+            
+            for index_name in unique_indexes:
+                try:
+                    drop_sql = f"ALTER TABLE {quote_identifier(table_name)} DROP INDEX {quote_identifier(index_name)}"
+                    self.cursor.execute(drop_sql)
+                    logger.info(f"Temporarily disabled unique constraint: {index_name}")
+                except Exception as idx_error:
+                    logger.warning(f"Could not disable constraint {index_name}: {idx_error}")
+            
+            self.conn.commit()
+            return unique_indexes  # Return list for restoration
+            
+        except Exception as e:
+            logger.warning(f"Could not disable constraints on {table_name}: {e}")
+            return []
+
+    def _restore_unique_constraints(self, table_name: str, disabled_indexes: list):
+        """Restore unique constraints after migration (optional)"""
+        if not disabled_indexes:
+            return
+            
+        try:
+            for index_name in disabled_indexes:
+                try:
+                    # Note: We can't restore the exact constraint without knowing the column(s)
+                    # This is intentionally left as a warning since we want to preserve duplicates
+                    logger.info(f"Skipping restoration of unique constraint: {index_name} (preserving duplicates)")
+                except Exception as idx_error:
+                    logger.warning(f"Could not restore constraint {index_name}: {idx_error}")
+            
+            logger.info(f" Unique constraints handling completed for {table_name}")
+            
+        except Exception as e:
+            logger.warning(f"Error during constraint restoration: {e}")
+
     def _build_insert_statement(self, table_name: str, insert_columns: List[str]) -> Tuple[str, List[str]]:
         # First, alter all columns to TEXT to accept any data
         self._ensure_columns_are_text(table_name, insert_columns)
         
         placeholders = ", ".join(["%s"] * len(insert_columns))
         quoted_cols = ", ".join([quote_identifier(col) for col in insert_columns])
-        sql = f"REPLACE INTO {quote_identifier(table_name)} ({quoted_cols}) VALUES ({placeholders})"
+        sql = f"INSERT INTO {quote_identifier(table_name)} ({quoted_cols}) VALUES ({placeholders})"
         return sql, insert_columns
 
     def _iter_row_values(self, insert_columns: List[str]):
@@ -248,6 +312,12 @@ class GenericTabularMigrator:
             if unknown_columns:
                 logger.info(f"ℹ️ Ignoring unknown columns not in table: {unknown_columns}")
 
+            # Clear existing data before inserting new data
+            self._clear_existing_data(self.table_name)
+
+            # Disable unique constraints to preserve exact data including duplicates
+            disabled_indexes = self._disable_unique_constraints(self.table_name)
+
             insert_sql, _ = self._build_insert_statement(self.table_name, insert_columns)
 
             inserted = 0
@@ -270,6 +340,9 @@ class GenericTabularMigrator:
                     # Log the actual values that failed for debugging
                     logger.debug(f"Failed values: {values}")
                     # Don't rollback - just continue to next row
+
+            # Optionally restore constraints (currently skipped to preserve duplicates)
+            self._restore_unique_constraints(self.table_name, disabled_indexes)
 
             total_processed = len(self.df)
             logger.info(f"✅ Done. Total rows: {total_processed} | Inserted: {inserted} | Failed: {failed}")

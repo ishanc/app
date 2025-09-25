@@ -1,0 +1,138 @@
+[1mdiff --cc file_server/app.py[m
+[1mindex a952f2a,e7b63cc..0000000[m
+[1m--- a/file_server/app.py[m
+[1m+++ b/file_server/app.py[m
+[36m@@@ -41,8 -22,12 +41,12 @@@[m [msys.path.append(LASVEGAS_APP_DIR[m
+  LMS_DATABASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))[m
+  sys.path.append(LMS_DATABASE_DIR)[m
+  [m
+[31m -import sumtotal_transformer_with_neo4j as transformer[m
+[32m +from lasVegas.app import sumtotal_transformer_with_neo4j as transformer[m
+  [m
+[32m+ # Import session manager[m
+[32m+ sys.path.append(LMS_DATABASE_DIR)[m
+[32m+ from session_manager import session_manager[m
+[32m+ [m
+  app = Flask(__name__)[m
+  [m
+  # Use absolute paths for all directories[m
+[36m@@@ -68,33 -53,18 +72,38 @@@[m [mdef allowed_file(filename)[m
+  def index():[m
+      return render_template('index.html')[m
+  [m
+[32m+ @app.route('/lms')[m
+[32m+ def lms_ui():[m
+[32m+     """Serve the new LMS Migration Agent UI"""[m
+[32m+     return send_from_directory('.', 'index.html')[m
+[32m+ [m
+  def map_filename_to_database_key(filename):[m
+      """Map filename to the correct database key for mapping rules"""[m
+[31m -    # Import here to avoid circular imports[m
+[31m -    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))[m
+[31m -    from utils.filename_mapper import FilenameMapper[m
+[32m +    # Implement direct mapping for Core files to maintain consistent keys[m
+[32m +    if filename.startswith('Core_'):[m
+[32m +        base_name = os.path.splitext(filename)[0][m
+[32m +        return base_name  # Keep the full Core_ prefix for consistency[m
+[32m +        [m
+[32m +    # For other files, use the FilenameMapper[m
+[32m +    from lms_error_analyzer.database.utils.filename_mapper import FilenameMapper[m
+      return FilenameMapper.to_db_key(filename)[m
+  [m
+[32m +# [MODIFIED: 2025-09-17] Previous validation was simpler without detailed checks[m
+[32m +"""[m
+[32m +Original implementation:[m
+[32m +def validate_transformed_data(df, mapping_rules):[m
+[32m +    errors = [][m
+[32m +    for rule in mapping_rules:[m
+[32m +        if rule.get('mandatory') == 'Mandatory' and rule['CSOD Field Name'] not in df.columns:[m
+[32m +            errors.append(f"Mandatory field '{rule['CSOD Field Name']}' is missing")[m
+[32m +    return {[m
+[32m +        'total_errors': len(errors),[m
+[32m +        'errors': errors[m
+[32m +    }[m
+[32m +[m
+[32m +Reason for change: Added more comprehensive validation including empty values and warnings tracking[m
+[32m +"""[m
+[32m +[m
+  def validate_transformed_data(df, mapping_rules):[m
+      """Validate the transformed data against mapping rules"""[m
+      errors = [][m
+[36m@@@ -395,23 -381,9 +460,23 @@@[m [mdef delete_file(filename)[m
+          logger.error(f"Error deleting file {filename}: {e}")[m
+          return jsonify({'error': str(e)}), 500[m
+  [m
+[32m +# [MODIFIED: 2025-09-17] Enhanced reset functionality with better error handling[m
+[32m +"""[m
+[32m +Original implementation:[m
+[32m +@app.route('/reset-all-data', methods=['POST'])[m
+[32m +def reset_all_data_endpoint():[m
+[32m +    try:[m
+[32m +        reset_all_data(app.config['PROCESSED_FOLDER'])[m
+[32m +        return jsonify({'success': True})[m
+[32m +    except Exception as e:[m
+[32m +        return jsonify({'error': str(e)}), 500[m
+[32m +[m
+[32m +Reason for change: Added comprehensive reset with better error tracking and detailed response[m
+[32m +"""[m
+[32m +[m
+  @app.route('/reset-all-data', methods=['POST'])[m
+  def reset_all_data_endpoint():[m
+[31m-     """Reset all data for a new batch - clears database and all processed files"""[m
+[32m+     """Reset all data for a new batch - clears database, files, and session data"""[m
+      logger.info("🔍 Reset all data endpoint called") # DEBUG[m
+      try:[m
+          # Import from the parent directory where pdf_quality_report.py is located[m
+[36m@@@ -450,38 -443,26 +536,44 @@@[m
+              'error': f'Failed to reset data: {str(e)}'[m
+          }), 500[m
+  [m
+[32m +# [MODIFIED: 2025-09-17] Enhanced PDF report generation with better error handling[m
+[32m +"""[m
+[32m +Original implementation:[m
+  @app.route('/generate-pdf-report', methods=['POST'])[m
+  def generate_pdf_report():[m
+[31m -    """Manually generate PDF quality report using original filenames from database"""[m
+      try:[m
+[31m -        # Ensure proper import path for PDF generation[m
+[31m -        sys.path.append(LMS_DATABASE_DIR)[m
+[31m -        from pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db[m
+[32m++<<<<<<< HEAD[m
+[32m +        generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])[m
+[32m +        pdf_filename = generator.generate_report()[m
+[32m +        return jsonify({'success': True, 'pdf_filename': pdf_filename})[m
+[32m +    except Exception as e:[m
+[32m +        return jsonify({'error': str(e)}), 500[m
+[32m +[m
+[32m +Reason for change: Added support for original filenames from database and improved error handling[m
+[32m +"""[m
+[32m +[m
+[32m +@app.route('/generate-pdf-report', methods=['POST'])[m
+[32m +def generate_pdf_report():[m
+[32m +    """Manually generate consolidated PDF quality report using original filenames from database"""[m
+[32m +    try:[m
+[32m +        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lms_error_analyzer', 'database'))[m
+[32m +        from lms_error_analyzer.database.pdf_quality_report import PDFQualityReportGenerator, get_original_file_list_from_db, cleanup_old_pdf_reports[m
+          [m
+[31m -        # Get original uploaded filenames from database - much cleaner![m
+[31m -        original_files = get_original_file_list_from_db()[m
+[32m +        # Clean up any existing PDFs first[m
+[32m +        cleanup_old_pdf_reports(app.config['PROCESSED_FOLDER'])[m
+[32m +        [m
+[32m +        # Get original uploaded filenames from database[m
+[32m +        original_files = get_original_file_list_from_db()  # This manages its own connection[m
+          [m
+          if not original_files:[m
+              return jsonify({'error': 'No uploaded files found in database for report generation'}), 400[m
+          [m
+[31m-         # Generate consolidated PDF report using original filenames[m
+[32m+         # Run fresh session-aware orphan detection before generating PDF[m
+[31m -        from pdf_quality_report import _run_orphan_detection_for_uploaded_files[m
+[32m++        from lms_error_analyzer.database.pdf_quality_report import _run_orphan_detection_for_uploaded_files[m
+[32m+         logger.info("Running session-aware orphan detection for manual PDF generation...")[m
+[32m+         _run_orphan_detection_for_uploaded_files(original_files)[m
+[32m+         [m
+[32m+         # Generate PDF report using original filenames with fresh orphan data[m
+          generator = PDFQualityReportGenerator(app.config['PROCESSED_FOLDER'])[m
+          pdf_filename = generator.generate_report(original_files)[m
+          [m

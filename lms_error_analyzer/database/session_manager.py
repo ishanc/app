@@ -48,9 +48,9 @@ class SessionConfig:
             self.domains = ["activities", "employees", "orgs"]
         if self.mysql_target is None:
             self.mysql_target = {
-                "host": os.getenv('MYSQL_HOST', 'localhost'),
-                "port": int(os.getenv('MYSQL_PORT', 3306)),
-                "schema": os.getenv('MYSQL_NAME', 'error_logging')
+                "host": os.getenv('MYSQL_HOST'),
+                "port": int(os.getenv('MYSQL_PORT')),
+                "schema": os.getenv('MYSQL_NAME')
             }
         if self.rules is None:
             self.rules = {
@@ -130,14 +130,14 @@ class SessionManager:
         """Create MySQL connection using environment variables"""
         try:
             connection = mysql.connector.connect(
-                host=os.getenv('MYSQL_HOST', 'localhost'),
+                host=os.getenv('MYSQL_HOST'),
                 user=os.getenv('MYSQL_USER'),
                 password=os.getenv('MYSQL_PASSWORD'),
                 database=os.getenv('MYSQL_NAME'),
                 autocommit=False,
                 charset='utf8mb4',
                 collation='utf8mb4_unicode_ci',
-                port=int(os.getenv('MYSQL_PORT', 3306))
+                port=int(os.getenv('MYSQL_PORT'))
             )
             return connection
         except MySQLError as e:

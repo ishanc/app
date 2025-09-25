@@ -3,9 +3,9 @@
   "reset": false,
   "domains": ["activities", "employees", "orgs"],
   "mysql_target": {
-    "host": "Hank2313",
+    "host": "your-mysql-host",
     "port": 3306,
-    "schema": "error_logging"
+    "schema": "your-database-name"
   },
   "rules": {
     "run_if_uploaded_only": true,

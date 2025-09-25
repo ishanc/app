@@ -1013,6 +1013,16 @@
                     <p>Submit files for processing and report generation</p>
                 </div>
                 
+                <!-- Analysis Section - moved to top -->
+                <div style="margin-bottom: 1.5rem; text-align: center;">
+                    <button id="analyzeFilesBtn" class="button" style="padding: 0.75rem 2rem; font-size: 1rem; margin-right: 1rem;">
+                        📊 Analyze Uploaded Files
+                    </button>
+                    <button id="generatePDFBtnUpload" class="button" style="padding: 0.75rem 2rem; font-size: 1rem;">
+                        📄 Generate PDF Report
+                    </button>
+                </div>
+                
                 <!-- Upload Card -->
                 <div class="card">
                    <div class="upload-box" id="drop-zone">
@@ -1040,11 +1050,11 @@
                             📋 Required Files Status
                         </h3>
                         <div id="upload-progress-summary" style="font-size: 0.875rem; color: #6b7280;">
-                            <span id="files-uploaded-count">0</span>/21 files uploaded
+                            <span id="files-uploaded-count">0</span>/23 files uploaded
                         </div>
                     </div>
                     <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                        All 21 files must be uploaded before generating the PDF report for complete cross-file relationship analysis.
+                        All 23 files must be uploaded before generating the PDF report for complete cross-file relationship analysis.
                     </p>
                     
                     <div class="file-tracking-table-container">
@@ -1064,16 +1074,6 @@
                     <div id="completion-status" style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.375rem; display: none;">
                         <div id="completion-message"></div>
                     </div>
-                </div>
-                
-                <!-- Analysis Section - OUTSIDE the card -->
-                <div style="margin-top: 2rem; text-align: center;">
-                    <button id="analyzeFilesBtn" class="button" style="padding: 0.75rem 2rem; font-size: 1rem; margin-right: 1rem;">
-                        📊 Analyze Uploaded Files
-                    </button>
-                    <button id="generatePDFBtnUpload" class="button" style="padding: 0.75rem 2rem; font-size: 1rem;">
-                        📄 Generate PDF Report
-                    </button>
                 </div>
                 
                 <!-- Analysis Results Display - OUTSIDE the card -->
